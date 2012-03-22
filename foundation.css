@@ -1,0 +1,18 @@
+/**
+ * Foundation
+ * @description basic styles for Buttons, text, resets, etc.
+ */
+body{
+	background: #eee;
+	font-size: 62.5%;
+	font-family: 'Lucida Sans', Helvetica, Sans-serif;
+	color: #333;
+}
+
+*{
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+	z-index: 1;
+}
