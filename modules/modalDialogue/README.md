@@ -1,9 +1,9 @@
-#ModalDialogue#
+# ModalDialogue #
 
 ModalDialogue is a module that allows the creation of complex modal dialogues using a
 Modal Dialogue Object (MDO).
 
-##Usage:##
+## Usage: ##
 
 To use ModalDialogue you create an instance like so:
 
@@ -32,15 +32,15 @@ you can use the createDialogueWithViews method, which requires a bit more inform
 The default parameter above means that the view is created and shows the
 second view when it's made.
 
-##MDO##
+## MDO ##
 
 The Modal Dialogue Object is used for defining a modal dialogue or modal view.
 
-##MDO.title##
+## MDO.title ##
 
 The title creates a default h1 and puts the contents in the dialogue.
 
-##MDO.body##
+## MDO.body ##
 
 The body member accepts two types of data: __HTMLElement__ and __String__. MDO.body can 
 also be an array of HTMLElements or strings, or a mixture of the two.
@@ -56,7 +56,7 @@ Example:
 		"body" : [h2,"&lt;p&gt;This is a paragraph&lt;/p&gt;","&lt;img src='image.jpg' alt /&gt;",]
 	});
 
-##MDO.buttons##
+## MDO.buttons ##
 
 The buttons object allows you to specify a button, or a series of buttons to add 
 to the dialogue. There are two properties for buttons: __Name__ and __Callback__.
@@ -73,7 +73,7 @@ Example:
 		}
 	});
 
-##MDO.form##
+## MDO.form ##
 
 The form object has two properties: __name__ and __inputs__, the name property
 is a string that will be used to refer to the form in the callbacks. The inputs
@@ -86,7 +86,7 @@ __type__ - The input type. Defaults to text.
 __name__ - The input name.
 __default__ - The default input value.
 
-##MDO.class##
+## MDO.class ##
 
 Add custom classes to the dialogue element. Accepts a single class or an array
 of classes.
