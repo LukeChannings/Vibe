@@ -53,7 +53,7 @@ Example:
 
 	dialogue.createModalDialogue({
 		"title" : "Hello World",
-		"body" : [h2,"\<p\>This is a paragraph\</p\>","\<img src='image.jpg' alt /\>",]
+		"body" : [h2,"&lt;p&gt;This is a paragraph&lt;/p&gt;","&lt;img src='image.jpg' alt /\&gt;",]
 	});
 
 ##MDO.buttons##
