@@ -16,7 +16,17 @@ define(['modules/audio/sm2/soundmanager2.js'],function(){
 	
 	soundManager.ontimeout(function(status){
 		
-		console.error("SoundManager failed to load - " + status.message);
+		require(['modules/modalDialogue/modal'],function(modalDialogue){
+		
+			var dialogue = new modalDialogue();
+			
+			dialogue.createModalDialogue({
+				"error" : true,
+				"title" : "Something has gone wrong!",
+				"body" : "<p>The component used to play music has failed to load. This app is pretty unusable.</p>"
+			});
+		
+		});
 		
 	});
 
@@ -44,7 +54,7 @@ define(['modules/audio/sm2/soundmanager2.js'],function(){
 		
 			var newSound = soundManager.createSound({
 				id : id,
-				url : settings.get('host') + '/stream/' + id
+				url : 'http://' + settings.get('host') + ':' + settings.get('port') + '/stream/' + id
 			});
 			
 			current = sounds.push(newSound) - 1;

@@ -8,20 +8,20 @@ define(function(){
 	function ModalDialogue()
 	{
 		/** Append Stylesheet. **/
-		var stylesheet = document.createElement("link");
+		var stylesheet = document.createElement('link');
 		
-		stylesheet.setAttribute("rel","stylesheet");
+		stylesheet.setAttribute('rel','stylesheet');
 		
-		stylesheet.setAttribute("type","text/css");
+		stylesheet.setAttribute('type','text/css');
 		
-		stylesheet.setAttribute("href","modules/modalDialogue/modal.css");
+		stylesheet.setAttribute('href','modules/modalDialogue/modal.css');
 		
 		document.head.appendChild(stylesheet);
 		
 		/** Append overlay element. **/
-		this.overlay = document.createElement("div");
+		this.overlay = document.createElement('div');
 		
-		this.overlay.setAttribute("id","ModalDialogueOverlay");
+		this.overlay.setAttribute('id','ModalDialogueOverlay');
 		
 		document.body.appendChild(this.overlay);
 		
@@ -40,7 +40,7 @@ define(function(){
 		var self = this;
 	
 		// make an array to keep a list of classes.
-		var classes = ["visible"];
+		var classes = ['visible'];
 	
 		// check that there is actually an MDO.
 		if ( MDO )
@@ -54,13 +54,20 @@ define(function(){
 			}
 		
 			// make a dialogue element.
-			var dialogue = this.currentDialogue = document.createElement("div");
+			var dialogue = this.currentDialogue = document.createElement('div');
+	
+			// check for alignment specification.
+			if ( MDO.alignment && /^(center|right)$/.test(MDO.alignment) )
+			{
+				// set left, center or right alignment.
+				classes.push(MDO.alignment);
+			}
 	
 			// give it the ID.
-			dialogue.setAttribute("id","ModalDialogue");
+			dialogue.setAttribute('id','ModalDialogue');
 			
 			/* create a header. */
-			var title = document.createElement("h1");
+			var title = document.createElement('h1');
 			
 			// put the MDO title into the header.
 			title.innerHTML = MDO.title;
@@ -68,73 +75,82 @@ define(function(){
 			// append the header to the dialogue.
 			dialogue.appendChild(title);
 			
-			/* Check the MDO body. */
-			if ( MDO.body instanceof HTMLElement )
+			/** check for the body. **/
+			if ( MDO.body )
 			{
-				// if the body is an HTML Element then append it.
-				dialogue.appendChild(MDO.body);
-					
-			}
+				// check if the element is not an array.
+				if ( !(MDO.body instanceof Array) )
+				{
+					// if not, just put the element into an array to keep compatibility.
+					MDO.body = [MDO.body];
+				}
 			
-			// if the MDO body is an array..
-			else if ( MDO.body instanceof Array )
-			{
-				// iterate the array.
+				// loop through body elements.
 				for ( var i = 0; i < MDO.body.length; i++ )
 				{
-					// append each element to the innerHTML.
-					dialogue.innerHTML += MDO.body[i];
-				}
 					
+					// check if the item is an HTMLElement.
+					if ( MDO.body[i] instanceof HTMLElement )
+					{
+						// if it is, append the element to the dialogue.
+						dialogue.appendChild(MDO.body[i]);
+					}
+					
+					// otherwise check if the element is a string.
+					else if ( typeof MDO.body[i] == "string" )
+					{
+						// if the element is a string then add it directly.
+						dialogue.innerHTML += MDO.body[i];
+					}
+				}
+				
 			}
-			
-			// if the body isn't anything special, just put it in the innerHTML.
-			else dialogue.innerHTML += MDO.body;
-			
 			
 			/* check for a form definition. */
 			if ( MDO.form )
 			{
 				// add form to the classes.
-				classes.push("form");
+				classes.push('form');
 				
 				// make a new form.
-				var form = document.createElement("form");
+				var form = document.createElement('form');
 				
 				// set the form name.
-				form.setAttribute("name",MDO.form.name);
+				form.setAttribute('name',MDO.form.name);
 				
 				// set a default method. (For semantics.)
-				form.setAttribute("method","post");
+				form.setAttribute('method','post');
 				
 				for ( var i = 0; i < MDO.form.inputs.length; i++ )
 				{
 					if ( MDO.form.inputs[i].title )
 					{ 
 						// make a new label.
-						var label = document.createElement("label");
+						var label = document.createElement('label');
 					
 						// give the label some text.
 						label.innerHTML = MDO.form.inputs[i].title;
 					}
 					
 					// make a new input.
-					var input = document.createElement("input");
+					var input = document.createElement('input');
 					
-					// set the input name.
-					if ( MDO.form.inputs[i].name ) input.setAttribute("name",MDO.form.inputs[i].name);
-					
-					// set the input type.
-					if ( MDO.form.inputs[i].type ) input.setAttribute("type",MDO.form.inputs[i].type);
-					
-					// set the placeholder
-					if ( MDO.form.inputs[i].placeholder ) input.setAttribute("placeholder",MDO.form.inputs[i].placeholder);
+					// check for a default value.
+					if ( MDO.form.inputs[i].default )
+					{
+						input.value = MDO.form.inputs[i].default;
+					}
 					
 					// append the input.
-					if ( label ){
+					if ( label )
+					{
+					
 						label.appendChild(input);
+						
 						form.appendChild(label);
+						
 					}
+					
 					else form.appendChild(input);
 				}
 				
@@ -146,67 +162,61 @@ define(function(){
 			// check for button definitions.
 			if ( MDO.buttons )
 			{
+				// create the button container.
+				var buttonContainer = document.createElement('div');
+			
+				// set the id.
+				buttonContainer.setAttribute('id','buttons');
+			
 				// loop through the buttons.
 				for ( var i in MDO.buttons )
 				{
 					// make a button.
-					var button = document.createElement("button");
+					var button = document.createElement('button');
 					
 					// if the member is a close button then create a close template.
-					if ( i == "close" )
+					if ( i == 'close' )
 					{
 						// give it a title.
-						button.innerHTML = "Close";
+						button.innerHTML = 'Close';
 						
-						// close the dialogue when it's pressed.
-						addListener(button,'click',function(){
-						
-							// yes, that means what it says.
-							self.destroy();
-						
-						});
-						
-					}
-					
-					// check for an apply button.
-					else if ( i == "apply" )
-					{
-						// set the button text.
-						button.innerHTML = "Apply";
-						
-						// check that the callback is actually a function.
 						if ( typeof MDO.buttons[i] == "function" )
 						{
-							// if it is then add a click listener.
-							addListener(button,'click',MDO.buttons[i]);
+							
+							addListener(button,'click',function(){
+							
+								// yes, that means what it says.
+								MDO.buttons[i].call(self);
+							
+							});
+							
 						}
-						
-						// if there's no callback function then this button is pretty useless. :(
-						else continue;
-					
+						else
+						{
+							// close the dialogue when it's pressed.
+							addListener(button,'click',function(){
+							
+								// yes, that means what it says.
+								self.destroy();
+							
+							});
+						}
 					}
-					
-					// check for a submit button.
-					else if ( i == "submit" )
-					{
-						// set the text.
-						button.innerHTML = "Save";
-						
-						// handle the submit event.
-						addListener(button,'click',MDO.buttons.submit);
-						
-					}
-					
+
 					else
 					{
 						// if there's a generic button, let it title itself.
 						button.innerHTML = i;
 						
 						// check if it has a callback.
-						if ( typeof MDO.buttons[i] == "function" )
+						if ( typeof MDO.buttons[i] == 'function' )
 						{
 							// if it does then listen for a click.
-							addListener(button,'click',MDO.buttons[i]);
+							addListener(button,'click',function(){
+							
+								MDO.buttons[i].call(self);
+							
+							});
 						}
 						
 						// if it doesn't.. screw it.
@@ -215,23 +225,42 @@ define(function(){
 					}
 					
 					// add the button to the dialogue.
-					dialogue.appendChild(button);
+					buttonContainer.appendChild(button);
+				}
+				
+				dialogue.appendChild(buttonContainer);
+				
+			}
+			
+			if ( MDO.errorDialogue ) classes.push('error');
+			
+			self.overlay.appendChild(dialogue);
+			
+			self.overlay.setAttribute('class','visible');
+			
+			
+			// check for classes.
+			if ( MDO.class )
+			{
+				// check for an array of classes.
+				if ( MDO.class instanceof Array )
+				{
+					classes = MDO.class.concat(classes);
+				}
+				
+				else if ( typeof MDO.class == "string" )
+				{
+					classes.push(MDO.class);
 				}
 				
 			}
 			
-			if ( MDO.errorDialogue ) classes.push("error");
-			
-			self.overlay.appendChild(dialogue);
-			
-			self.overlay.setAttribute("class","visible");
-			
-			dialogue.setAttribute("class",classes.join(" "));
-			
+			dialogue.setAttribute('class', classes.join(' '));
+		
 		}
 		
 		// if there's no MDO, log an error.
-		else console.error("ModalDialogue::createDialogue - No MDO!");
+		else console.error('ModalDialogue::createDialogue - No MDO!');
 	
 	}
 	
@@ -247,7 +276,7 @@ define(function(){
 		removeNode(this.currentDialogue);
 		
 		// hide the overlay.
-		this.overlay.removeAttribute("class");
+		this.overlay.removeAttribute('class');
 	
 	}
 	

@@ -39,7 +39,7 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/s
 			
 		});
 		
-		if ( settings.get('host') )
+		if ( !! settings.get('host') && !! settings.get('port') )
 		{
 			var socket = io.connect('http://' + settings.get('host') + ':' + settings.get('port'));
 		}
@@ -50,45 +50,53 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/s
 			
 				var modalDialogue = new ModalDialogue();
 			
+				var defaults = {
+					"host" : "localhost",
+					"port" : "6232"
+				};
+			
 				modalDialogue.createDialogue({
-					"title" : "First Time?",
+					"title" : "Welcome to MusicMe.",
 					"body" : [
-						"<p>It looks like this is the first time you've run MusicMe,</p>",
-						"<p>in order for you to get started we'll just need you to enter</p>",
-						"<p>the details of your MusicMe server. Thank You!</p>"	
+						"<p>It looks like this is the first time you've run MusicMe. Before you can get started you need to fill out some basic information that will allow this app to run.</p>",
+						"<p>This part is fairly simple, just type in the name of the host that you run your MusicMe daemon from, and if you've changed the port fill out your own. (Otherwise use the default port.)</p>"	
 					],
 					"form" : {
 						"name" : "settings",
 						"inputs" : [
 							{
-								"title" : "Host",
+								"title" : "Host:",
 								"type" : "text",
 								"name" : "host",
-								"placeholder" : "example.com"
+								"default" : defaults.host
 							},
 							{
-								"title" : "Port",
+								"title" : "Port:",
 								"type" : "text",
 								"name" : "port",
-								"placeholder" : "6232"
+								"default" : defaults.port
 							}
 						]
 					},
 					"buttons" : {
-						"submit" : function(){
+						"Begin" : function(){
 							
 							// get the form.
 							var form = document.forms["settings"];
 							
 							// get the host.
-							var host = form["host"].value || form["host"].getAttribute("placeholder");
+							var host = form["host"].value || defaults.host;
 							
 							// get the port.
-							var port = parseInt(form["port"].value) || parseInt(form["port"].getAttribute("placeholder"));
+							var port = parseInt(form["port"].value) || defaults.port;
 							
 							// save the settings.
-							settings.set('port',port);
-							settings.set('host',host);
+							settings.set('port', port);
+							settings.set('host', host);
+							
+							// close the dialogue.
+							this.destroy();
+						
 						}
 					}
 				});

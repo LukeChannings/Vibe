@@ -86,7 +86,7 @@ define(function(){
 		
 		// alias.
 		this.clear = localStorage.clear;
-	
+		
 	}
 	
 	return Settings;

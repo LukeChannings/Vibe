@@ -16,6 +16,23 @@ function addListener(element,listenFor,callback){
 }
 
 /**
+ * removeListener
+ * @description Cross-browser removeEventListener.
+ */
+function removeListener(element,listenFor,dispatch){
+
+	if ( document.removeEventListener )
+	{
+		element.removeEventListener(listenFor,dispatch,false);
+	}
+	else
+	{
+		element.detachEvent(listenFor,dispatch);
+	}
+
+}
+
+/**
  * removeNode
  * @description Removes a given node from the DOM.
  */

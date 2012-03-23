@@ -1,4 +1,9 @@
-/** Modal ModalDialogueOverlay. **/
+/**
+ * modalDialoge Stylesheet
+ * @description The supporting stylesheet for the modalDialogue module.
+ */
+
+/* @group Overlay */
 
 #ModalDialogueOverlay{
 	height: 100%;
@@ -6,159 +11,87 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: rgba(0,0,0,0.7);
+	background: #333;
 	z-index: 0;
 	opacity: 0;
-	-webkit-user-select: text;
 }
 
 #ModalDialogueOverlay.visible{
-	opacity: 1;
-	z-index: 10000;
+	z-index: 1000;
+	opacity: 0.8;
 }
+
+/* @end */
+
+/* @group Modal Dialogue */
 
 #ModalDialogue{
-	color: #444;
-	font-family: Lucida, 'Lucida Sans', Helvetica, Arial;
-	position: relative;
-	margin: auto;
-	margin-top: -100%;
-	-webkit-transition: margin 0.4s linear;
-	-moz-transition: margin 0.4s linear; /* In case FF support is added at some point. */
-	width: 70%;
+	width: 60%;
 	height: 60%;
-	background: #fff;
-	border: 1px solid rgba(0, 0, 0, 0.7);
-	box-shadow: 0 0 4em rgba(0,0,0,0.5);
-	overflow: hidden;
-	border-radius: 2px;
+	margin: 10% auto;
+	background: #f9f9f9;
+	border: 1px solid #aaa;
+	padding: 0em 2em;
+	z-index: 10000;
+	box-shadow: 0 0 5em rgba(0,0,0,0.6), 0 0 10em rgba(0,0,0,0.5);
+	overflow: auto;
+	position: relative;
 }
 
-#ModalDialogue.error{
-	background: #fff url("error.svg") no-repeat center;
-	background-size: auto 80%;
-}
+#ModalDialogue.center{text-align: center}
 
-#ModalDialogue.visible{margin-top: 15%}
+#ModalDialogue.right{text-align: right}
+
+#ModalDialogue > *{margin: 1em 0}
 
 #ModalDialogue > h1{
-	text-align: center;
 	font-weight: 100;
-	font-family: Lucida, Helvetica, Arial;
-	font-size: 3em;
-	line-height: 2em;
-	color: #333;
+	font-size: 2.5em;
 }
 
 #ModalDialogue > p{
-	margin: 1em 2em;
+	font-size: 1.3em;
+	color: #888;
+}
+
+#ModalDialogue > div#buttons{
+	position: absolute;
+	bottom: 0;
+	right: 1em;
+}
+
+#ModalDialogue > div#buttons > button{
+	padding: 0.5em 1.4em;
+	margin: 0 0.5em;
+	border: 1px solid #aaa;
+	background: #eee;
+	box-shadow: 0 0 3px #ddd;
+	font-size: 1.3em;
+}
+
+#ModalDialogue > div#buttons > button:hover{
+	background: #f9f9f9;
+	background: -moz-linear-gradient(bottom, #ddd 50%, #eee 79%);
+	background: -webkit-linear-gradient(#ddd,#eee);
+	background: -ms-linear-gradient(bottom, #ddd 50%, #eee 79%);
+}
+
+#ModalDialogue > form{
+	margin-top: 2em;
+}
+
+#ModalDialogue > form > label{
+	display: block;
+	margin: 1em 0;
 	font-size: 1.6em;
 }
 
-#ModalDialogue p > a{
-	color: #c13333;
-	text-decoration: none;
+#ModalDialogue > form > label > input{
+	margin-left: 1em;
+	font-size: 0.8em;
+	border: 2px solid #aaa;
+	color: #aaa;
+	padding: 0.2em 0.4em;
 }
 
-#ModalDialogue p > a:hover{
-	color: #e41010;
-}
-
-#ModalDialogue.usenav ol.Navigation{
-	height: 100%;
-	width: 25%;
-	float: left;
-}
-
-#ModalDialogue.usenav.settings ol.Navigation{
-	background: #dee5ee url("images/controls.svg") top no-repeat;
-	background-size: auto 90%;
-	background-position: 100% -200%;
-}
-
-#ModalDialogue.usenav ol.Navigation li.Title,#ModalDialogue.usenav div.views div.active h1{
-	color: #333;
-	font-size: 2.5em;
-	line-height: 1em;
-	margin: 0;
-	padding: 0.4em;
-
-}
-
-#ModalDialogue.usenav ol.Navigation li{
-	display: block;
-	font-size: 1.5em;
-	line-height: 2em;
-	padding: 0 1em;
-	margin: 0.5em 0;
-	cursor: pointer;
-	-webkit-user-select: none;
-	border-top: 1px solid transparent;
-	border-bottom: 1px solid transparent;
-}
-
-#ModalDialogue.usenav ol.Navigation li.Title{
-	cursor: default;
-}
-
-#ModalDialogue.usenav ol.Navigation li.active{
-	background: rgba(142,181,228,0.8);
-	color: #255b9c;
-	border-top: 1px solid #7895b8;
-	border-bottom: 1px solid #7895b8;
-	cursor: default;
-}
-
-#ModalDialogue.usenav div.views{
-	float: left;
-	width: 74%;
-	height: 100%;
-	box-shadow: -5px 0 1em rgba(0,0,0,0.08);
-	border-left: 1px solid rgba(0,0,0,0.3);
-}
-
-#ModalDialogue.usenav div.views > div{display: none}
-
-#ModalDialogue.usenav div.views > div.active{
-	display: block;
-	height: 100%;
-	width: 100%;
-	padding: 1em;
-}
-
-#ModalDialogue.usenav div.views div.active h1{
-	font-weight: 100;
-	padding: 0;
-	padding-bottom: 0.4em;
-	margin-bottom: 0.4em;
-	border-bottom: 1px solid #eee;
-}
-
-#ModalDialogue.usenav div.views div.active p{
-	font-size: 1.5em;
-	padding-right: 1.5em;
-}
-
-/* Standard dialogue button style. */
-#ModalDialogue button{
-	position: absolute;
-	bottom: 1em;
-	right: 1em;
-	background: #eee;
-	color: #333;
-	border: 1px solid #aaa;
-	box-shadow: 0 0 3px #ddd;
-	font-size: 1.4em;
-	padding: 5px 8px;
-}
-
-#ModalDialogue button:hover{
-	background: -webkit-linear-gradient(#eee,#ddd);
-	border: 1px solid #999;
-}
-
-#ModalDialogue button:active{
-	border: 1px solid #eee;
-	color: #999;
-	background: #eee;
-}
+/* @end */
