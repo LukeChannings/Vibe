@@ -3,6 +3,11 @@
 ModalDialogue is a module that allows the creation of complex modal dialogues using a
 Modal Dialogue Object (MDO).
 
+## Support ##
+
+ModalDialogue is tested on FireFox 10+, Chrome 15+ and IE9. IE9 doesn't support linear
+gradients so some things may be slightly different. (Don't blame me, blame Microsoft.)
+
 ## Usage: ##
 
 To use ModalDialogue you create an instance like so:
