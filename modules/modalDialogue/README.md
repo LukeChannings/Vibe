@@ -80,11 +80,11 @@ is a string that will be used to refer to the form in the callbacks. The inputs
 property is an array that contains objects that define an input.
 
 An input object allows the following properties:
-__title__ - If the title property is set it will put the value into a label 
+* __title__ - If the title property is set it will put the value into a label 
 and the input element into the label.
-__type__ - The input type. Defaults to text.
-__name__ - The input name.
-__default__ - The default input value.
+* __type__ - The input type. Defaults to text.
+* __name__ - The input name.
+* __default__ - The default input value.
 
 ### MDO.class ###
 
