@@ -29,53 +29,64 @@ define(function(){
 		this.currentDialogue;
 		
 	}
-
-	/**
-	 * createDialogue
-	 * @description Creates a simple single-view dialogue box.
-	 * @param MDO (object) - The Modal Dialogue Object defines the content of the dialogue.
-	 */
-	ModalDialogue.prototype.createDialogue = function(MDO){
 	
+	/**
+	 * createDialogueElement
+	 * @description Creates a dialogue element from an MDO.
+	 * @param MDO (object) - The Modal Dialogue Object.
+	 */
+	function createDialogueElement(MDO,overlay)
+	{
+	
+		// usual lark.
 		var self = this;
 	
-		// make an array to keep a list of classes.
-		var classes = ['visible'];
+		// check for an overlay element.
+		if ( overlay ) this.overlay = overlay;
 	
-		// check that there is actually an MDO.
+		// check for a dialogue specification.
 		if ( MDO )
 		{
 		
-			// if there's not title or body then it's a pretty broken dialogue.
-			if ( ! MDO.title && ! MDO.body )
-			{
-				// don't continue.
-				return;
-			}
+			// set the definition.
+			this.definition = MDO;
 		
-			// make a dialogue element.
-			var dialogue = this.currentDialogue = document.createElement('div');
-	
-			// check for alignment specification.
+			// create the dialogue element.
+			var dialogue = this.dialogue = document.createElement("div");
+			
+			// determine the id for the dialogue.
+			var dialogueId = ( MDO.customId ) ? MDO.customId : "ModalDialogue";
+			
+			// set the id.
+			dialogue.setAttribute("id",dialogueId);
+		
+			// keep dialogue classes here.
+			var classes = ['visible'];
+		
+			// check if this is an error dialogue
+			if ( MDO.errorDialogue ) classes.push('error');
+		
+			// check for custom alignment specification.
 			if ( MDO.alignment && /^(center|right)$/.test(MDO.alignment) )
 			{
-				// set left, center or right alignment.
+				// set centre or right alignment.
 				classes.push(MDO.alignment);
 			}
-	
-			// give it the ID.
-			dialogue.setAttribute('id','ModalDialogue');
-			
-			/* create a header. */
-			var title = document.createElement('h1');
-			
-			// put the MDO title into the header.
-			title.innerHTML = MDO.title;
-			
-			// append the header to the dialogue.
-			dialogue.appendChild(title);
-			
-			/** check for the body. **/
+		
+			/* DIALOGUE HEADER */
+			if ( MDO.title )
+			{
+				// create header element.
+				var title = document.createElement('h1');
+				
+				// put the MDO title into the header.
+				title.innerHTML = MDO.title;
+				
+				// append the header to the dialogue.
+				dialogue.appendChild(title);
+			}
+		
+			/* DIALOGUE BODY */
 			if ( MDO.body )
 			{
 				// check if the element is not an array.
@@ -103,10 +114,9 @@ define(function(){
 						dialogue.innerHTML += MDO.body[i];
 					}
 				}
-				
 			}
 			
-			/* check for a form definition. */
+			/* DIALOGUE FORM */
 			if ( MDO.form )
 			{
 				// add form to the classes.
@@ -135,22 +145,46 @@ define(function(){
 					// make a new input.
 					var input = document.createElement('input');
 					
+					// check for the form name.
+					if ( MDO.form.inputs[i].name )
+					{
+						input.setAttribute("name", MDO.form.inputs[i].name);
+					}
+					else
+					{
+						input.setAttribute("name" + "input" + (i + 1));
+					}
+					
+					// check for a type.
+					if ( MDO.form.inputs[i].type )
+					{
+						input.setAttribute("type",MDO.form.inputs[i].type);
+					}
+					else
+					{
+						// if no type was specified default to "text"
+						input.setAttribute("type","text");
+					}
+					
 					// check for a default value.
 					if ( MDO.form.inputs[i].default )
 					{
+						// set the default value.
 						input.value = MDO.form.inputs[i].default;
 					}
 					
-					// append the input.
+					// if the MDO specified an input title..
 					if ( label )
 					{
-					
+						// append the input to the label
 						label.appendChild(input);
 						
+						// and then the label to the form.
 						form.appendChild(label);
 						
 					}
 					
+					// if the MDO specified no title for the input, append the input to the form.
 					else form.appendChild(input);
 				}
 				
@@ -158,15 +192,15 @@ define(function(){
 				dialogue.appendChild(form);
 				
 			}
-			
-			// check for button definitions.
+		
+			/* DIALOGUE BUTTONS */
 			if ( MDO.buttons )
 			{
 				// create the button container.
 				var buttonContainer = document.createElement('div');
 			
-				// set the id.
-				buttonContainer.setAttribute('id','buttons');
+				// set the class.
+				buttonContainer.setAttribute('class','buttons');
 			
 				// loop through the buttons.
 				for ( var i in MDO.buttons )
@@ -174,8 +208,8 @@ define(function(){
 					// make a button.
 					var button = document.createElement('button');
 					
-					// if the member is a close button then create a close template.
-					if ( i == 'close' )
+					// if a close button is specified, create a close button.
+					if ( /close/i.test(i) && ! ( typeof MDO.buttons[i] == "function") )
 					{
 						// give it a title.
 						button.innerHTML = 'Close';
@@ -202,44 +236,79 @@ define(function(){
 							});
 						}
 					}
-
-					else
+					else if ( typeof MDO.buttons[i] == "object" )
 					{
-						// if there's a generic button, let it title itself.
-						button.innerHTML = i;
-						
-						// check if it has a callback.
-						if ( typeof MDO.buttons[i] == 'function' )
+					
+						button.innerHTML = MDO.buttons[i].title || i;
+					
+						if ( typeof MDO.buttons[i].callback == "function" )
 						{
-							// if it does then listen for a click.
-							addListener(button,'click',function(){
-							
-								MDO.buttons[i].call(self);
-							
-							});
-						}
 						
-						// if it doesn't.. screw it.
-						else continue;
+							if ( MDO.isPartial )
+							{
+								var index = parseInt(MDO.customId.match(/\d/)[0]);
+								
+								if ( i == "next" )
+								{
+									addListener(button,'click',function(e){
+									
+										MDO.buttons.next.callback.call(MDO.buttons.next.callbackContext,e,index);
+									
+									});
+								}
+								if ( i == "prev" ) {
+								
+								addListener(button,'click',function(e){
+								
+									MDO.buttons.prev.callback.call(MDO.buttons.prev.callbackContext,e,index);
+								
+								});
+								
+								}
+								
+							}
+							else
+							{
+								addListener(button,'click',MDO.buttons[i].callback);
+							}
+						}
 					
 					}
+					// check if it has a callback.
+					else if ( typeof MDO.buttons[i] == 'function' )
+					{
+					
+						// if there's a generic button, let it title itself.
+						button.innerHTML = i;
+					
+						// if it does then listen for a click.
+						addListener(button,'click',function(){
+						
+							MDO.buttons[i].call(self);
+						
+						});
+						
+					}
+					
+					// if it doesn't.. screw it.
+					else continue;
 					
 					// add the button to the dialogue.
 					buttonContainer.appendChild(button);
 				}
 				
-				dialogue.appendChild(buttonContainer);
+				// if there are actually buttons...
+				if ( buttonContainer.children.length != 0 )
+				{
+					// append the container.
+					dialogue.appendChild(buttonContainer);
+				}
 				
+				// if there are no buttons, destroy the container.
+				else buttonContainer = null;
 			}
-			
-			if ( MDO.errorDialogue ) classes.push('error');
-			
-			self.overlay.appendChild(dialogue);
-			
-			self.overlay.setAttribute('class','visible');
-			
-			
-			// check for classes.
+		
+			/* DIALOGUE CLASSES */
 			if ( MDO.class )
 			{
 				// check for an array of classes.
@@ -255,7 +324,50 @@ define(function(){
 				
 			}
 			
+			// set the dialogue classes.
 			dialogue.setAttribute('class', classes.join(' '));
+		
+			// return the constructed dialogue.
+			return dialogue;
+		}
+		
+		// if there is no dialogue specification return nothing.
+		return false;
+	}
+	
+	createDialogueElement.prototype.destroy = function()
+	{
+		
+		// check for the absence of closeKeepsOverlay setting.
+		if ( !(this.definition.closeKeepsOverlay) && this.overlay )
+		{
+			// remove the overlay.
+			removeNode(this.overlay);
+		}
+		else
+		{
+			// remove the dialogue.
+			removeNode(this.dialogue);
+		}
+	}
+	
+	/**
+	 * createDialogue
+	 * @description Creates a simple single-view dialogue box.
+	 * @param MDO (object) - The Modal Dialogue Object defines the content of the dialogue.
+	 */
+	ModalDialogue.prototype.createDialogue = function(MDO)
+	{
+	
+		// check that there is actually an MDO.
+		if ( MDO )
+		{
+		
+			var dialogue = new createDialogueElement(MDO,this.overlay);
+		
+			this.overlay.appendChild(dialogue);
+		
+			this.overlay.setAttribute('class','visible');
 		
 		}
 		
@@ -264,21 +376,75 @@ define(function(){
 	
 	}
 	
-	ModalDialogue.prototype.createDialogueWithNavigation = function(MDO){}
-
-	/**
-	 * destroy
-	 * @description Closes the dialogue.
-	 */
-	ModalDialogue.prototype.destroy = function(){
+	ModalDialogue.prototype.createWizard = function(MDOArray){
 	
-		// destroy the dialogue.
-		removeNode(this.currentDialogue);
+		// store the MDOs.
+		var mdos = MDOArray;
+	
+		if ( MDOArray instanceof Array )
+		{
+			
+			var dialogues = this.dialogues = [];
+			
+			var wizard = this.wizard = document.createElement('div');
+			
+			wizard.setAttribute('id','ModalDialogue');
+			
+			for ( var i = 0; i < MDOArray.length; i++ )
+			{
+				MDOArray[i].customId = "WizardDialogue" + (i + 1);
+				
+				MDOArray[i].isPartial = true;
+				
+				if ( MDOArray[i].buttons.next )
+				{
+					MDOArray[i].buttons.next = {
+						"title" : "Next",
+						"callback" : function(e,i){
+							
+							removeNode(this.wizard.children[0]);
+							
+							this.wizard.appendChild(this.dialogues[i]);
+							
+						},
+						"callbackContext" : this
+					}
+				}
+			
+				if ( MDOArray[i].buttons.prev )
+				{
+					MDOArray[i].buttons.prev = {
+						"title" : "Previous",
+						"callback" : function(e,i){
+						
+							removeNode(this.wizard.children[0]);
+							
+							this.wizard.appendChild(this.dialogues[i - 2]);
+						
+						},
+						"callbackContext" : this
+					}
+				}
+				
+				var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
+				
+				dialogues.push(dialogue);
+			}
+			
+			// put the first dialogue in the wizard.
+			wizard.appendChild(dialogues[0]);
+			
+			this.overlay.appendChild(wizard);
+			
+			this.overlay.setAttribute('class','visible');
+			
+		}
 		
-		// hide the overlay.
-		this.overlay.removeAttribute('class');
+		else return false;
 	
 	}
+	
+	ModalDialogue.prototype.createDialogueWithNavigation = function(MDO){}
 	
 	// export the module.
 	return ModalDialogue;

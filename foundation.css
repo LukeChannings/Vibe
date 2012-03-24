@@ -16,3 +16,11 @@ body{
 	outline: none;
 	z-index: 1;
 }
+
+button{
+	background: #333;
+	color: #eee;
+	padding: 0.5em 0.8em;
+	margin: 1em;
+	border-radius: 1em;
+}

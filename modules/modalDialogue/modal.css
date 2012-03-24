@@ -42,51 +42,53 @@
 
 #ModalDialogue.right{text-align: right}
 
-#ModalDialogue > *{margin: 1em 0}
+#ModalDialogue  *{margin: 1em 0}
 
-#ModalDialogue > h1{
+#ModalDialogue  h1{
 	font-weight: 100;
 	font-size: 2.5em;
 }
 
-#ModalDialogue > p{
+#ModalDialogue  p{
 	font-size: 1.3em;
 	color: #888;
 }
 
-#ModalDialogue > div#buttons{
+#ModalDialogue  div.buttons{
 	position: absolute;
 	bottom: 0;
 	right: 1em;
 }
 
-#ModalDialogue > div#buttons > button{
+#ModalDialogue  div.buttons > button{
 	padding: 0.5em 1.4em;
 	margin: 0 0.5em;
 	border: 1px solid #aaa;
 	background: #eee;
+	color: #333;
 	box-shadow: 0 0 3px #ddd;
 	font-size: 1.3em;
+	border-radius: 0;
 }
 
-#ModalDialogue > div#buttons > button:hover{
+#ModalDialogue  div.buttons > button:hover{
 	background: #f9f9f9;
 	background: -moz-linear-gradient(bottom, #ddd 50%, #eee 79%);
 	background: -webkit-linear-gradient(#ddd,#eee);
 	background: -ms-linear-gradient(bottom, #ddd 50%, #eee 79%);
 }
 
-#ModalDialogue > form{
+#ModalDialogue  form{
 	margin-top: 2em;
 }
 
-#ModalDialogue > form > label{
+#ModalDialogue  form > label{
 	display: block;
 	margin: 1em 0;
 	font-size: 1.6em;
 }
 
-#ModalDialogue > form > label > input{
+#ModalDialogue  form > label > input{
 	margin-left: 1em;
 	font-size: 0.8em;
 	border: 2px solid #aaa;
