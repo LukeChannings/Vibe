@@ -14,28 +14,43 @@ To use ModalDialogue you create an instance like so:
 
 	var dialogue = new ModalDialogue();
 
-and use the createModalDialogue method to create a basic single-view dialogue.
+This will create an overlay element and append it to the body. It will be hidden until 
+you use one of the methods to create a dialogue.
 
-	dialogue.createModalDialogue(MDO);
+## ModalDialogue.createDialogue ##
 
-if you can a wizard with next/previous buttons use:
+This method allows the creation of a simple dialogue. Pass it an MDO (documented below) and
+it will create a dialogue for you.
 
-	dialogue.createModalDialogueWithWizard({MDO1,MDO2,MDO3,...]);
+Example:
 
-To create a fully fledged multi-view dialogue with a side panel navigation,
-you can use the createDialogueWithViews method, which requires a bit more information.
+	dialogue.createDialogue(MDO);
 
-	dialogue.createModalDialogueWithViews([{
-		"name" : "Menu Item 1",
-		"MDO" : MDO
+## ModalDialogue.createWizard ##
+
+This method creates a dialogue that looks like the simple createDialogue, except that it allows
+you to specify multiple dialogue objects which can be used in a wizard-like fashion. createWizard
+takes an array of MDO objects.
+
+Example:
+
+	dialogue.createWizard([{
+		"title" : "Pane 1",
+		"buttons" : {"next" : true}
 	},{
-		"name" : "Menu Item 2",
-		"MDO" : MDO,
-		"default" : true
+		"title" : "Pane 2",
+		"buttons" : {"next" : true,"prev" : true}
+	},{
+		"title" : "Pane 3",
+		"buttons" : {"prev" : true,"close" : true}
 	}]);
 
-The default parameter above means that the view is created and shows the
-second view when it's made.
+The above example will create a three-pane wizard with buttons for switching between them. Specifying
+the prev and next buttons with a boolean value will cause the buttons to use the standard title and callback,
+you can make your own, and the callback will be executed in the context of the dialogue.
+
+If you're specifying your own callback, you can access the panes using __this.panes__, and the 
+dialogue object with __this.wizard__.
 
 ## MDO ##
 

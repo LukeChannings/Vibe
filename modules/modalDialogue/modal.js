@@ -25,9 +25,6 @@ define(function(){
 		
 		document.body.appendChild(this.overlay);
 		
-		// current dialogue.
-		this.currentDialogue;
-		
 	}
 	
 	/**
@@ -396,7 +393,7 @@ define(function(){
 				
 				MDOArray[i].isPartial = true;
 				
-				if ( MDOArray[i].buttons.next )
+				if ( typeof MDOArray[i].buttons.next == "object" && !( MDOArray[i].buttons.next instanceof Array ) )
 				{
 					MDOArray[i].buttons.next = {
 						"title" : "Next",
@@ -411,7 +408,7 @@ define(function(){
 					}
 				}
 			
-				if ( MDOArray[i].buttons.prev )
+				if ( typeof MDOArray[i].buttons.prev == "object" && !( MDOArray[i].buttons.prev instanceof Array ) )
 				{
 					MDOArray[i].buttons.prev = {
 						"title" : "Previous",
