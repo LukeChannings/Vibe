@@ -12,20 +12,6 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 		// make a global settings object.
 		window.settings = new Settings();
 		
-		var simpleDialogue = document.getElementById("simpleDialogue");
-		
-		addListener(simpleDialogue,'click',function(){
-		
-			var dialogue = new ModalDialogue();
-			
-			dialogue.createDialogue({
-				"title" : "This is a simple dialogue.",
-				"alignment" : "center",
-				"buttons" : {close:true}
-			});
-		
-		});
-		
 		var dialogueWizard = document.getElementById('dialogueWizard');
 		
 		addListener(dialogueWizard,'click',function(){
@@ -33,14 +19,35 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 			var dialogue = new ModalDialogue();
 			
 			dialogue.createWizard([{
-				"title" : "Pane one.",
+				"title" : "Welcome to MusicMe.",
+				"body" : "<p>It looks like this is your first time using MusicMe, before you can get started you'll need to specify the MusicMe server host and port. If your MusicMe is configured for authentication, tick the authentication box and enter your username and password.</p>",
+				"form" : {
+					"name" : "mm_settings",
+					"inputs" : [{
+						"title" : "Host:",
+						"name" : "host"
+					},{
+						"title" : "Port:",
+						"name" : "port"
+					}]
+				},
 				"buttons" : {next:true}
 			},{
-				"title" : "Pane two.",
-				"buttons" : {prev:true,next:true}
-			},{
-				"title" : "Pane three.",
-				"buttons" : {prev:true,close:true}
+				"title" : "Set Up The Interface",
+				"form" : {
+					"name" : "i_settings",
+					"inputs" : [{
+						"title" : "Default Volume",
+						"name" : "volume",
+						"type" : "number",
+						"default" : 100
+					}]
+				},
+				"buttons" : {prev:true,Begin:function(){
+					
+					this.destroy();
+					
+				}}
 			}]);
 		
 		});

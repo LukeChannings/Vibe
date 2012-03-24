@@ -93,6 +93,8 @@ Example:
 		}
 	});
 
+As you can see from the example above, calling __this.destroy__ will close the dialogue.
+
 ### MDO.form ###
 
 The form object has two properties: __name__ and __inputs__, the name property

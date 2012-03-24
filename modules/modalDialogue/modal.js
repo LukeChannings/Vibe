@@ -1,5 +1,16 @@
 define(function(){
 
+	/** Append Stylesheet. **/
+	var stylesheet = document.createElement('link');
+	
+	stylesheet.setAttribute('rel','stylesheet');
+	
+	stylesheet.setAttribute('type','text/css');
+	
+	stylesheet.setAttribute('href','modules/modalDialogue/modal.css');
+	
+	document.head.appendChild(stylesheet);
+
 	/**
 	 * modalDialogue
 	 * @description Creates a dialogue box and overlays it.
@@ -7,17 +18,6 @@ define(function(){
 	 */
 	function ModalDialogue()
 	{
-		/** Append Stylesheet. **/
-		var stylesheet = document.createElement('link');
-		
-		stylesheet.setAttribute('rel','stylesheet');
-		
-		stylesheet.setAttribute('type','text/css');
-		
-		stylesheet.setAttribute('href','modules/modalDialogue/modal.css');
-		
-		document.head.appendChild(stylesheet);
-		
 		/** Append overlay element. **/
 		this.overlay = document.createElement('div');
 		
@@ -373,66 +373,85 @@ define(function(){
 	
 	}
 	
+	/**
+	 * createWizard
+	 * @description Creates a dialogue that allows switching between panes. (Next/Prev)
+	 * @param MDOArray (Array) - An array of MDOs, each MDO is a pane of its own.
+	 */
 	ModalDialogue.prototype.createWizard = function(MDOArray){
-	
-		// store the MDOs.
-		var mdos = MDOArray;
 	
 		if ( MDOArray instanceof Array )
 		{
+			// array to store the dialogue panes in.
+			var panes = this.panes = [];
 			
-			var dialogues = this.dialogues = [];
-			
+			// the parent dialogue element.
 			var wizard = this.wizard = document.createElement('div');
 			
+			// make the wizard the ModalDialogue.
 			wizard.setAttribute('id','ModalDialogue');
 			
+			// loop through the MDOs.
 			for ( var i = 0; i < MDOArray.length; i++ )
 			{
+				// inject a custom id for the MDO.
 				MDOArray[i].customId = "WizardDialogue" + (i + 1);
 				
+				// specify that the MDO is a partial view.
 				MDOArray[i].isPartial = true;
 				
-				if ( typeof MDOArray[i].buttons.next == "object" && !( MDOArray[i].buttons.next instanceof Array ) )
+				// check for a next button.
+				if ( typeof MDOArray[i].buttons.next == "boolean" )
 				{
+					// add template specification.
 					MDOArray[i].buttons.next = {
 						"title" : "Next",
 						"callback" : function(e,i){
 							
+							// remove the current pane.
 							removeNode(this.wizard.children[0]);
 							
-							this.wizard.appendChild(this.dialogues[i]);
+							// add the next pane.
+							this.wizard.appendChild(this.panes[i]);
 							
 						},
-						"callbackContext" : this
+						"callbackContext" : this // cannot be used externally.
 					}
 				}
 			
-				if ( typeof MDOArray[i].buttons.prev == "object" && !( MDOArray[i].buttons.prev instanceof Array ) )
+				// check for a previous button.
+				if ( typeof MDOArray[i].buttons.prev == "boolean" )
 				{
+					// add template specification.
 					MDOArray[i].buttons.prev = {
 						"title" : "Previous",
 						"callback" : function(e,i){
 						
+							// remove the current pane.
 							removeNode(this.wizard.children[0]);
 							
-							this.wizard.appendChild(this.dialogues[i - 2]);
+							// add the previous pane.
+							this.wizard.appendChild(this.panes[i - 2]);
 						
 						},
-						"callbackContext" : this
+						"callbackContext" : this // cannot be used externally.
 					}
 				}
 				
+				// create the dialogue.
 				var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
 				
-				dialogues.push(dialogue);
+				// add it to the dialogue to the panes.
+				panes.push(dialogue);
 			}
 			
 			// put the first dialogue in the wizard.
-			wizard.appendChild(dialogues[0]);
+			wizard.appendChild(panes[0]);
 			
+			// append the wizard to the overlay.
 			this.overlay.appendChild(wizard);
 			
+			// unhide the overlay.
 			this.overlay.setAttribute('class','visible');
 			
 		}
