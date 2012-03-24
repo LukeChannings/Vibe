@@ -18,13 +18,23 @@ define(function(){
 	 */
 	function ModalDialogue()
 	{
-		/** Append overlay element. **/
-		this.overlay = document.createElement('div');
-		
-		this.overlay.setAttribute('id','ModalDialogueOverlay');
-		
-		document.body.appendChild(this.overlay);
-		
+		// check for an existing modal dialogue.
+		if ( ! document.getElementById('ModalDialogueOverlay') )
+		{
+			// create the overlay.
+			this.overlay = document.createElement('div');
+			
+			// give it the id.
+			this.overlay.setAttribute('id','ModalDialogueOverlay');
+			
+			// append it to the body.
+			document.body.appendChild(this.overlay);
+		}
+		else
+		{
+			// if there is already an overlay then use that.
+			this.overlay = document.getElementById('ModalDialogueOverlay');
+		}
 	}
 	
 	/**
