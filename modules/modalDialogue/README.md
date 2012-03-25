@@ -52,6 +52,26 @@ you can make your own, and the callback will be executed in the context of the d
 If you're specifying your own callback, you can access the panes using __this.panes__, and the 
 dialogue object with __this.wizard__.
 
+## ModalDialogue.createDialogueWithSidebar ##
+
+createDialogueWithSidebar will create a complex view-based dialogue that provides a navigation sidebar and a 
+main view area. The navigation area allows you to switch between views. Each view is defined as a standard MDO,
+with the addition of a __navTitle__ member, which sets the title in the navigation. (If unspecified, the navigation 
+title defaults to the view title.)
+
+The dialogue object is passed a title, which is used in the sidebar.
+
+Buttons are not specified on a per-view basis, instead buttons are specified within the dialogue definition, and 
+the standard close button is available as a template. Views are specified in the __views__ member, which is an array.
+
+Example:
+
+	dialogue.createDialogueWithSidebar({
+		"title" : "Sidebar Title.",
+		"views" : [MDO,MDO,MDO,etc],
+		"buttons" : {close:true}
+	});
+
 ## MDO ##
 
 The Modal Dialogue Object is used for defining a modal dialogue or modal view.
@@ -71,7 +91,7 @@ Example:
 
 	h2.innerText = "This is a subheader.";
 
-	dialogue.createModalDialogue({
+	dialogue.createDialogue({
 		"title" : "Hello World",
 		"body" : [h2,"&lt;p&gt;This is a paragraph&lt;/p&gt;","&lt;img src='image.jpg' alt /&gt;",]
 	});
@@ -83,7 +103,7 @@ to the dialogue. There are two properties for buttons: __Name__ and __Callback__
 
 Example:
 
-	dialogue.createModalDialogue({
+	dialogue.createDialogue({
 		"This is a button" : function callback(){
 		
 			// this is a callback.
@@ -114,6 +134,27 @@ and the input element into the label.
 
 - __options__ - When the type is "select", options is accepted as an array of options.
 
+Example:
+
+	dialogue.createDialogue({
+		"title" : "Example",
+		"body" : "Here's a form:",
+		"form" : {
+			"name" : "myForm",
+			"inputs" : [{
+				"title" : "Type text here: ",
+				"name" : "textField"
+			},{
+				"title" : "Type a number here:",
+				"name" : "numberField",
+				"type" : "number"
+			}]
+		}
+	})
+
+The above example will create a simple form with two inputs. To access the values of these
+forms, use __document.forms["myForm"]["textField"]__ and __document.forms["myForm"]["numberField"]__.
+
 ### MDO.class ###
 
 Add custom classes to the dialogue element. Accepts a single class or an array
@@ -121,7 +162,7 @@ of classes.
 
 Example:
 
-	dialogue.createModalDialogue({
+	dialogue.createDialogue({
 		"title" : "Hello!",
 		"body" : "Hello world.",
 		"class" : ["someClass","someOtherClass"]	

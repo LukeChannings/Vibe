@@ -404,6 +404,10 @@ define(function(){
 		return false;
 	}
 	
+	/**
+	 * destroy
+	 * @description Removes the overlay, or, if closeKeepsOverlay is specified in the MDO, just the dialogue.
+	 */
 	createDialogueElement.prototype.destroy = function()
 	{
 		
@@ -532,7 +536,196 @@ define(function(){
 	
 	}
 	
-	ModalDialogue.prototype.createDialogueWithNavigation = function(MDO){}
+	/**
+	 * createDialogueWithSidebar
+	 * @description Creates a dialogue with a sidebar and views.
+	 * @param dialogueDefinition (object) - Defines the dialogue. (See documentation.)
+	 */
+	ModalDialogue.prototype.createDialogueWithSidebar = function(dialogueDefinition){
+	
+		var self = this;
+	
+		// check for the dialogue definition.
+		if ( dialogueDefinition )
+		{
+			// create the dialogue.
+			var dialogue = document.createElement('div');
+			dialogue.setAttribute('id','ModalDialogue');
+			dialogue.setAttribute('class','sidebar');
+			
+			// create the navigation sidebar.
+			var nav = document.createElement('div');
+			nav.setAttribute('class','navigation');
+			
+			// create the navigation items container.
+			var navItems = document.createElement('ol');
+			
+			// create the view container.
+			var viewContainer = document.createElement('div');
+			viewContainer.setAttribute('class','views');
+			
+			// create an array to contain view elements.
+			var views = this.views = [];
+			
+			// set the current view index.
+			var currentViewIndex = this.currentViewIndex = 0;
+			
+			// append the nav and view container to the dialogue.
+			dialogue.appendChild(nav);
+			dialogue.appendChild(viewContainer);
+			
+			// check for a title.
+			if ( dialogueDefinition.title )
+			{
+				// create the title and append it to nav..
+				var title = document.createElement('h1');
+				title.innerHTML = dialogueDefinition.title;
+				nav.appendChild(title);
+			}
+			
+			// check for views.
+			if ( dialogueDefinition.views )
+			{
+			
+				// implement view switcher.
+				self.switchView = function(e){
+				
+					var t = e.target || e.srcElement;
+				
+					// make sure we're not already on this view.
+					if ( ! ( currentViewIndex == t.getAttribute('data-viewIndex') ) )
+					{
+						// destroy the current view.
+						removeNode(views[currentViewIndex]);
+						
+						// append the specified view.
+						viewContainer.appendChild(views[parseInt(t.getAttribute('data-viewIndex'))]);
+						
+						navItems.children[currentViewIndex].removeAttribute('class');
+						
+						// set currentView.
+						currentViewIndex = parseInt(t.getAttribute('data-viewIndex'));
+						
+						navItems.children[currentViewIndex].setAttribute('class','active');
+						
+					}
+				
+				}
+			
+			
+				// loop views.
+				for ( var i = 0; i < dialogueDefinition.views.length; i++ )
+				{
+					// add the ModalView id.
+					dialogueDefinition.views[i].customId = "ModalView" + (i + 1);
+					
+					// add the view class.
+					dialogueDefinition.views[i].class = "view";
+					
+					// check for button definitions.
+					if ( dialogueDefinition.views[i].buttons )
+					{
+						// remove buttons from the MDO. (withSidebar does not allow per-view buttons.)
+						delete dialogueDefinition.views[i].buttons;
+					}
+					
+					// create the view.
+					var view = createDialogueElement(dialogueDefinition.views[i],this.overlay);
+					
+					// set view index.
+					view.setAttribute('data-viewIndex',i);
+					
+					// push the view to the views array.
+					views.push(view);
+					
+					// check for a navigation title.
+					var navItem = document.createElement('li');
+						
+					navItem.innerHTML = dialogueDefinition.views[i].navTitle || dialogueDefinition.views[i].title ;
+						
+					navItem.setAttribute('data-viewIndex',i);
+						
+					addListener(navItem,'click',function(e){
+							
+						self.switchView.call(self,e);
+							
+					});
+						
+					if ( i == 0 ) navItem.setAttribute('class','active');
+						
+					navItems.appendChild(navItem);
+					
+				}
+				
+				viewContainer.appendChild(views[0]);
+			}
+			
+			// check for buttons.
+			if ( dialogueDefinition.buttons )
+			{
+			
+				// method to close the dialogue.
+				self.destroy = function()
+				{
+					
+					removeNode(this.overlay);
+				}
+				
+				var buttonContainer = document.createElement('div');
+			
+				buttonContainer.setAttribute('class','buttons');
+			
+				for ( var i in dialogueDefinition.buttons )
+				{
+					
+					var button = document.createElement('button');
+				
+					if ( i == "close" )
+					{
+						button.innerHTML = "Close";
+						
+						addListener(button,'click',function(){
+						
+							self.destroy();
+						
+						});
+						
+					}
+					else
+					{
+						button.innerHTML = i;
+						
+						if ( typeof dialogueDefinition.buttons[i] == "function" )
+						{
+							addListener(button,'click',function(e){
+								
+								dialogueDefinition.buttons[i].call(self,e);
+							
+							});
+						}
+					}
+					
+					buttonContainer.appendChild(button);
+					
+				}
+				
+				viewContainer.appendChild(buttonContainer);
+			}
+			
+			// append the dialogue to the overlay.
+			this.overlay.appendChild(dialogue);
+			this.overlay.setAttribute('class','visible');
+			
+			// append the navItems.
+			nav.appendChild(navItems);
+			
+			// return the dialogue.
+			return dialogue;
+		}
+		
+		// if there is no definition, return false.
+		else return false;
+	}
 	
 	// export the module.
 	return ModalDialogue;

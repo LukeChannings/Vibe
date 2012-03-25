@@ -98,3 +98,89 @@
 }
 
 /* @end */
+
+/* @group ModalDialogueWithSidebar */
+
+#ModalDialogue.sidebar{
+	padding: 0;
+	background: #fff;
+	width: 70%;
+}
+
+#ModalDialogue.sidebar *{margin: 0}
+
+#ModalDialogue.sidebar > div.navigation{
+	float: left;
+	background: #DBE0EC;
+	height: 100%;
+	width: 30%;
+}
+
+#ModalDialogue.sidebar > div.navigation > h1{
+	color: #333;
+	font-size: 2.5em;
+	line-height: 1em;
+	padding: 0.4em;
+}
+
+#ModalDialogue.sidebar > div.navigation > ol{
+	list-style: none;
+}
+
+#ModalDialogue.sidebar > div.navigation > ol > li{
+	display: block;
+	font-size: 1.5em;
+	padding: 0.5em 1em;
+	margin: 0.5em 0;
+	cursor: pointer;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+
+#ModalDialogue.sidebar > div.navigation > ol > li.active{
+	background: rgba(142, 181, 228, 0.8);
+	color: #255B9C;
+	border-top: 1px solid #7895B8;
+	border-bottom: 1px solid #7895B8;
+	cursor: default;
+}
+
+#ModalDialogue.sidebar > div.navigation > ol > li.active > a{
+	color: #31313b;
+}
+
+#ModalDialogue.sidebar > div.views{
+	float: left;
+	height: 100%;
+	width: 69%;
+	background: #fff;
+	box-shadow: -8px 0em 15px rgba(0,0,0,0.1);
+	border-left: 1px solid #aaa;
+	position: relative;
+}
+
+#ModalDialogue.sidebar > div.views > .view{padding: 1em}
+
+#ModalDialogue.sidebar > div.views > .view > h1{
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 0.5em;
+}
+
+#ModalDialogue.sidebar > div.views > .view > p{
+	font-size: 1.5em;
+	color: #333;
+}
+
+#ModalDialogue.sidebar > div.views > div.buttons{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 1em 0em;
+}
+
+#ModalDialogue.sidebar > div.views > .view > form > *{
+	margin: 1em 0;
+	padding-right: 1em;
+}
+
+/* @end */
