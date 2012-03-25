@@ -28,7 +28,7 @@ define(["require"],function(require){
 	 * @description Creates a dialogue box and overlays it.
 	 * @param MDO (object) - Modal Dialogue Object, used to define the dialogue.
 	 */
-	function ModalDialogue()
+	function ModalDialogue(callback)
 	{
 		// check for an existing modal dialogue.
 		if ( ! document.getElementById('ModalDialogueOverlay') )
@@ -47,6 +47,9 @@ define(["require"],function(require){
 			// if there is already an overlay then use that.
 			this.overlay = document.getElementById('ModalDialogueOverlay');
 		}
+		
+		if ( callback && typeof callback == "function" ) callback(this);
+		
 	}
 	
 	/**

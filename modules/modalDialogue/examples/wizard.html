@@ -9,7 +9,9 @@
 			
 				domReady(function(){
 				
-					require(['../modal.js'],function(ModalDialogue){
+					require(['../modal.js','../../util'],function(ModalDialogue,Util){
+					
+						this.mm = Util
 					
 						var modal = new ModalDialogue();
 						

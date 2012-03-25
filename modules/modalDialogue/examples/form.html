@@ -9,8 +9,10 @@
 			
 				domReady(function(){
 				
-					require(['../modal'],function(ModalDialogue){
+					require(['../modal','../../util'],function(ModalDialogue,Util){
 					
+						window.mm = Util;
+						
 						var dialogue = new ModalDialogue();
 						
 						dialogue.createDialogue({
@@ -55,6 +57,7 @@
 														
 							}}
 						});
+					
 					});
 				
 				});
