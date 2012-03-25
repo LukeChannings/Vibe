@@ -110,7 +110,9 @@ and the input element into the label.
 
 - __name__ - The input name.
 
-- __default__ - The default input value.
+- __placeholder__ - The placeholder value. Disappears when clicked, used as a default.
+
+- __options__ - When the type is "select", options is accepted as an array of options.
 
 ### MDO.class ###
 
