@@ -42,35 +42,28 @@ define(["require","../../foundation"],function(require){
 	 * @description Returns true if the MDO meets the minimum requirements.
 	 * @param MDO (object) - The MDO to test.
 	 */
-	var isValidMDO = ModalDialogue.prototype.isValidMDO = function(MDO)
+	function isValidMDO(MDO)
 	{
-		// MDO list compatibility.
-		if ( ! (MDO instanceof Array ) ) MDO = [MDO];
-		
-		// loop through MDOs.
-		for ( var i = 0; i < MDO.length; i++ )
+		// make sure the MDO is actually an object.
+		if ( typeof MDO == "object" && !( MDO instanceof Array) )
 		{
-			// make sure the MDO is actually an object.
-			if ( typeof MDO[i] == "object" && !( MDO[i] instanceof Array) )
+			// check for a title and body.
+			if ( ! MDO.title || ! MDO.body ) return false;
+			
+			// check if the MDO is part of a wizard.
+			if ( MDO.isWizardDialogue )
 			{
-				// check for a title and body.
-				if ( ! MDO[i].title || ! MDO[i].body ) return false;
-				
-				// check if the MDO is part of a wizard.
-				if ( MDO[i].isWizardDialogue )
+				// check for buttons.
+				if ( ! MDO.buttons ) return false;
+				else
 				{
-					// check for buttons.
-					if ( ! MDO[i].buttons ) return false;
-					else
-					{
-						// if there is no previous button, next button or close button then the user cannot escape.
-						if ( ! MDO[i].buttons.next && ! MDO[i].buttons.prev && ! MDO[i].buttons.close ) return false;
-						
-					}
+					// if there is no previous button, next button or close button then the user cannot escape.
+					if ( ! MDO.buttons.next && ! MDO.buttons.prev && ! MDO.buttons.close ) return false;
+					
 				}
-				
-				return true;
 			}
+			
+			return true;
 		}
 	
 	}
@@ -343,7 +336,7 @@ define(["require","../../foundation"],function(require){
 						if ( typeof MDO.buttons[i].callback == "function" )
 						{
 						
-							if ( MDO.isPartial )
+							if ( MDO.isWizardDialogue )
 							{
 								var index = parseInt(MDO.customId.match(/\d/)[0]);
 								
@@ -496,110 +489,89 @@ define(["require","../../foundation"],function(require){
 	 */
 	ModalDialogue.prototype.createWizard = function(MDOArray){
 		
-		// check the DMO is valid.
-		if ( isValidMDO(MDOArray) )
+		// array to store the dialogue panes in.
+		var panes = [];
+			
+		// the parent dialogue element.
+		var wizard = document.createElement('div');
+			
+		// make the wizard the ModalDialogue.
+		wizard.setAttribute('id','ModalDialogue');
+		
+		// loop through the MDOs.
+		for ( var i = 0; i < MDOArray.length; i++ )
 		{
-			// array to store the dialogue panes in.
-			var panes = this.panes = [];
+			// inject a custom id for the MDO.
+			MDOArray[i].customId = "WizardDialogue" + (i + 1);
+					
+			// specify that the MDO is a wizard dialogue view.
+			MDOArray[i].isWizardDialogue = true;
 			
-			// the parent dialogue element.
-			var wizard = this.wizard = document.createElement('div');
-			
-			// make the wizard the ModalDialogue.
-			wizard.setAttribute('id','ModalDialogue');
-			
-			// loop through the MDOs.
-			for ( var i = 0; i < MDOArray.length; i++ )
+			// check that the MDO is valid.
+			if ( ! isValidMDO(MDOArray[i]) )
 			{
-				// inject a custom id for the MDO.
-				MDOArray[i].customId = "WizardDialogue" + (i + 1);
-					
-				// specify that the MDO is a partial view.
-				MDOArray[i].isPartial = true;
-					
-				// check for a next button.
-				if ( typeof MDOArray[i].buttons.next == "boolean" )
-				{
-					// add template specification.
-					MDOArray[i].buttons.next = {
-						"title" : "Next",
-						"callback" : function(e,i){
-							
-							// remove the current pane.
-							removeNode(this.wizard.children[0]);
-							
-							// add the next pane.
-							this.wizard.appendChild(this.panes[i]);
-								
-						},
-						"callbackContext" : this // cannot be used externally.
-					}
-				}
-						
-				// check for a previous button.
-				if ( typeof MDOArray[i].buttons.prev == "boolean" )
-				{
-					// add template specification.
-					MDOArray[i].buttons.prev = {
-						"title" : "Previous",
-						"callback" : function(e,i){
-						
-							// remove the current pane.
-							removeNode(this.wizard.children[0]);
-							
-							// add the previous pane.
-							this.wizard.appendChild(this.panes[i - 2]);
-						
-						},
-						"callbackContext" : this // cannot be used externally.
-					}
+				// log any error.
+				console.error("MDO " + (i + 1) + " is invalid.");
 				
-				}
-					
-				try{
-				
-					// create the dialogue.
-					var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
-					
-				}
-				catch(ex)
-				{
-					console.error(ex.name + " - " + ex.message);
-					return false;
-				}
-				
-				if ( dialogue )
-				{
-					// add it to the dialogue to the panes.
-					panes.push(dialogue);
-				}
-				else
-				{
-					console.error("Cannot create wizard due to invalid MDO.");
-					return;
-				}
-				
+				// break out.
+				return;
+			
 			}
 			
-			// put the first dialogue in the wizard.
-			wizard.appendChild(panes[0]);
+			// check for a next button.
+			if ( typeof MDOArray[i].buttons.next == "boolean" )
+			{
+				// add template specification.
+				MDOArray[i].buttons.next = {
+					"title" : "Next",
+					"callback" : function(e,i){
+						
+						// remove the current pane.
+						removeNode(wizard.children[0]);
+						
+						// add the next pane.
+						wizard.appendChild(panes[i]);
+							
+					},
+					"callbackContext" : this // cannot be used externally.
+				}
+			}
+					
+			// check for a previous button.
+			if ( typeof MDOArray[i].buttons.prev == "boolean" )
+			{
+				// add template specification.
+				MDOArray[i].buttons.prev = {
+					"title" : "Previous",
+					"callback" : function(e,i){
+					
+						// remove the current pane.
+						removeNode(wizard.children[0]);
+						
+						// add the previous pane.
+						wizard.appendChild(panes[i - 2]);
+					
+					},
+					"callbackContext" : this // cannot be used externally.
+				}
 			
-			// append the wizard to the overlay.
-			this.overlay.appendChild(wizard);
-			
-			// unhide the overlay.
-			this.overlay.setAttribute('class','visible');
-			
+			}
+				
+			// create the dialogue.
+			var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
+			panes.push(dialogue);
+				
 		}
-		else
-		{
 			
-			console.log(MDOArray.length);
+		// put the first dialogue in the wizard.
+		wizard.appendChild(panes[0]);
+			
+		// append the wizard to the overlay.
+		this.overlay.appendChild(wizard);
+			
+		// unhide the overlay.
+		this.overlay.setAttribute('class','visible');
 		
-			console.error("NO_MDO - Cannot detect an array of MDOs.");
-			return false;
-		}
-	
 	}
 	
 	/**
