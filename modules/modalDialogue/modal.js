@@ -1,16 +1,16 @@
-define(function(){
+define(["require","../../foundation"],function(require){
 
-	/** Append Stylesheet. **/
+	// include stylesheet resource.
 	var stylesheet = document.createElement('link');
-	
-	stylesheet.setAttribute('rel','stylesheet');
-	
-	stylesheet.setAttribute('type','text/css');
-	
-	stylesheet.setAttribute('href','modules/modalDialogue/modal.css');
-	
-	document.head.appendChild(stylesheet);
 
+	stylesheet.setAttribute('type','text/css');
+
+	stylesheet.setAttribute('rel','stylesheet');
+
+	stylesheet.setAttribute('href',require.toUrl("./modal.css"));
+
+	document.head.appendChild(stylesheet);
+	
 	/**
 	 * modalDialogue
 	 * @description Creates a dialogue box and overlays it.
@@ -37,6 +37,44 @@ define(function(){
 		}
 	}
 	
+	/** 
+	 * isValidMDO
+	 * @description Returns true if the MDO meets the minimum requirements.
+	 * @param MDO (object) - The MDO to test.
+	 */
+	var isValidMDO = ModalDialogue.prototype.isValidMDO = function(MDO)
+	{
+		// MDO list compatibility.
+		if ( ! (MDO instanceof Array ) ) MDO = [MDO];
+		
+		// loop through MDOs.
+		for ( var i = 0; i < MDO.length; i++ )
+		{
+			// make sure the MDO is actually an object.
+			if ( typeof MDO[i] == "object" && !( MDO[i] instanceof Array) )
+			{
+				// check for a title and body.
+				if ( ! MDO[i].title || ! MDO[i].body ) return false;
+				
+				// check if the MDO is part of a wizard.
+				if ( MDO[i].isWizardDialogue )
+				{
+					// check for buttons.
+					if ( ! MDO[i].buttons ) return false;
+					else
+					{
+						// if there is no previous button, next button or close button then the user cannot escape.
+						if ( ! MDO[i].buttons.next && ! MDO[i].buttons.prev && ! MDO[i].buttons.close ) return false;
+						
+					}
+				}
+				
+				return true;
+			}
+		}
+	
+	}
+	
 	/**
 	 * createDialogueElement
 	 * @description Creates a dialogue element from an MDO.
@@ -48,15 +86,12 @@ define(function(){
 		// usual lark.
 		var self = this;
 	
-		// check for an overlay element.
-		if ( overlay ) this.overlay = overlay;
-	
 		// check for a dialogue specification.
-		if ( MDO )
+		if ( isValidMDO(MDO) )
 		{
 		
-			// set the definition.
-			this.definition = MDO;
+			// check for an overlay element.
+			if ( overlay ) this.overlay = overlay;
 		
 			// create the dialogue element.
 			var dialogue = this.dialogue = document.createElement("div");
@@ -81,45 +116,40 @@ define(function(){
 			}
 		
 			/* DIALOGUE HEADER */
-			if ( MDO.title )
-			{
-				// create header element.
-				var title = document.createElement('h1');
+			var title = document.createElement('h1');
 				
-				// put the MDO title into the header.
-				title.innerHTML = MDO.title;
+			// put the MDO title into the header.
+			title.innerHTML = MDO.title;
 				
-				// append the header to the dialogue.
-				dialogue.appendChild(title);
-			}
+			// append the header to the dialogue.
+			dialogue.appendChild(title);
 		
 			/* DIALOGUE BODY */
-			if ( MDO.body )
+			if ( !(MDO.body instanceof Array) )
 			{
-				// check if the element is not an array.
-				if ( !(MDO.body instanceof Array) )
-				{
-					// if not, just put the element into an array to keep compatibility.
-					MDO.body = [MDO.body];
-				}
+				// if not, just put the element into an array to keep compatibility.
+				MDO.body = [MDO.body];
+			}
 			
-				// loop through body elements.
-				for ( var i = 0; i < MDO.body.length; i++ )
+			// loop through body elements.
+			for ( var i = 0; i < MDO.body.length; i++ )
+			{
+					
+				// check if the item is an HTMLElement.
+				if ( MDO.body[i] instanceof HTMLElement )
 				{
+					// if it is, append the element to the dialogue.
+					dialogue.appendChild(MDO.body[i]);
+				}
 					
-					// check if the item is an HTMLElement.
-					if ( MDO.body[i] instanceof HTMLElement )
-					{
-						// if it is, append the element to the dialogue.
-						dialogue.appendChild(MDO.body[i]);
-					}
-					
-					// otherwise check if the element is a string.
-					else if ( typeof MDO.body[i] == "string" )
-					{
-						// if the element is a string then add it directly.
-						dialogue.innerHTML += MDO.body[i];
-					}
+				// otherwise check if the element is a string.
+				else if ( typeof MDO.body[i] == "string" )
+				{
+					// if the text does not have tags then wrap it in a <p>.
+					if ( !( /\<.+\>.*\<.+\>/.test(MDO.body[i]) ) ) MDO.body[i] = "<p>" + MDO.body[i] + "</p>";
+				
+					// if the element is a string then add it directly.
+					dialogue.innerHTML += MDO.body[i];
 				}
 			}
 			
@@ -399,9 +429,16 @@ define(function(){
 			// return the constructed dialogue.
 			return dialogue;
 		}
+		else
+		{
+			throw {
+				"message" : "The specified MDO is invalid.",
+				"name" : "MDO_FAULT"
+			};
+		}
 		
 		// if there is no dialogue specification return nothing.
-		return false;
+		return null;
 	}
 	
 	/**
@@ -410,18 +447,11 @@ define(function(){
 	 */
 	createDialogueElement.prototype.destroy = function()
 	{
+		// remove the dialogue.
+		removeNode(this.dialogue);
 		
-		// check for the absence of closeKeepsOverlay setting.
-		if ( !(this.definition.closeKeepsOverlay) && this.overlay )
-		{
-			// remove the overlay.
-			removeNode(this.overlay);
-		}
-		else
-		{
-			// remove the dialogue.
-			removeNode(this.dialogue);
-		}
+		// hide the overlay.
+		this.overlay.removeAttribute('class');
 	}
 	
 	/**
@@ -431,21 +461,31 @@ define(function(){
 	 */
 	ModalDialogue.prototype.createDialogue = function(MDO)
 	{
-	
 		// check that there is actually an MDO.
-		if ( MDO )
+		if ( isValidMDO(MDO) )
 		{
 		
 			var dialogue = new createDialogueElement(MDO,this.overlay);
-		
+			
+			// check for existing dialogues.
+			if ( this.overlay.children.length >= 1 )
+			{
+				// remove them.
+				removeNode(this.overlay.children[0]);
+			}
+			
+			// append the new dialogue.
 			this.overlay.appendChild(dialogue);
-		
+			
+			// show the dialogue.
 			this.overlay.setAttribute('class','visible');
-		
+			
 		}
 		
 		// if there's no MDO, log an error.
 		else console.error('ModalDialogue::createDialogue - No MDO!');
+	
+	 return this;
 	
 	}
 	
@@ -455,8 +495,9 @@ define(function(){
 	 * @param MDOArray (Array) - An array of MDOs, each MDO is a pane of its own.
 	 */
 	ModalDialogue.prototype.createWizard = function(MDOArray){
-	
-		if ( MDOArray instanceof Array )
+		
+		// check the DMO is valid.
+		if ( isValidMDO(MDOArray) )
 		{
 			// array to store the dialogue panes in.
 			var panes = this.panes = [];
@@ -472,10 +513,10 @@ define(function(){
 			{
 				// inject a custom id for the MDO.
 				MDOArray[i].customId = "WizardDialogue" + (i + 1);
-				
+					
 				// specify that the MDO is a partial view.
 				MDOArray[i].isPartial = true;
-				
+					
 				// check for a next button.
 				if ( typeof MDOArray[i].buttons.next == "boolean" )
 				{
@@ -489,12 +530,12 @@ define(function(){
 							
 							// add the next pane.
 							this.wizard.appendChild(this.panes[i]);
-							
+								
 						},
 						"callbackContext" : this // cannot be used externally.
 					}
 				}
-			
+						
 				// check for a previous button.
 				if ( typeof MDOArray[i].buttons.prev == "boolean" )
 				{
@@ -512,13 +553,32 @@ define(function(){
 						},
 						"callbackContext" : this // cannot be used externally.
 					}
+				
+				}
+					
+				try{
+				
+					// create the dialogue.
+					var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
+					
+				}
+				catch(ex)
+				{
+					console.error(ex.name + " - " + ex.message);
+					return false;
 				}
 				
-				// create the dialogue.
-				var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
+				if ( dialogue )
+				{
+					// add it to the dialogue to the panes.
+					panes.push(dialogue);
+				}
+				else
+				{
+					console.error("Cannot create wizard due to invalid MDO.");
+					return;
+				}
 				
-				// add it to the dialogue to the panes.
-				panes.push(dialogue);
 			}
 			
 			// put the first dialogue in the wizard.
@@ -531,8 +591,14 @@ define(function(){
 			this.overlay.setAttribute('class','visible');
 			
 		}
+		else
+		{
+			
+			console.log(MDOArray.length);
 		
-		else return false;
+			console.error("NO_MDO - Cannot detect an array of MDOs.");
+			return false;
+		}
 	
 	}
 	
@@ -588,7 +654,7 @@ define(function(){
 			{
 			
 				// implement view switcher.
-				self.switchView = function(e){
+				function switchView(e){
 				
 					var t = e.target || e.srcElement;
 				
@@ -616,45 +682,52 @@ define(function(){
 				// loop views.
 				for ( var i = 0; i < dialogueDefinition.views.length; i++ )
 				{
-					// add the ModalView id.
-					dialogueDefinition.views[i].customId = "ModalView" + (i + 1);
-					
-					// add the view class.
-					dialogueDefinition.views[i].class = "view";
-					
-					// check for button definitions.
-					if ( dialogueDefinition.views[i].buttons )
+					// check the view is valid.
+					if ( isValidMDO(dialogueDefinition.views[i]) )
 					{
-						// remove buttons from the MDO. (createDialogueWithSidebar does not allow per-view buttons.)
-						delete dialogueDefinition.views[i].buttons;
+						// add the ModalView id.
+						dialogueDefinition.views[i].customId = "ModalView" + (i + 1);
+						
+						// add the view class.
+						dialogueDefinition.views[i].class = "view";
+						
+						// check for button definitions.
+						if ( dialogueDefinition.views[i].buttons )
+						{
+							// remove buttons from the MDO. (createDialogueWithSidebar does not allow per-view buttons.)
+							delete dialogueDefinition.views[i].buttons;
+						}
+						
+						// create the view.
+						var view = createDialogueElement(dialogueDefinition.views[i],this.overlay);
+						
+						// set view index.
+						view.setAttribute('data-viewIndex',i);
+						
+						// push the view to the views array.
+						views.push(view);
+						
+						// check for a navigation title.
+						var navItem = document.createElement('li');
+							
+						navItem.innerHTML = dialogueDefinition.views[i].navTitle || dialogueDefinition.views[i].title ;
+							
+						navItem.setAttribute('data-viewIndex',i);
+							
+						addListener(navItem,'click',function(e){
+								
+							switchView.call(self,e);
+								
+						});
+							
+						if ( i == 0 ) navItem.setAttribute('class','active');
+							
+						navItems.appendChild(navItem);
 					}
-					
-					// create the view.
-					var view = createDialogueElement(dialogueDefinition.views[i],this.overlay);
-					
-					// set view index.
-					view.setAttribute('data-viewIndex',i);
-					
-					// push the view to the views array.
-					views.push(view);
-					
-					// check for a navigation title.
-					var navItem = document.createElement('li');
-						
-					navItem.innerHTML = dialogueDefinition.views[i].navTitle || dialogueDefinition.views[i].title ;
-						
-					navItem.setAttribute('data-viewIndex',i);
-						
-					addListener(navItem,'click',function(e){
-							
-						self.switchView.call(self,e);
-							
-					});
-						
-					if ( i == 0 ) navItem.setAttribute('class','active');
-						
-					navItems.appendChild(navItem);
-					
+					else
+					{
+						console.error("Invalid view. Choked on DMO " + (i + 1));
+					}
 				}
 				
 				viewContainer.appendChild(views[0]);
