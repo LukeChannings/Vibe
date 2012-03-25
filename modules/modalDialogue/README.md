@@ -167,3 +167,11 @@ Example:
 		"body" : "Hello world.",
 		"class" : ["someClass","someOtherClass"]	
 	});
+
+### MDO.alignment ###
+
+Defaults to left, accepts __center__ and __right__. (Changes the text-align property.)
+
+### MDO.errorDialogue ###
+
+Adds an error background image.
