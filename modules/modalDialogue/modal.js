@@ -149,36 +149,98 @@ define(function(){
 						label.innerHTML = MDO.form.inputs[i].title;
 					}
 					
-					// make a new input.
-					var input = document.createElement('input');
-					
-					// check for the form name.
-					if ( MDO.form.inputs[i].name )
+					if ( MDO.form.inputs[i].type && MDO.form.inputs[i].type == "select" )
 					{
-						input.setAttribute("name", MDO.form.inputs[i].name);
+						var input = document.createElement("select");
+						
+						for ( var j = 0; j < MDO.form.inputs[i].options.length; j++ )
+						{
+							var option = document.createElement("option");
+							
+							option.setAttribute('value',MDO.form.inputs[i].options[j]);
+							
+							option.innerHTML = MDO.form.inputs[i].options[j];
+							
+							input.appendChild(option);
+						}
+						
+						if (  MDO.form.inputs[i].placeholder )
+						{
+							input.value =  MDO.form.inputs[i].placeholder;
+						}
+						
 					}
 					else
 					{
-						input.setAttribute("name" + "input" + (i + 1));
+						// make a new input.
+						var input = document.createElement('input');
+						
+						// check for the form name.
+						if ( MDO.form.inputs[i].name )
+						{
+							input.setAttribute("name", MDO.form.inputs[i].name);
+						}
+						else
+						{
+							input.setAttribute("name" + "input" + (i + 1));
+						}
+						
+						// check for a type.
+						if ( MDO.form.inputs[i].type )
+						{
+							input.setAttribute("type",MDO.form.inputs[i].type);
+						}
+						else
+						{
+							// if no type was specified default to "text"
+							input.setAttribute("type","text");
+						}
+						
+						// check for placeholder text.
+						if ( MDO.form.inputs[i].placeholder )
+						{
+							// check for native placeholder support. (The good browsers do this.)
+							if ( "placeholder" in input )
+							{
+								input.setAttribute('placeholder',MDO.form.inputs[i].placeholder);
+							}
+							
+							// implement our own placeholder. (Because IE9 still sucks donkey dick.)
+							else
+							{
+								// set the placeholder.
+								input.value = MDO.form.inputs[i].placeholder;
+							
+								// set the placeholder.
+								input.setAttribute('placeholder',MDO.form.inputs[i].placeholder);
+							
+								// listen for the input to be clicked.
+								addListener(input,'focus',function(e){
+									
+									var target = e.target || e.srcElement;
+									
+									if ( target.getAttribute('placeholder') == target.value )
+									{
+										target.value = "";
+									}
+									
+								});
+								
+								// listen for the blur event.
+								addListener(input,'blur',function(e){
+								
+									var target = e.target || e.srcElement;
+								
+									if ( target.value == "" )
+									{
+										target.value = target.getAttribute('placeholder');
+									}
+								
+								});
+							}
+						}
 					}
 					
-					// check for a type.
-					if ( MDO.form.inputs[i].type )
-					{
-						input.setAttribute("type",MDO.form.inputs[i].type);
-					}
-					else
-					{
-						// if no type was specified default to "text"
-						input.setAttribute("type","text");
-					}
-					
-					// check for a default value.
-					if ( MDO.form.inputs[i].default )
-					{
-						// set the default value.
-						input.value = MDO.form.inputs[i].default;
-					}
 					
 					// if the MDO specified an input title..
 					if ( label )
