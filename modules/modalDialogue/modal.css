@@ -63,6 +63,8 @@ body.svg #ModalDialogue.error{background-image: url('error.svg')}
 
 #ModalDialogue.right{text-align: right}
 
+#ModalDialogue.justify{text-align: justify}
+
 #ModalDialogue *{margin: 1em 0}
 
 #ModalDialogue h1{

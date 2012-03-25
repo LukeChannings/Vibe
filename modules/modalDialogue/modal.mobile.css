@@ -59,3 +59,8 @@
 #ModalDialogueOverlay #ModalDialogue.sidebar .views .view h1{
 	margin-bottom: 0.5em;
 }
+
+#ModalDialogueOverlay #ModalDialogue form label input{
+	margin: 0em;
+	margin-left: 1em
+}

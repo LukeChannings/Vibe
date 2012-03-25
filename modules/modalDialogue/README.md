@@ -170,7 +170,7 @@ Example:
 
 ### MDO.alignment ###
 
-Defaults to left, accepts __center__ and __right__. (Changes the text-align property.)
+Defaults to left, accepts __center__, __justify__ and __right__. (Changes the text-align property.)
 
 ### MDO.errorDialogue ###
 

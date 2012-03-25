@@ -114,7 +114,7 @@ define(["require","../../foundation"],function(require){
 			if ( MDO.errorDialogue ) classes.push('error');
 		
 			// check for custom alignment specification.
-			if ( MDO.alignment && /^(center|right)$/.test(MDO.alignment) )
+			if ( MDO.alignment && /^(center|right|justify)$/.test(MDO.alignment) )
 			{
 				// set centre or right alignment.
 				classes.push(MDO.alignment);

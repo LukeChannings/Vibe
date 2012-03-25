@@ -17,6 +17,7 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 		dialogue.createDialogue({
 			"title" : "Welcome to MusicMe",
 			"body" : "Before we can get started some basic information about your MusicMe server is required.",
+			"alignment" : "justify",
 			"form" : {
 				"name" : "getting_started",
 				"inputs" : [{
