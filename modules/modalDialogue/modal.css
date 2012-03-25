@@ -38,6 +38,17 @@
 	position: relative;
 }
 
+body.svg #ModalDialogue.error{background-image: url('error.svg')}
+
+#ModalDialogue.error{
+	background: #fff url('error.png') center no-repeat;
+	background-size: 60%
+}
+
+#ModalDialogue.error > h1{font-size: 3em}
+
+#ModalDialogue.error > p{font-size: 1.5em}
+
 #ModalDialogue.center{text-align: center}
 
 #ModalDialogue.right{text-align: right}
@@ -78,16 +89,16 @@
 	background: -ms-linear-gradient(bottom, #ddd 50%, #eee 79%);
 }
 
-#ModalDialogue form{
-	margin-top: 2em;
-}
+#ModalDialogue form{margin-top: 2em}
 
 #ModalDialogue form > label{
 	display: inline-block;
 	margin: 0;
-	margin-right: 4em;
+	margin-left: 4em;
 	font-size: 1.6em;
 }
+
+#ModalDialogue form > label:first-child{margin-left: 0}
 
 #ModalDialogue form > label > input{
 	margin-left: 1em;
@@ -100,6 +111,16 @@
 /* @end */
 
 /* @group ModalDialogueWithSidebar */
+
+#ModalDialogue.sidebar button, #ModalDialogue.sidebar .navigation *, #ModalDialogue.sidebar .view h1{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
+}
 
 #ModalDialogue.sidebar{
 	padding: 0;
@@ -121,11 +142,10 @@
 	font-size: 2.5em;
 	line-height: 1em;
 	padding: 0.4em;
+	margin-left: 0.2em;
 }
 
-#ModalDialogue.sidebar > div.navigation > ol{
-	list-style: none;
-}
+#ModalDialogue.sidebar > div.navigation > ol{list-style: none}
 
 #ModalDialogue.sidebar > div.navigation > ol > li{
 	display: block;
@@ -145,9 +165,7 @@
 	cursor: default;
 }
 
-#ModalDialogue.sidebar > div.navigation > ol > li.active > a{
-	color: #31313b;
-}
+#ModalDialogue.sidebar > div.navigation > ol > li.active > a{color: #31313b}
 
 #ModalDialogue.sidebar > div.views{
 	float: left;
@@ -162,8 +180,9 @@
 #ModalDialogue.sidebar > div.views > .view{padding: 1em}
 
 #ModalDialogue.sidebar > div.views > .view > h1{
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #d9d9d9;
 	margin-bottom: 0.5em;
+	padding-bottom: 0.2em;
 }
 
 #ModalDialogue.sidebar > div.views > .view > p{

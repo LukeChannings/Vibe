@@ -14,30 +14,25 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 		
 		var dialogue = new ModalDialogue();
 			
-		dialogue.createDialogueWithSidebar({
-			"title" : "Settings",
-			"views" : [{
-				"title" : "Interface Preferences",
-				"body" : "<p>This pane will allow for configuration of the MusicMe Interface.</p>",
-				"form" : {
-					"name" : "interface_settings",
-					"inputs" : [{
-						"title" : "Host: ",
-						"name" : "host",
-						"placeholder" : "localhost"
-					},{
-						"title" : "Port: ",
-						"name" : "port",
-						"type" : "number",
-						"placeholder" : "6242"
-					}]
-				}
-			},{
-				"title" : "Album Art Manager",
-				"body" : "<p>Support for managing Album art will be added at some point.</p>"
-			}],
+		dialogue.createDialogue({
+			"title" : "Failed To Connect.",
+			"body" : "<p>It looks like you did something wrong, because I can't connect!</p>",
+			"alignment" : "center",
+			"errorDialogue" : true,
+			"form" : {
+				"name" : "settings",
+				"inputs" : [{
+					"name" : "host",
+					"title" : "Host"
+				},{
+					"name" : "port",
+					"title" : "Port"
+				}]
+			},
 			"buttons" : {
-				"close" : true
+				"Try Again." : function(){
+					alert("NO! YOU DID IT WRONG!");
+				}
 			}
 		});
 		

@@ -625,7 +625,7 @@ define(function(){
 					// check for button definitions.
 					if ( dialogueDefinition.views[i].buttons )
 					{
-						// remove buttons from the MDO. (withSidebar does not allow per-view buttons.)
+						// remove buttons from the MDO. (createDialogueWithSidebar does not allow per-view buttons.)
 						delete dialogueDefinition.views[i].buttons;
 					}
 					
