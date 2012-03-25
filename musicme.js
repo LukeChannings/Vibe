@@ -2,7 +2,7 @@
  * MusicMe
  * @description Official MusicMe Web App.
  */
-require(['modules/domReady','modules/settings','modules/EventEmitter','modules/modalDialogue/modal'], function (domReady,Settings,EventEmitter,ModalDialogue) {
+require(['modules/domReady','modules/settings','modules/EventEmitter','modules/modalDialogue/modal.min'], function (domReady,Settings,EventEmitter,ModalDialogue) {
 
 	domReady(function(){
 		

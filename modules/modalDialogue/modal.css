@@ -43,7 +43,7 @@
 	box-shadow: 0 0 5em rgba(0,0,0,0.6), 0 0 10em rgba(0,0,0,0.5);
 	overflow: auto;
 	position: relative;
-	font-size: 62.5%;
+	font-size: 10px;
 	font-family: 'Lucida Sans', Helvetica, Sans-serif;
 	color: #333;
 }
@@ -102,13 +102,17 @@ body.svg #ModalDialogue.error{background-image: url('error.svg')}
 #ModalDialogue form{margin-top: 2em}
 
 #ModalDialogue form > label{
-	display: inline-block;
+	display: block;
 	margin: 0;
-	margin-left: 4em;
 	font-size: 1.6em;
 }
 
-#ModalDialogue form > label:first-child{margin-left: 0}
+#ModalDialogue form.inputsSideBySide > label{
+	display: inline-block;
+	margin-right: 4em;
+}
+
+#ModalDialogue form.inputsSideBySide > label:last-child{margin-right: 0}
 
 #ModalDialogue form > label > input{
 	margin-left: 1em;

@@ -650,7 +650,16 @@ define(["require","../../foundation"],function(require){
 				
 				}
 			
-			
+				// check that there are views.
+				if ( dialogueDefinition.views.length == 0 ) 
+				{
+					// if there are not then log an error.
+					console.error("dialogueDefinition has no views. Cannot continue.");
+					
+					// break out.
+					return false;
+				}
+				
 				// loop views.
 				for ( var i = 0; i < dialogueDefinition.views.length; i++ )
 				{
@@ -699,6 +708,9 @@ define(["require","../../foundation"],function(require){
 					else
 					{
 						console.error("Invalid view. Choked on DMO " + (i + 1));
+						
+						return false;
+						
 					}
 				}
 				
