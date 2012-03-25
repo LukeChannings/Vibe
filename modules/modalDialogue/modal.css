@@ -169,6 +169,9 @@ body.svg #ModalDialogue.error{background-image: url('error.svg')}
 	cursor: pointer;
 	border-top: 1px solid transparent;
 	border-bottom: 1px solid transparent;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 #ModalDialogue.sidebar > div.navigation > ol > li.active{

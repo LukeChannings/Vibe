@@ -2,7 +2,7 @@
  * MusicMe
  * @description Official MusicMe Web App.
  */
-require(['modules/domReady','modules/settings','modules/EventEmitter','modules/modalDialogue/modal.min'], function (domReady,Settings,EventEmitter,ModalDialogue) {
+require(['modules/domReady','modules/settings','modules/EventEmitter','modules/modalDialogue/modal'], function (domReady,Settings,EventEmitter,ModalDialogue) {
 
 	domReady(function(){
 		
@@ -13,14 +13,12 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 		window.settings = new Settings();
 		
 		var dialogue = new ModalDialogue();
-			
+		
 		dialogue.createDialogue({
-			"title" : "Failed To Connect.",
-			"body" : "<p>It looks like you did something wrong, because I can't connect!</p>",
-			"alignment" : "center",
-			"errorDialogue" : true,
+			"title" : "Welcome to MusicMe",
+			"body" : "Before we can get started some basic information about your MusicMe server is required.",
 			"form" : {
-				"name" : "settings",
+				"name" : "getting_started",
 				"inputs" : [{
 					"name" : "host",
 					"title" : "Host",
@@ -28,14 +26,15 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 				},{
 					"name" : "port",
 					"title" : "Port",
-					"placeholder" : 6232
+					"placeholder" : 6232,
+					"type" : "number"
 				}]
 			},
-			"buttons" : {
-				"Try Again." : function(){
-					alert("NO! YOU DID IT WRONG!");
-				}
-			}
+			"buttons" : {"Begin" : function(){
+				
+				alert("Doing something, bbk l8r.");
+				
+			}}
 		});
 		
 	});

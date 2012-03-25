@@ -11,6 +11,18 @@ define(["require","../../foundation"],function(require){
 
 	document.head.appendChild(stylesheet);
 	
+	var mobileStylesheet = document.createElement('link');
+	
+	mobileStylesheet.setAttribute('media','screen and (max-device-width: 480px)');
+	
+	mobileStylesheet.setAttribute('rel','stylesheet');
+	
+	mobileStylesheet.setAttribute('type','text/css');
+	
+	mobileStylesheet.setAttribute('href',require.toUrl("./modal.mobile.css"));
+	
+	document.head.appendChild(mobileStylesheet);
+	
 	/**
 	 * modalDialogue
 	 * @description Creates a dialogue box and overlays it.
