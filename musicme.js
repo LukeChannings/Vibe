@@ -23,10 +23,12 @@ require(['modules/domReady','modules/settings','modules/EventEmitter','modules/m
 				"name" : "settings",
 				"inputs" : [{
 					"name" : "host",
-					"title" : "Host"
+					"title" : "Host",
+					"placeholder" : "localhost"
 				},{
 					"name" : "port",
-					"title" : "Port"
+					"title" : "Port",
+					"placeholder" : 6232
 				}]
 			},
 			"buttons" : {
