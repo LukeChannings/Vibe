@@ -1,4 +1,4 @@
-define(["require","../../foundation"],function(require){
+define(["require"],function(require){
 
 	// include stylesheet resource.
 	var stylesheet = document.createElement('link');
@@ -47,6 +47,20 @@ define(["require","../../foundation"],function(require){
 			// if there is already an overlay then use that.
 			this.overlay = document.getElementById('ModalDialogueOverlay');
 		}
+	}
+	
+	/**
+	 * destroy
+	 * @description Externally accessible method for removing the current dialogue.
+	 */
+	ModalDialogue.prototype.destroy = function(){
+	
+		// delete the dialogue.
+		this.overlay.removeChild(this.overlay.children[0]);
+	
+		// hide the overlay.
+		this.overlay.removeAttribute('class');
+	
 	}
 	
 	/** 
@@ -250,7 +264,7 @@ define(["require","../../foundation"],function(require){
 								input.setAttribute('placeholder',MDO.form.inputs[i].placeholder);
 							
 								// listen for the input to be clicked.
-								addListener(input,'focus',function(e){
+								mm.addListener(input,'focus',function(e){
 									
 									var target = e.target || e.srcElement;
 									
@@ -262,7 +276,7 @@ define(["require","../../foundation"],function(require){
 								});
 								
 								// listen for the blur event.
-								addListener(input,'blur',function(e){
+								mm.addListener(input,'blur',function(e){
 								
 									var target = e.target || e.srcElement;
 								
@@ -321,7 +335,7 @@ define(["require","../../foundation"],function(require){
 						if ( typeof MDO.buttons[i] == "function" )
 						{
 							
-							addListener(button,'click',function(){
+							mm.addListener(button,'click',function(){
 							
 								// yes, that means what it says.
 								MDO.buttons[i].call(self);
@@ -332,7 +346,7 @@ define(["require","../../foundation"],function(require){
 						else
 						{
 							// close the dialogue when it's pressed.
-							addListener(button,'click',function(){
+							mm.addListener(button,'click',function(){
 							
 								// yes, that means what it says.
 								self.destroy();
@@ -354,7 +368,7 @@ define(["require","../../foundation"],function(require){
 								
 								if ( i == "next" )
 								{
-									addListener(button,'click',function(e){
+									mm.addListener(button,'click',function(e){
 									
 										MDO.buttons.next.callback.call(MDO.buttons.next.callbackContext,e,index);
 									
@@ -362,7 +376,7 @@ define(["require","../../foundation"],function(require){
 								}
 								if ( i == "prev" ) {
 								
-								addListener(button,'click',function(e){
+								mm.addListener(button,'click',function(e){
 								
 									MDO.buttons.prev.callback.call(MDO.buttons.prev.callbackContext,e,index);
 								
@@ -373,7 +387,7 @@ define(["require","../../foundation"],function(require){
 							}
 							else
 							{
-								addListener(button,'click',MDO.buttons[i].callback);
+								mm.addListener(button,'click',MDO.buttons[i].callback);
 							}
 						}
 					
@@ -386,7 +400,7 @@ define(["require","../../foundation"],function(require){
 						button.innerHTML = i;
 					
 						// if it does then listen for a click.
-						addListener(button,'click',function(){
+						mm.addListener(button,'click',function(){
 						
 							MDO.buttons[i].call(self);
 						
@@ -452,8 +466,12 @@ define(["require","../../foundation"],function(require){
 	 */
 	createDialogueElement.prototype.destroy = function()
 	{
+	
 		// remove the dialogue.
-		removeNode(this.dialogue);
+		if ( this.dialogue.getAttribute('id').match(/WizardDialogue/) )
+		{
+			mm.removeNode(this.dialogue.parentNode);
+		}
 		
 		// hide the overlay.
 		this.overlay.removeAttribute('class');
@@ -476,7 +494,7 @@ define(["require","../../foundation"],function(require){
 			if ( this.overlay.children.length >= 1 )
 			{
 				// remove them.
-				removeNode(this.overlay.children[0]);
+				mm.removeNode(this.overlay.children[0]);
 			}
 			
 			// append the new dialogue.
@@ -500,6 +518,13 @@ define(["require","../../foundation"],function(require){
 	 * @param MDOArray (Array) - An array of MDOs, each MDO is a pane of its own.
 	 */
 	ModalDialogue.prototype.createWizard = function(MDOArray){
+		
+		// check for existing dialogues.
+		if ( this.overlay.children.length >= 1 )
+		{
+			// remove them.
+			mm.removeNode(this.overlay.children[0]);
+		}
 		
 		// array to store the dialogue panes in.
 		var panes = [];
@@ -539,7 +564,7 @@ define(["require","../../foundation"],function(require){
 					"callback" : function(e,i){
 						
 						// remove the current pane.
-						removeNode(wizard.children[0]);
+						mm.removeNode(wizard.children[0]);
 						
 						// add the next pane.
 						wizard.appendChild(panes[i]);
@@ -558,13 +583,28 @@ define(["require","../../foundation"],function(require){
 					"callback" : function(e,i){
 					
 						// remove the current pane.
-						removeNode(wizard.children[0]);
+						mm.removeNode(wizard.children[0]);
 						
 						// add the previous pane.
 						wizard.appendChild(panes[i - 2]);
 					
 					},
 					"callbackContext" : this // cannot be used externally.
+				}
+			
+			}
+			
+			// check for a previous button.
+			if ( typeof MDOArray[i].buttons.close == "boolean" )
+			{
+				// add template specification.
+				MDOArray[i].buttons.close = {
+					"title" : "Close",
+					"callback" : function(){
+					
+						mm.removeNode(this.dialogue.parentNode.parentNode);
+					
+					}
 				}
 			
 			}
@@ -594,6 +634,13 @@ define(["require","../../foundation"],function(require){
 	ModalDialogue.prototype.createDialogueWithSidebar = function(dialogueDefinition){
 	
 		var self = this;
+	
+		// check for existing dialogues.
+		if ( this.overlay.children.length >= 1 )
+		{
+			// remove them.
+			mm.removeNode(this.overlay.children[0]);
+		}
 	
 		// check for the dialogue definition.
 		if ( dialogueDefinition )
@@ -646,7 +693,7 @@ define(["require","../../foundation"],function(require){
 					if ( ! ( currentViewIndex == t.getAttribute('data-viewIndex') ) )
 					{
 						// destroy the current view.
-						removeNode(views[currentViewIndex]);
+						mm.removeNode(views[currentViewIndex]);
 						
 						// append the specified view.
 						viewContainer.appendChild(views[parseInt(t.getAttribute('data-viewIndex'))]);
@@ -707,7 +754,7 @@ define(["require","../../foundation"],function(require){
 							
 						navItem.setAttribute('data-viewIndex',i);
 							
-						addListener(navItem,'click',function(e){
+						mm.addListener(navItem,'click',function(e){
 								
 							switchView.call(self,e);
 								
@@ -732,14 +779,7 @@ define(["require","../../foundation"],function(require){
 			// check for buttons.
 			if ( dialogueDefinition.buttons )
 			{
-			
-				// method to close the dialogue.
-				self.destroy = function()
-				{
-					
-					removeNode(this.overlay);
-				}
-				
+
 				var buttonContainer = document.createElement('div');
 			
 				buttonContainer.setAttribute('class','buttons');
@@ -749,11 +789,11 @@ define(["require","../../foundation"],function(require){
 					
 					var button = document.createElement('button');
 				
-					if ( i == "close" )
+					if ( i == "close" && typeof dialogueDefinition.buttons[i] !== "function"  )
 					{
 						button.innerHTML = "Close";
 						
-						addListener(button,'click',function(){
+						mm.addListener(button,'click',function(){
 						
 							self.destroy();
 						
@@ -766,7 +806,7 @@ define(["require","../../foundation"],function(require){
 						
 						if ( typeof dialogueDefinition.buttons[i] == "function" )
 						{
-							addListener(button,'click',function(e){
+							mm.addListener(button,'click',function(e){
 								
 								dialogueDefinition.buttons[i].call(self,e);
 							
