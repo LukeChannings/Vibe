@@ -593,21 +593,6 @@ define(["require"],function(require){
 				}
 			
 			}
-			
-			// check for a previous button.
-			if ( typeof MDOArray[i].buttons.close == "boolean" )
-			{
-				// add template specification.
-				MDOArray[i].buttons.close = {
-					"title" : "Close",
-					"callback" : function(){
-					
-						mm.removeNode(this.dialogue.parentNode.parentNode);
-					
-					}
-				}
-			
-			}
 				
 			// create the dialogue.
 			var dialogue = new createDialogueElement(MDOArray[i],this.overlay);
