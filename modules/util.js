@@ -35,32 +35,41 @@ define(function(){
 			node.parentNode.removeChild(node);
 		
 		},
-		BrowserHasSupport : {
-			dragAndDrop : function() {
-				
-				if ( 'draggable' in document.createElement('div') ) return true;
-
-				else return false;
-			},
-			svg : function() {
+		Browser : {
+			isMobile : function(){
 			
-				return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+				// simple test to check if the browser identifies itself as mobile. 
+				// (It's browser detection, but the only option sadly.)
+				return /(iPhone|Android|Mobile)/i.test(navigator.userAgent);
+			
 			},
-			cssTransitions : function() {
-		
-				// possible properties.
-				var properties = ["transition", "WebkitTransition", "MozTransition", "OTransition", "msTransition"];
+			HasSupport : {
+				dragAndDrop : function() {
 				
-				// loop through possibilities.
-				for ( var i = 0; i < properties.length; i++ )
-				{
-					// check if the possibility is present, if so, return the property that was found.
-					if ( properties[i] in document.createElement('div').style ) return properties[i];
+					// check for draggable attribute in a <div>.
+					return ( 'draggable' in document.createElement('div') );
+				},
+				svg : function() {
 				
+					// check hasFeature for basic SVG support.
+					return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+				},
+				cssTransitions : function() {
+			
+					// possible prefixes.
+					var prefix = ["transition", "WebkitTransition", "MozTransition", "OTransition", "msTransition"];
+					
+					// loop through possibilities.
+					for ( var i = 0; i < prefix.length; i++ )
+					{
+						// check if the possibility is present, if so, return the property that was found.
+						if ( prefix[i] in document.createElement('div').style ) return prefix[i];
+					
+					}
+					
+					// if no possibilities match then transitions are unsupported, return false.
+					return false;
 				}
-				
-				// if no possibilities match then transitions are unsupported, return false.
-				return false;
 			}
 		},
 		connectAPI : function(host,port,callback) {
