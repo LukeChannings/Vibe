@@ -25,6 +25,8 @@
 	margin-bottom: 0.5em;
 }
 
+#ModalDialogueOverlay #ModalDialogue.center h1{border-bottom: none}
+
 #ModalDialogueOverlay #ModalDialogue.sidebar{
 	width: auto;
 	border: none;
@@ -56,11 +58,11 @@
 	border: none;
 }
 
-#ModalDialogueOverlay #ModalDialogue.sidebar .views .view h1{
-	margin-bottom: 0.5em;
-}
+#ModalDialogueOverlay #ModalDialogue.sidebar .views .view h1{margin-bottom: 0.5em}
 
 #ModalDialogueOverlay #ModalDialogue form label input{
 	margin: 0em;
 	margin-left: 1em
 }
+
+#ModalDialogueOverlay #ModalDialogue.form form input{width: 8em}

@@ -116,63 +116,60 @@ define(["require"],function(require){
 		}
 		
 		// check for an animation setting.
-		if ( typeof animation == "string" && /(slideTop|slideBottom|fade)/.test(animation) )
+		if ( typeof animation == "string" && 
+			/(slideTop|slideBottom|fade)/.test(animation) &&
+			util.Browser.HasSupport.cssTransitions() &&
+			! util.Browser.isMobile() )
 		{
 		
-			// check for CSS transition support.
-			var transition = util.BrowserHasSupport.cssTransitions();
-			
-			// check for transition support.
-			if ( transition )
+			var transition = util.Browser.HasSupport.cssTransitions();
+		
+			// animate overlay appearance.
+			overlay.style.opacity = 0;
+		
+			overlay.style[transition] = "opacity 0.5s linear";
+		
+			// slideTop/Bottom.
+			if ( /slide/.test(animation) )
 			{
-			
-				// animate overlay appearance.
-				overlay.style.opacity = 0;
-			
-				overlay.style[transition] = "opacity 0.5s linear";
-			
-				// slideTop/Bottom.
-				if ( /slide/.test(animation) )
-				{
-					dialogue.style.marginTop = ( animation == "slideTop" ) ? "-100%" : "100%";
-					
-					dialogue.style[transition] = "margin-top 0.5s linear";
-					
-					overlay.setAttribute('class','visible');
-					
-					overlay.appendChild(dialogue);
-					
-					setTimeout(function(){
-					
-						overlay.style.opacity = 1;
-					
-						dialogue.style.marginTop = "10%";
-					
-					}, 1);
-					
-				}
+				dialogue.style.marginTop = ( animation == "slideTop" ) ? "-100%" : "100%";
 				
-				// fade.
-				if ( animation == "fade" )
-				{
-					
-					dialogue.style.opacity = 0;
-					
-					dialogue.style[transition] = "opacity 0.2s linear";
-					
-					overlay.setAttribute('class','visible');
-					
-					overlay.appendChild(dialogue);
-					
-					setTimeout(function(){
-					
-						overlay.style.opacity = 1;
-					
-						dialogue.style.opacity = 1;
-					
-					},1);
-					
-				}
+				dialogue.style[transition] = "margin-top 0.5s linear";
+				
+				overlay.setAttribute('class','visible');
+				
+				overlay.appendChild(dialogue);
+				
+				setTimeout(function(){
+				
+					overlay.style.opacity = 1;
+				
+					dialogue.style.marginTop = "10%";
+				
+				}, 1);
+				
+			}
+			
+			// fade.
+			if ( animation == "fade" )
+			{
+				
+				dialogue.style.opacity = 0;
+				
+				dialogue.style[transition] = "opacity 0.2s linear";
+				
+				overlay.setAttribute('class','visible');
+				
+				overlay.appendChild(dialogue);
+				
+				setTimeout(function(){
+				
+					overlay.style.opacity = 1;
+				
+					dialogue.style.opacity = 1;
+				
+				},1);
+				
 			}
 			
 		}
