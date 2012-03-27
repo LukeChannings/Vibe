@@ -45,6 +45,22 @@ define(function(){
 			svg : function() {
 			
 				return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+			},
+			cssTransitions : function() {
+		
+				// possible properties.
+				var properties = ["transition", "WebkitTransition", "MozTransition", "OTransition", "msTransition"];
+				
+				// loop through possibilities.
+				for ( var i = 0; i < properties.length; i++ )
+				{
+					// check if the possibility is present, if so, return the property that was found.
+					if ( properties[i] in document.createElement('div').style ) return properties[i];
+				
+				}
+				
+				// if no possibilities match then transitions are unsupported, return false.
+				return false;
 			}
 		},
 		connectAPI : function(host,port,callback) {
