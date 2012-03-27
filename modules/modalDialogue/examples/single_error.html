@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>modalDialogue stress tests</title>
+		<title>modalDialogue error example.</title>
 		<script src="../../require.js" type="text/javascript"></script>
 		<script type="text/javascript">
-		
-			require(['../../domReady'],function(domReady){
+			require(['../../domReady','../modal','../../util'],function(domReady,ModalDialogue,util){
 			
 				domReady(function(){
 				
-					require(['../modal','../../util'],function(ModalDialogue,Util){
+					var dialogue = new ModalDialogue(util);
 					
-						this.mm = Util;
-					
-						var dialogue = new ModalDialogue();
-						
-						dialogue.createDialogue({
-							"title" : "Oh no! Something went wrong!",
-							"alignment" : "center",
-							"errorDialogue" : "true",
-							"body" : "It appears that something has gone horribly wrong. :("
-						});
+					dialogue.createDialogue({
+						"title" : "Oh no! Something went wrong!",
+						"alignment" : "center",
+						"errorDialogue" : "true",
+						"body" : "It appears that something has gone horribly wrong. :("
 					});
-				
+					
 				});
 			
 			});
