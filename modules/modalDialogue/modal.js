@@ -53,10 +53,10 @@ define(["require"],function(require){
 	}
 	
 	/**
-	 * destroy
+	 * close
 	 * @description Externally accessible method for removing the current dialogue.
 	 */
-	ModalDialogue.prototype.destroy = function(){
+	ModalDialogue.prototype.close = function(){
 	
 		// delete the dialogue.
 		this.overlay.removeChild(this.overlay.children[0]);
@@ -95,6 +95,108 @@ define(["require"],function(require){
 			return true;
 		}
 	
+	}
+	
+	/**
+	 * addDialogue
+	 * @description Makes the element visible.
+	 * @param dialogue (HTMLElement) - dialogue to add.
+	 * @param overlay (HTMLElement) - the overlay.
+	 * @param animation (string) - name of the animation. (slideTop, slideBottom, fade.)
+	 * @param util - (object) - object containing utility methods.
+	 */
+	function addDialogue(dialogue,overlay,animation,util)
+	{
+	
+		// check for existing dialogues.
+		if ( overlay.children.length >= 1 )
+		{
+			// remove them.
+			util.removeNode(overlay.children[0]);
+		}
+		
+		// check for an animation setting.
+		if ( typeof animation == "string" && /(slideTop|slideBottom|fade)/.test(animation) )
+		{
+		
+			// check for CSS transition support.
+			var transition = util.BrowserHasSupport.cssTransitions();
+			
+			// check for transition support.
+			if ( transition )
+			{
+			
+				// animate overlay appearance.
+				overlay.style.opacity = 0;
+			
+				overlay.style[transition] = "opacity 0.5s linear";
+			
+				// slideTop/Bottom.
+				if ( /slide/.test(animation) )
+				{
+					dialogue.style.marginTop = ( animation == "slideTop" ) ? "-100%" : "100%";
+					
+					dialogue.style[transition] = "margin-top 0.5s linear";
+					
+					overlay.setAttribute('class','visible');
+					
+					overlay.appendChild(dialogue);
+					
+					setTimeout(function(){
+					
+						overlay.style.opacity = 1;
+					
+						dialogue.style.marginTop = "10%";
+					
+					}, 1);
+					
+				}
+				
+				// fade.
+				if ( animation == "fade" )
+				{
+					
+					dialogue.style.opacity = 0;
+					
+					dialogue.style[transition] = "opacity 0.2s linear";
+					
+					overlay.setAttribute('class','visible');
+					
+					overlay.appendChild(dialogue);
+					
+					setTimeout(function(){
+					
+						overlay.style.opacity = 1;
+					
+						dialogue.style.opacity = 1;
+					
+					},1);
+					
+				}
+			}
+			
+		}
+		else
+		{
+			
+			// append the new dialogue.
+			overlay.appendChild(dialogue);
+			
+			// show the dialogue.
+			overlay.setAttribute('class','visible');
+			
+		}
+	}
+	
+	function removeDialogue(dialogue,overlay,animation,util)
+	{
+		
+		util.removeNode(dialogue);
+		
+		overlay.style.opacity = 0;
+		
+		overlay.removeAttribute('class');
+		
 	}
 	
 	/**
@@ -353,8 +455,11 @@ define(["require"],function(require){
 							// close the dialogue when it's pressed.
 							self.util.addListener(button,'click',function(){
 							
+								// fix removal bug for wizard dialogues.
+								if ( MDO.isWizardDialogue ) self.dialogue = self.dialogue.parentNode;
+								
 								// yes, that means what it says.
-								self.destroy();
+								self.close();
 							
 							});
 						}
@@ -427,7 +532,7 @@ define(["require"],function(require){
 					dialogue.appendChild(buttonContainer);
 				}
 				
-				// if there are no buttons, destroy the container.
+				// if there are no buttons, close the container.
 				else buttonContainer = null;
 			}
 		
@@ -464,22 +569,10 @@ define(["require"],function(require){
 		// if there is no dialogue specification return nothing.
 		return null;
 	}
+
+	createDialogueElement.prototype.close = function(){
 	
-	/**
-	 * destroy
-	 * @description Removes the overlay, or, if closeKeepsOverlay is specified in the MDO, just the dialogue.
-	 */
-	createDialogueElement.prototype.destroy = function()
-	{
-	
-		// remove the dialogue.
-		if ( this.dialogue.getAttribute('id').match(/WizardDialogue/) )
-		{
-			this.util.removeNode(this.dialogue.parentNode);
-		}
-		
-		// hide the overlay.
-		this.overlay.removeAttribute('class');
+		removeDialogue(this.dialogue,this.overlay,null,this.util);
 	}
 	
 	/**
@@ -495,18 +588,7 @@ define(["require"],function(require){
 		
 			var dialogue = new createDialogueElement(MDO,this.overlay,this.util);
 			
-			// check for existing dialogues.
-			if ( this.overlay.children.length >= 1 )
-			{
-				// remove them.
-				self.util.removeNode(this.overlay.children[0]);
-			}
-			
-			// append the new dialogue.
-			this.overlay.appendChild(dialogue);
-			
-			// show the dialogue.
-			this.overlay.setAttribute('class','visible');
+			addDialogue(dialogue,this.overlay,MDO.animateIn || null,this.util);
 			
 		}
 		
@@ -522,7 +604,7 @@ define(["require"],function(require){
 	 * @description Creates a dialogue that allows switching between panes. (Next/Prev)
 	 * @param MDOArray (Array) - An array of MDOs, each MDO is a pane of its own.
 	 */
-	ModalDialogue.prototype.createWizard = function(MDOArray){
+	ModalDialogue.prototype.createWizard = function(MDOArray,animateIn){
 		
 		// usual lark.
 		var self = this;
@@ -610,12 +692,8 @@ define(["require"],function(require){
 			
 		// put the first dialogue in the wizard.
 		wizard.appendChild(panes[0]);
-			
-		// append the wizard to the overlay.
-		this.overlay.appendChild(wizard);
-			
-		// unhide the overlay.
-		this.overlay.setAttribute('class','visible');
+		
+		addDialogue(wizard,this.overlay,animateIn || null,this.util);
 		
 	}
 	
@@ -685,7 +763,7 @@ define(["require"],function(require){
 					// make sure we're not already on this view.
 					if ( ! ( currentViewIndex == t.getAttribute('data-viewIndex') ) )
 					{
-						// destroy the current view.
+						// close the current view.
 						self.util.removeNode(views[currentViewIndex]);
 						
 						// append the specified view.
@@ -788,7 +866,7 @@ define(["require"],function(require){
 						
 						self.util.addListener(button,'click',function(){
 						
-							self.destroy();
+							self.close();
 						
 						});
 						
@@ -820,6 +898,8 @@ define(["require"],function(require){
 			
 			// append the navItems.
 			nav.appendChild(navItems);
+			
+			addDialogue(dialogue,this.overlay,dialogueDefinition.animateIn || null,this.util);
 			
 			// return the dialogue.
 			return dialogue;
