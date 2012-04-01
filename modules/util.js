@@ -1,8 +1,71 @@
+/**
+ * Util.
+ * @description Implements forEach, setAttributes, addListener, removeListener, removeNode and various tests.
+ */
 define(function(){
 
 	/**
-	 * Util
-	 * @description series of important utility methods.
+	 * Prototypes.
+	 */
+	 
+	// forEach.
+	if ( typeof Array.prototype.forEach == "undefined" )
+	{
+		Array.prototype.forEach = function(callback){
+		
+			if ( typeof callback == "function" )
+			{
+				for ( var i = 0; i < this.length; i++ )
+				{
+					callback(this[i],i,this);
+				}
+			}
+		}
+	}
+	
+	// setAttributes.
+	if ( typeof HTMLElement.prototype.setAttributes == "undefined" )
+	{
+		HTMLElement.prototype.setAttributes = function(attributes){
+			
+			if ( attributes instanceof Array )
+			{
+				
+				var self = this;
+				
+				attributes.forEach(function(attribute){
+				
+					self.setAttribute(attribute[0],attribute[1]);
+				
+				});
+			}
+			
+		}
+	}
+	
+	// removeNode.
+	if ( typeof HTMLElement.prototype.removeNode == "undefined" )
+	{
+		HTMLElement.prototype.removeNode = function()
+		{
+			this.parentNode.removeChild(this);
+		}
+	}
+	
+	// removeChildren.
+	if ( typeof HTMLElement.prototype.removeChildren == "undefined" )
+	{
+		HTMLElement.prototype.removeChildren = function()
+		{
+			while ( this.firstChild )
+			{
+				this.removeChild(this.firstChild);
+			}
+		}
+	}
+	
+	/**
+	 * Util Object.
 	 */
 	var Util = {
 		addListener : function(element,listenFor,callback){
@@ -29,10 +92,17 @@ define(function(){
 			}
 		
 		},
-		removeNode : function(node){
+		addStylesheet : function(url){
 		
-			// mercilessly destroy the bitch.
-			node.parentNode.removeChild(node);
+			document.head.appendChild(function(){
+			
+				var link = document.createElement('link');
+			
+				link.setAttributes([['rel','stylesheet'],['type','text/css'],['href',url]]);
+			
+				return link;
+			
+			}());
 		
 		},
 		Browser : {
@@ -71,95 +141,6 @@ define(function(){
 					return false;
 				}
 			}
-		},
-		connectAPI : function(host,port,callback) {
-		
-			var self = this;
-		
-			require(['modules/api/api'],function(API){
-			
-				api = new API(settings.get('host'),settings.get('port'));
-			
-				ee.on('API_CONNECTED',function(){
-				
-					console.log("API connected.");
-				
-					if ( callback ) callback();
-				
-				});
-				
-				ee.on('API_CONNECTION_FAILED',function(){
-				
-					self.Dialogue.firstRun("Connection Failed. Please try again.");
-				
-				});
-			
-			});
-		},
-		Dialogue : {
-			firstRun : function(title,body,callback)
-			{
-				dialogue.createDialogue({
-					"title" : title || "Welcome to MusicMe",
-					"body" : body || "Before we can get started some basic information about your MusicMe server is required.",
-					"alignment" : "justify",
-					"form" : {
-						"name" : "getting_started",
-						"inputs" : [{
-							"name" : "host",
-							"title" : "Host",
-							"placeholder" : "localhost"
-						},{
-							"name" : "port",
-							"title" : "Port",
-							"placeholder" : 6232,
-							"type" : "number"
-						}]
-					},
-					"buttons" : {"Connect" : function(){
-						
-						var host = document.forms['getting_started']['host'].value;
-						var port = parseInt(document.forms['getting_started']['port'].value);
-						
-						// check that the host and port are defined.
-						if ( host && port )
-						{
-							// set the host and port.
-							settings.set('host',host);
-							settings.set('port',port);
-							
-							// connect to the API.
-							api = connectAPI(host,port);
-							
-							// close the dialogue.
-							this.destroy();
-							
-						}
-						else
-						{
-							alert("A host and port need to be specified.");
-						}
-						
-					}}
-				});
-			}
-		},
-		Construct : {
-			collection : function(){
-				
-				// fetch the UICollection module.
-				require(['modules/UI/Collection'],function(UICollection){
-				
-					// make an instance.
-					UI.Collection = new UICollection(api);
-				
-					UI.MusicMe.appendChild(UI.Collection.element);
-				
-				});
-				
-			},
-			playlist : function(){},
-			player : function(){}
 		}
 	}
 

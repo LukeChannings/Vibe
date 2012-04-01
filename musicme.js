@@ -2,42 +2,35 @@
  * MusicMe
  * @description Official MusicMe Web App.
  */
-require(['modules/domReady','modules/settings','modules/EventEmitter','modules/modalDialogue/modal'], function (domReady,Settings,EventEmitter,ModalDialogue) {
+ 
+require.config({baseUrl: "./modules/"});
+
+require(['domReady','settings','EventEmitter','ModalDialogue/modalDialogue'], function (domReady,Settings,EventEmitter,MD) {
 
 	domReady(function(){
 		
 		// make a global EventEmitter object.
-		window.ee = new EventEmitter();
+		ee = new EventEmitter();
 		
 		// make a global settings object.
-		window.settings = new Settings();
-		
-		var dialogue = new ModalDialogue();
-		
-		dialogue.createDialogue({
-			"title" : "Welcome to MusicMe",
-			"body" : "Before we can get started some basic information about your MusicMe server is required.",
-			"alignment" : "justify",
-			"form" : {
-				"name" : "getting_started",
-				"inputs" : [{
-					"name" : "host",
-					"title" : "Host",
-					"placeholder" : "localhost"
-				},{
-					"name" : "port",
-					"title" : "Port",
-					"placeholder" : 6232,
-					"type" : "number"
-				}]
-			},
-			"buttons" : {"Begin" : function(){
-				
-				alert("Doing something, bbk l8r.");
-				
-			}}
-		});
-		
+		settings = new Settings();
+
+		modal = MD;
+
+		modal.createWizard([{
+				"title" : "This is the first pane of the wizard!",
+				"body" : "Don't like the first pane? Why not go to the second one? Just press the next button.",
+				"buttons" : {next:true}
+			},{
+				"title" : "This is the second pane!",
+				"body" : "Don't like the second pane? Why are you so hard to please?! You want another dialogue? Is that is? FINE!",
+				"buttons" : {prev:true,next:true}
+			},{
+				"title" : "LAST DIALOGUE!",
+				"body" : "If you're not happy with this one it's your own fault! Make your own dialogue then!",
+				"buttons" : {prev:true,close:true}
+		}],"slideTop");
+
 	});
 
 });
