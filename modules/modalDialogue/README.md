@@ -1,7 +1,7 @@
 # ModalDialogue #
 
 ModalDialogue is a module that allows the creation of complex modal dialogues using a
-Modal Dialogue Object (MDO).
+Modal Dialogue Definition (MDD).
 
 ## Support ##
 
@@ -19,18 +19,18 @@ you use one of the methods to create a dialogue.
 
 ## ModalDialogue.createDialogue ##
 
-This method allows the creation of a simple dialogue. Pass it an MDO (documented below) and
+This method allows the creation of a simple dialogue. Pass it an MDD (documented below) and
 it will create a dialogue for you.
 
 Example:
 
-	dialogue.createDialogue(MDO);
+	dialogue.createDialogue(MDD);
 
 ## ModalDialogue.createWizard ##
 
 This method creates a dialogue that looks like the simple createDialogue, except that it allows
 you to specify multiple dialogue objects which can be used in a wizard-like fashion. createWizard
-takes an array of MDO objects.
+takes an array of MDD objects.
 
 Example:
 
@@ -52,10 +52,10 @@ you can make your own, and the callback will be executed in the context of the d
 If you're specifying your own callback, you can access the panes using __this.panes__, and the 
 dialogue object with __this.wizard__.
 
-## ModalDialogue.createDialogueWithSidebar ##
+## ModalDialogue.createViewBasedDialogue ##
 
-createDialogueWithSidebar will create a complex view-based dialogue that provides a navigation sidebar and a 
-main view area. The navigation area allows you to switch between views. Each view is defined as a standard MDO,
+createViewBasedDialogue will create a complex view-based dialogue that provides a navigation sidebar and a 
+main view area. The navigation area allows you to switch between views. Each view is defined as a standard MDD,
 with the addition of a __navTitle__ member, which sets the title in the navigation. (If unspecified, the navigation 
 title defaults to the view title.)
 
@@ -68,21 +68,21 @@ Example:
 
 	dialogue.createDialogueWithSidebar({
 		"title" : "Sidebar Title.",
-		"views" : [MDO,MDO,MDO,etc],
+		"views" : [MDD,MDD,MDD,etc],
 		"buttons" : {close:true}
 	});
 
-## MDO ##
+## MDD ##
 
-The Modal Dialogue Object is used for defining a modal dialogue or modal view.
+The Modal Dialogue Definition is used for defining a modal dialogue or modal view.
 
-### MDO.title ###
+### MDD.title ###
 
 The title creates a default h1 and puts the contents in the dialogue.
 
-### MDO.body ###
+### MDD.body ###
 
-The body member accepts two types of data: __HTMLElement__ and __String__. MDO.body can 
+The body member accepts two types of data: __HTMLElement__ and __String__. MDD.body can 
 also be an array of HTMLElements or strings, or a mixture of the two.
 
 Example:
@@ -96,7 +96,7 @@ Example:
 		"body" : [h2,"<p>This is a paragraph</p>","<img src='image.jpg' alt />",]
 	});
 
-### MDO.buttons ###
+### MDD.buttons ###
 
 The buttons object allows you to specify a button, or a series of buttons to add 
 to the dialogue. There are two properties for buttons: __Name__ and __Callback__.
@@ -115,7 +115,7 @@ Example:
 
 As you can see from the example above, calling __this.destroy__ will close the dialogue.
 
-### MDO.form ###
+### MDD.form ###
 
 The form object has two properties: __name__ and __inputs__, the name property
 is a string that will be used to refer to the form in the callbacks. The inputs
@@ -155,7 +155,7 @@ Example:
 The above example will create a simple form with two inputs. To access the values of these
 forms, use __document.forms["myForm"]["textField"]__ and __document.forms["myForm"]["numberField"]__.
 
-### MDO.class ###
+### MDD.class ###
 
 Add custom classes to the dialogue element. Accepts a single class or an array
 of classes.
@@ -168,10 +168,10 @@ Example:
 		"class" : ["someClass","someOtherClass"]	
 	});
 
-### MDO.alignment ###
+### MDD.alignment ###
 
 Defaults to left, accepts __center__, __justify__ and __right__. (Changes the text-align property.)
 
-### MDO.errorDialogue ###
+### MDD.errorDialogue ###
 
 Adds an error background image.
