@@ -4,11 +4,14 @@
 		<title>modalDialogue error example.</title>
 		<script src="../../require.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			require(['../../domReady','../modal','../../util'],function(domReady,ModalDialogue,util){
+			
+			require.config({baseUrl : "../../"});
+			
+			require(['domReady','ModalDialogue/modalDialogue'],function(domReady,ModalDialogue){
 			
 				domReady(function(){
 				
-					var dialogue = new ModalDialogue(util);
+					var dialogue = new ModalDialogue();
 					
 					dialogue.createDialogue({
 						"title" : "Oh no! Something went wrong!",
@@ -16,8 +19,6 @@
 						"errorDialogue" : "true",
 						"body" : "It appears that something has gone horribly wrong. :(",
 						"buttons" : {close:function(){
-							
-							console.log("Hello World");
 							
 							this.close();
 							
