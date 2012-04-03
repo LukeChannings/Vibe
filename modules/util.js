@@ -64,6 +64,25 @@ define(function(){
 		}
 	}
 	
+	// toggleClass.
+	if ( typeof HTMLElement.prototype.toggleClass == "undefined" )
+	{
+		HTMLElement.prototype.toggleClass = function(name)
+		{
+			var regex = new RegExp(name);
+		
+			if ( regex.test(this.className) )
+			{
+				this.className = this.className.replace(name,'');
+			}
+			else
+			{
+				if ( this.className.length == 0 ) this.className = name;
+				else this.className += ' ' + name;
+			}
+		}
+	}
+	
 	/**
 	 * Util Object.
 	 */

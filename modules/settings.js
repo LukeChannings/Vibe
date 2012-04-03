@@ -4,7 +4,9 @@ define(function(){
 	 * Settings
 	 * @description MusicMe settings object. (Keeps persistency.)
 	 */
-	function Settings(callback){
+	function Settings(){
+	
+		var self = this;
 	
 		// settings object.
 		var settings = {};
@@ -18,6 +20,7 @@ define(function(){
 			if ( localStorage.musicMeSettings )
 			{
 				settings = JSON.parse(localStorage.musicMeSettings);
+				
 			}
 		
 		})();
