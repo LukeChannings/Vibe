@@ -24,7 +24,8 @@ require(['dep/domReady','settings','player'], function (domReady,Settings,Player
 		require(['UI/Collection','UI/Player','UI/Playlist'],function(UICollection,UIPlayer,UIPlaylist){
 		
 			collection = new UICollection({
-				'rootType' : 'Artist'
+				'rootType' : 'Genre',
+				'parentNode' : document.getElementById('MusicMe')
 			});
 
 			collection.on('addTrackToPlaylist',function(id){

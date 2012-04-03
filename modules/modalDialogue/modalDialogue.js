@@ -285,27 +285,12 @@ define(['require','util'],function(require,util){
 						// give it a title.
 						button.innerHTML = 'Close';
 						
-						if ( typeof MDD.buttons[i] == 'function' )
-						{
+						// close the dialogue when it's pressed.
+						util.addListener(button,'click',function(){
 							
-							util.addListener(button,'click',function(){
+							ModalDialogue.close();
 							
-								// yes, that means what it says.
-								MDD.buttons[i].call(ModalDialogue);
-							
-							});
-							
-						}
-						else
-						{
-							// close the dialogue when it's pressed.
-							util.addListener(button,'click',function(){
-							
-								// yes, that means what it says.
-								ModalDialogue.close();
-							
-							});
-						}
+						});
 					}
 					else if ( typeof MDD.buttons[i] == 'object' )
 					{
@@ -355,7 +340,7 @@ define(['require','util'],function(require,util){
 						// if it does then listen for a click.
 						util.addListener(button,'click',function(){
 						
-							MDD.buttons[i].call(self);
+							MDD.buttons[i].call(ModalDialogue);
 						
 						});
 						
@@ -424,6 +409,8 @@ define(['require','util'],function(require,util){
 	 */
 	ModalDialogue.createDialogue = function(MDD)
 	{
+	
+		var self = this;
 	
 		// check that there is actually an MDD.
 		if ( isValidMDD(MDD) )
@@ -695,6 +682,8 @@ define(['require','util'],function(require,util){
 						button.innerHTML = "Close";
 						
 						util.addListener(button,'click',function(){
+						
+							console.log(self);
 						
 							self.close();
 						

@@ -2,27 +2,23 @@
 <html lang="en">
 	<head>
 		<title>modalDialogue error example.</title>
-		<script src="../../require.js" type="text/javascript"></script>
+		<script src="../../dependencies/require.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			
 			require.config({baseUrl : "../../"});
 			
-			require(['domReady','ModalDialogue/modalDialogue'],function(domReady,ModalDialogue){
+			require(['dependencies/domReady','ModalDialogue/modalDialogue'],function(domReady,dialogue){
+			
+				MD = dialogue;
 			
 				domReady(function(){
 				
-					var dialogue = new ModalDialogue();
-					
 					dialogue.createDialogue({
 						"title" : "Oh no! Something went wrong!",
 						"alignment" : "center",
 						"errorDialogue" : "true",
 						"body" : "It appears that something has gone horribly wrong. :(",
-						"buttons" : {close:function(){
-							
-							this.close();
-							
-						}},
+						"buttons" : { close : true },
 						"animateIn" : "slideTop"
 					});
 					

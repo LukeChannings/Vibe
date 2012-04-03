@@ -2,13 +2,18 @@
  * MusicMe Collection
  * @description Provides an interface for representing the MusicMe collection.
  */
-define(['util','api/musicme','dep/EventEmitter'],function(util,Api,EventEmitter){
+define(['util','api/musicme','dep/EventEmitter','require'],function(util,Api,EventEmitter,require){
 
 	// make an Api instance.
 	var api = new Api(settings.get('host'),settings.get('port'));
 	
+	// include stylesheet.
+	util.addStylesheet(require.toUrl('./Collection.css'));
+	
 	// constructor.
 	function Collection(options){
+	
+		var self = this;
 	
 		if ( options )
 		{
@@ -17,16 +22,30 @@ define(['util','api/musicme','dep/EventEmitter'],function(util,Api,EventEmitter)
 			
 			// allow the top-level type to be specified.
 			var rootType = this.rootType = options.rootType || "artists";
+			
+			// allow a parentElement override.
+			var parent = this.parent = options.parentNode || document.body;
 		}
 	
 		// collection element.
 		var collection = this.collection = document.createElement('div');
 		collection.setAttribute('id', collectionId);
 	
-		var treeList = this.list = new this.TreeList(this,rootType);
+		if ( api.ready )
+		{
+			var treeList = this.list = new this.TreeList(this,rootType);
+		}
+		else
+		{
+			api.on('ready',function(){
+			
+				var treeList = self.list = new self.TreeList(self,rootType);
+			
+			});
+		}
 		
 		// appendages.
-		document.body.appendChild(collection);
+		parent.appendChild(collection);
 	}
 	
 	// mixin EventEmitter.
@@ -246,6 +265,8 @@ define(['util','api/musicme','dep/EventEmitter'],function(util,Api,EventEmitter)
 				
 				// collection emit addTrackToPlaylist event.
 				self.self.emit('addTrackToPlaylist',id);
+				
+				return;
 			}
 			
 			if ( list )
