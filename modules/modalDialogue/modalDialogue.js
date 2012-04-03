@@ -543,9 +543,6 @@ define(['require','util'],function(require,util){
 	{
 		var self = this;
 	
-		// remove any dialogues that are already present.
-		if ( currentDialogue ) currentDialogue.removeNode();
-	
 		// check for the dialogue definition.
 		if ( dialogueDefinition )
 		{
@@ -669,7 +666,7 @@ define(['require','util'],function(require,util){
 					}
 					else
 					{
-						console.error("Invalid view. Choked on DMO " + (index + 1));
+						console.error("Invalid view. Choked on MDD " + (index + 1));
 						
 						return false;
 						

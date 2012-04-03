@@ -58,6 +58,7 @@ define(['util','api/musicme','dep/EventEmitter'],function(util,Api,EventEmitter)
 	
 		var self = this;
 	
+		// populate the root level.
 		if ( type )
 		{
 		
@@ -143,6 +144,8 @@ define(['util','api/musicme','dep/EventEmitter'],function(util,Api,EventEmitter)
 				});
 			}
 		}
+		
+		// populate a child node.
 		else if ( e instanceof Event )
 		{
 			
