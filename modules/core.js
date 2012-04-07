@@ -26,30 +26,28 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 			document.body.setAttribute('class','svg');
 		}
 	
-		// fetch UICollection.
-		require(['UI/Collection'],function(UICollection){
-		
-			// make a UICollection instance.
-			collection = new UICollection({
-				appendTo : document.getElementById('MusicMe'),
-				rootType : 'artist',
-				dropTarget : document.getElementById('dropTarget')
-			});
+		if ( settings.get('host') && settings.get('port') )
+		{
+	
+			// fetch UICollection.
+			require(['UI/Collection/Collection'],function(UICollection){
 			
-			collection.on('trackClicked',function(id){
-			
-				console.log(id);
-			
-			});
-		
-			collection.on('drop',function(collectionItem){
-			
-				console.log(collectionItem.type + ' : ' + collectionItem.id);
+				// make a UICollection instance.
+				collection = new UICollection({
+					appendTo : document.getElementById('MusicMe'),
+					rootType : 'artist'
+				});
+				
+				collection.on('itemAdded',function(collectionItem){
+				
+					console.log(collectionItem.type + ' : ' + collectionItem.id);
+				
+				});
 			
 			});
 		
-		});
-			
+		}
+		
 	});
 
 });

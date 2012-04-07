@@ -5,18 +5,7 @@ body{
 	color: #333;
 }
 
-#UICollection{
+#MusicMe #UICollection{
 	float: left;
-}
-
-#dropTarget{
 	height: 400px;
-	width: 400px;
-	background: red;
-	float: right;
-	font-size: 5em;
-}
-
-#dropTarget.dragentered{
-	background: green;
 }

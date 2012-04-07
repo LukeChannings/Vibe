@@ -48,13 +48,10 @@ define(function(){
 		}
 	}
 	
-	// removeNode.
-	if ( typeof Element.prototype.removeNode == "undefined" )
+	// removeNode. (Overwrite existing prototypes. IE8 is gay.)
+	Element.prototype.removeNode = function()
 	{
-		Element.prototype.removeNode = function()
-		{
-			this.parentNode.removeChild(this);
-		}
+		this.parentNode.removeChild(this);
 	}
 	
 	// removeChildren.
@@ -206,24 +203,35 @@ define(function(){
 			return string.replace(/&/g,'&#38;').replace(/</g,'&#60;').replace(/>/g,'&#62;').replace(/£/g,'&#163;');
 			
 		},
-		remap : function(arrayOfObjects,map){
+		// doubleClick
+		// handles simultaneous click events allowing for separate functions
+		// to be used for a single click and a double click. Standard timeout 
+		// is 170ms, otherwise the timeout can be set in settings using the 
+		// 'clickTimeout' key.
+		doubleClick : function(element,click,doubleClick){
 		
-			var array = [];
-		
-			arrayOfObjects.forEach(function(object){
+			this.addListener(element,'click',function(e){
 			
-				var newObject = {};
-				
-				for ( var i in map )
+				var target = e.target || e.srcElement;
+			
+				if ( typeof clickTimeout == 'undefined' )
 				{
-					newObject[map[i]] = object[i];
+					clickTimeout = setTimeout(function(){
+					
+						clickTimeout = undefined;
+						
+						click(target);
+					
+					},settings.get('clickTimeout') || 170);
 				}
-				
-				array.push(newObject);
+				else
+				{
+					clearTimeout(clickTimeout);
+					clickTimeout = undefined;
+					doubleClick(target);
+				}
 			
 			});
-		
-			return array;
 		
 		}
 	}
