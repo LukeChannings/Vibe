@@ -1,50 +1,17 @@
 #UICollection{
-	height: 400px;
-	width: 250px;
+	height: 600px;
+	width: 270px;
 	border: 1px solid #333;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	font-size: 10px;
-	font-family: 'Lucida Sans',Helvetica, Sans-serif, Arial;
-	color: #333;
-}
-
-#UICollection *{
-	margin: 0;
-	padding: 0;
-	outline: none;
-	list-style: none;
-}
-
-#UICollection ol.list{
-	display: block;
+	background: #fff;
 	overflow: auto;
-	height: 100%;
-	width: 100%;
 }
 
-#UICollection ol.list ol{
-	padding-top: 5px;
-	background: white
+#UICollection.loading{
+	background: #ccc url('CollectionLoadingThrobber.gif') no-repeat center;
 }
 
-#UICollection li{
-	line-height: 25px;
-	cursor: default;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size: 12px;
-	margin-left: 20px;
+#UICollection ol.treeList ol.track > li{
+	background: none;
+	padding-left: 0;
+	list-style: inside decimal;
 }
-
-#UICollection ol.list ol{display: none}
-#UICollection ol.list ol.visible{display: block}
-
-#UICollection ol.list > li:nth-child(even){
-	background: red;
-}
-
-#UICollection ol.list > li:nth-child(even) > ol > li:nth-child(even){background: red}
-#UICollection ol.list ol > li:nth-child(even){background: red}

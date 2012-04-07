@@ -11,31 +11,45 @@ require.config({
 	}
 });
 
-require(['dep/domReady','settings','player'], function (domReady,Settings,Player) {
+require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 
 	domReady(function(){
 	
-		// settings.
+		// make a global settings instance.
 		window.settings = new Settings();
-
-		player = new Player();
-
-		// begin UI initialisation.
-		require(['UI/Collection','UI/Player','UI/Playlist'],function(UICollection,UIPlayer,UIPlaylist){
+	
+		settings.set('host','channings.me');
+		settings.set('port', 6232);
+	
+		if ( util.Browser.HasSupport.svg() )
+		{
+			document.body.setAttribute('class','svg');
+		}
+	
+		// fetch UICollection.
+		require(['UI/Collection'],function(UICollection){
 		
+			// make a UICollection instance.
 			collection = new UICollection({
-				'rootType' : 'Genre',
-				'parentNode' : document.getElementById('MusicMe')
+				appendTo : document.getElementById('MusicMe'),
+				rootType : 'artist',
+				dropTarget : document.getElementById('dropTarget')
 			});
-
-			collection.on('addTrackToPlaylist',function(id){
 			
-				player.add(id);
+			collection.on('trackClicked',function(id){
+			
+				console.log(id);
 			
 			});
-
+		
+			collection.on('drop',function(collectionItem){
+			
+				console.log(collectionItem.type + ' : ' + collectionItem.id);
+			
+			});
+		
 		});
-
+			
 	});
 
 });

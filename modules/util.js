@@ -112,7 +112,7 @@ define(function(){
 	    return -1;
 	  };
 	}
-	
+
 	/**
 	 * Util Object.
 	 */
@@ -200,6 +200,31 @@ define(function(){
 					return false;
 				}
 			}
+		},
+		htmlEntities : function(string){
+
+			return string.replace(/&/g,'&#38;').replace(/</g,'&#60;').replace(/>/g,'&#62;').replace(/£/g,'&#163;');
+			
+		},
+		remap : function(arrayOfObjects,map){
+		
+			var array = [];
+		
+			arrayOfObjects.forEach(function(object){
+			
+				var newObject = {};
+				
+				for ( var i in map )
+				{
+					newObject[map[i]] = object[i];
+				}
+				
+				array.push(newObject);
+			
+			});
+		
+			return array;
+		
 		}
 	}
 

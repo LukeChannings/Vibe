@@ -11,12 +11,12 @@ define(['require','util'],function(require,util){
 	/**
 	 * Stylesheet injection.
 	 */
-	util.addStylesheet(require.toUrl('./modal.css'));
+	util.registerStylesheet(require.toUrl('./modal.css'));
 	
 	// mobile stylesheet.
 	if ( util.Browser.isMobile() )
 	{
-		util.addStylesheet(require.toUrl('./modal.mobile.css'));
+		util.registerStylesheet(require.toUrl('./modal.mobile.css'));
 	}
 
 	/**

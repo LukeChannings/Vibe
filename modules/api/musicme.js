@@ -2,7 +2,7 @@
  * MusicMe API
  * @description MusicMe Application Programming Interface. Allows interfacing with a MusicMe server.
  */
-define(['dep/EventEmitter','dep/socket.io'],function(EventEmitter){
+define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmitter){
 
 	// constructor.
 	function Api(host,port)
@@ -19,17 +19,8 @@ define(['dep/EventEmitter','dep/socket.io'],function(EventEmitter){
 		// create an error dialogue on error.
 		this.connection.on('error',function(){
 
-			require(['ModalDialogue/modalDialogue'],function(modal){
-			
-				modal.createDialogue({
-					"title" : "Failed to connect.",
-					"body" : "An attempt to connect to the MusicMe server at " + ( settings.get('host') || 'localhost' ) + ':' + ( settings.get('port') || 6232 ) + ' failed. Please check that the server is up and that you can access the domain and try again.',
-					'errorDialogue' : true
-				});
-			
-			});
-				
-			
+			self.emit('error');
+
 		});
 
 		// emit ready event on connection.
@@ -62,6 +53,8 @@ define(['dep/EventEmitter','dep/socket.io'],function(EventEmitter){
 	}
 
 	Api.prototype.getArtistsInGenre = function(genre,callback){
+	
+		var genre = decodeURIComponent(genre);
 	
 		this.connection.emit('getArtistsInGenre',genre,function(err,artists){
 		
@@ -133,6 +126,32 @@ define(['dep/EventEmitter','dep/socket.io'],function(EventEmitter){
 			callback(genres);
 		
 		});
+	
+	}
+	
+	Api.prototype.getMethodFor = function(type){
+	
+		var types = {
+			'genre' : 'getArtistsInGenre',
+			'artist' : 'getAlbumsByArtist',
+			'album' : 'getTracksInAlbum'
+		}
+		
+		if ( type in types ) return types[type];
+		else return false;
+	
+	}
+	
+	Api.prototype.getSubtype = function(type){
+	
+		var types = {
+			'genre' : 'artist',
+			'artist' : 'album',
+			'album' : 'track'
+		}
+	
+		if ( type in types ) return types[type];
+		else return false;
 	
 	}
 
