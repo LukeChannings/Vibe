@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Test Transition support.</title>
+		<meta charset="utf-8" />
+		<script type="text/javascript">
+		
+function hasTransitionSupport()
+{
+	// possible properties.
+	var properties = ["transition", "WebkitTransition", "MozTransition", "OTransition", "msTransition"];
+	
+	// loop through possibilities.
+	for ( var i = 0; i < properties.length; i++ )
+	{
+		// check if the possibility is present, if so, return true.
+		if ( properties[i] in document.createElement('div').style ) return true;
+	
+	}
+	
+	// if no possibilities match then transitions are unsupported, return false.
+	return false;
+	
+}
+		
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

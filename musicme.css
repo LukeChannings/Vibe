@@ -1,0 +1,22 @@
+body{
+	background: #eee;
+	font-family: 'Lucida Sans', Helvetica, sans-serif, Arial;
+	font-size: 62.5%;
+	color: #333;
+}
+
+#UICollection{
+	float: left;
+}
+
+#dropTarget{
+	height: 400px;
+	width: 400px;
+	background: red;
+	float: right;
+	font-size: 5em;
+}
+
+#dropTarget.dragentered{
+	background: green;
+}

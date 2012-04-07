@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>UIWidgetSearchInput</title>
+		<meta charset="utf-8" />
+		<script src="../modules/dependencies/require.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		
+			require.config({
+				'baseUrl' : '../modules'
+			});
+		
+			require(['UI/Widget/TextInput'],function(TextInput){
+			
+				var search = new TextInput({
+					appendNode : document.body,
+					placeholder : "Search With Me!"
+				});
+			
+				search.on('clear',function(){
+				
+					console.log("Input cleared!");
+				
+				});
+				
+				search.on('input',function(newinput){
+				
+					console.log(newinput);
+				
+				});
+			
+				search.on('focus',function(){
+				
+					console.log("Focused.");
+				
+				});
+			
+				search.on('blur',function(){
+				
+					console.log("Blurred.");
+				
+				});
+			
+			});
+		
+		</script>
+	</head>
+	<body class="svg">
+		
+	</body>
+</html>
