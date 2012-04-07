@@ -131,7 +131,7 @@ define(['require','util'],function(require,util){
 			MDD.body.forEach(function(item){
 				
 				// check if the item is an HTMLElement.
-				if ( item instanceof HTMLElement )
+				if ( typeof item == 'object' && item instanceof Element )
 				{
 					// if it is, append the element to the dialogue.
 					dialogue.appendChild(item);
@@ -365,17 +365,17 @@ define(['require','util'],function(require,util){
 			}
 		
 			/* DIALOGUE CLASSES */
-			if ( MDD.class )
+			if ( MDD.customClass )
 			{
 				// check for an array of classes.
-				if ( MDD.class instanceof Array )
+				if ( MDD.customClass instanceof Array )
 				{
-					classes = MDD.class.concat(classes);
+					classes = MDD.customClass.concat(classes);
 				}
 				
-				else if ( typeof MDD.class == 'string' )
+				else if ( typeof MDD.customClass == 'string' )
 				{
-					classes.push(MDD.class);
+					classes.push(MDD.customClass);
 				}
 				
 			}
@@ -492,10 +492,10 @@ define(['require','util'],function(require,util){
 						"callback" : function(e,i){
 						
 							// remove the current pane.
-							wizard.children[0].removeNode();
+							currentDialogue.removeChildren();
 							
-							// add the previous pane.
-							wizard.appendChild(panes[i - 2]);
+							// add the next pane.
+							currentDialogue.appendChild(panes[index - 1]);
 						
 						},
 						"callbackContext" : this // cannot be used externally.
@@ -568,6 +568,51 @@ define(['require','util'],function(require,util){
 				nav.appendChild(title);
 			}
 			
+			// check for buttons.
+			if ( dialogueDefinition.buttons )
+			{
+
+				var buttonContainer = document.createElement('div');
+			
+				buttonContainer.setAttribute('class','buttons');
+			
+				for ( var i in dialogueDefinition.buttons )
+				{
+					
+					var button = document.createElement('button');
+				
+					if ( i == "close" && typeof dialogueDefinition.buttons[i] !== "function"  )
+					{
+						button.innerHTML = "Close";
+						
+						util.addListener(button,'click',function(){
+						
+							self.close();
+						
+						});
+						
+					}
+					else
+					{
+						button.innerHTML = i;
+						
+						if ( typeof dialogueDefinition.buttons[i] == "function" )
+						{
+							util.addListener(button,'click',function(e){
+								
+								dialogueDefinition.buttons[i].call(self,e);
+							
+							});
+						}
+					}
+					
+					buttonContainer.appendChild(button);
+					
+				}
+				
+				viewContainer.appendChild(buttonContainer);
+			}
+			
 			// check for views.
 			if ( dialogueDefinition.views )
 			{
@@ -575,21 +620,21 @@ define(['require','util'],function(require,util){
 				// implement view switcher.
 				function switchView(e){
 				
-					var t = e.target || e.srcElement;
+					var target = e.target || e.srcElement;
 				
 					// make sure we're not already on this view.
-					if ( ! ( currentViewIndex == t.getAttribute('data-viewIndex') ) )
+					if ( ! ( currentViewIndex == target.getAttribute('data-viewIndex') ) )
 					{
 						// close the current view.
 						views[currentViewIndex].removeNode();
 						
 						// append the specified view.
-						viewContainer.appendChild(views[parseInt(t.getAttribute('data-viewIndex'))]);
+						viewContainer.appendChild(views[parseInt(target.getAttribute('data-viewIndex'))]);
 						
 						navItems.children[currentViewIndex].removeAttribute('class');
 						
 						// set currentView.
-						currentViewIndex = parseInt(t.getAttribute('data-viewIndex'));
+						currentViewIndex = parseInt(target.getAttribute('data-viewIndex'));
 						
 						navItems.children[currentViewIndex].setAttribute('class','active');
 						
@@ -616,7 +661,7 @@ define(['require','util'],function(require,util){
 						view.customId = "ModalView" + (index + 1);
 						
 						// add the view class.
-						view.class = "view";
+						view.customClass = "view";
 						
 						// check for button definitions.
 						if ( view.buttons )
@@ -664,53 +709,6 @@ define(['require','util'],function(require,util){
 				viewContainer.appendChild(views[0]);
 			}
 			
-			// check for buttons.
-			if ( dialogueDefinition.buttons )
-			{
-
-				var buttonContainer = document.createElement('div');
-			
-				buttonContainer.setAttribute('class','buttons');
-			
-				for ( var i in dialogueDefinition.buttons )
-				{
-					
-					var button = document.createElement('button');
-				
-					if ( i == "close" && typeof dialogueDefinition.buttons[i] !== "function"  )
-					{
-						button.innerHTML = "Close";
-						
-						util.addListener(button,'click',function(){
-						
-							console.log(self);
-						
-							self.close();
-						
-						});
-						
-					}
-					else
-					{
-						button.innerHTML = i;
-						
-						if ( typeof dialogueDefinition.buttons[i] == "function" )
-						{
-							util.addListener(button,'click',function(e){
-								
-								dialogueDefinition.buttons[i].call(self,e);
-							
-							});
-						}
-					}
-					
-					buttonContainer.appendChild(button);
-					
-				}
-				
-				viewContainer.appendChild(buttonContainer);
-			}
-			
 			// append the dialogue to the overlay.
 			overlay.appendChild(dialogue);
 			overlay.setAttribute('class','visible');
@@ -738,8 +736,10 @@ define(['require','util'],function(require,util){
 	
 		overlay.removeAttribute('style');
 	
-		if ( currentDialogue ) currentDialogue.removeNode();
-	
+		if ( currentDialogue )
+		{
+			currentDialogue.removeNode();
+		}
 	}
 
 	/**

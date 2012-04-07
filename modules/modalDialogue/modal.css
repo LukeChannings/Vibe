@@ -180,6 +180,7 @@ body.svg #ModalDialogue.error{background-image: url('error.svg')}
 }
 
 #ModalDialogue.sidebar > div.navigation > ol > li.active{
+	background: #8EB5E4;
 	background: rgba(142, 181, 228, 0.8);
 	color: #255B9C;
 	border-top: 1px solid #7895B8;

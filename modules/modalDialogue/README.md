@@ -155,7 +155,7 @@ Example:
 The above example will create a simple form with two inputs. To access the values of these
 forms, use __document.forms["myForm"]["textField"]__ and __document.forms["myForm"]["numberField"]__.
 
-### MDD.class ###
+### MDD.customClass ###
 
 Add custom classes to the dialogue element. Accepts a single class or an array
 of classes.
@@ -165,7 +165,7 @@ Example:
 	dialogue.createDialogue({
 		"title" : "Hello!",
 		"body" : "Hello world.",
-		"class" : ["someClass","someOtherClass"]	
+		"customClass" : ["someClass","someOtherClass"]	
 	});
 
 ### MDD.alignment ###
