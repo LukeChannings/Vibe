@@ -2,7 +2,7 @@
 
 __dependencies: api/musicme, util, UI/Widget/TreeList, dependencies/EventEmitter__
 
-__tested: Chrome 15+, FireFox 3.5+, IE8+ __
+__tested: Chrome 15+, FireFox 3.5+, IE8+__
 
 UICollection provides a module for constructing an element that allows the user
 to interact with the MusicMe collection of the server specified in settings.
