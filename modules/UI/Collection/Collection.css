@@ -6,12 +6,39 @@
 	overflow: auto;
 }
 
-#UICollection.loading{
-	background: #ccc url('CollectionLoadingThrobber.gif') no-repeat center;
-}
+#UICollection.loading{background: #ccc url('CollectionLoadingThrobber.gif') no-repeat center}
+
+#UICollection.loading > *{display: none}
 
 #UICollection ol.treeList ol.track > li{
 	background: none;
 	padding-left: 0;
 	list-style: inside decimal;
 }
+
+/* @group Search */
+
+#UICollection.usingSearch{
+	padding-top: 35px;
+	position: relative;
+}
+
+#UICollection.usingSearch > div.search{
+	height: 35px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+}
+
+#UICollection.usingSearch > div.search > *{
+	width: 90%;
+	margin: 10px;
+}
+
+#UICollection.usingSearch > div.listContainer{
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
+/* @end */

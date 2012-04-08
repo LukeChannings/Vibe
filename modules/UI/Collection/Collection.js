@@ -22,14 +22,13 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		// create the UICollection element.
 		var element = this.element = document.createElement('div');
 	
-		if ( typeof self.options.dropTarget !== 'undefined' &&  self.options.dropTarget instanceof Element )
-		{
-			self.useDragAndDrop = true;
-		}
-		else
-		{
-			self.useDragAndDrop = false;
-		}
+		// Check if there's a drop target specified.
+		self.useDragAndDrop = ( typeof self.options.dropTarget !== 'undefined' &&  self.options.dropTarget instanceof Element ) ? 1 : 0;
+	
+		// create the list container element.
+		var listContainer = this.listContainer = document.createElement('div');
+	
+		listContainer.setAttribute('class','listContainer');
 	
 		// set the Id.
 		element.setAttribute('id','UICollection');
@@ -39,16 +38,57 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 	
 		// set loading class.
 		element.setAttribute('class','loading');
-	
+
 		// wait for the API to connect.
 		api.once('ready',function(){
 			
 			element.removeAttribute('class');
+
+			// determine the type of data to populate the collection with.
+			var type = ( /(artist|album|genre|track)/i.test(options.rootType) ) ? options.rootType : 'artist';
+
+			// check for search bar option.
+			if ( options.useSearchBar )
+			{
 			
-			// determine the Api method.
-			var method = ( /(artist|album|genre|track)/i.test(options.rootType) ) ? options.rootType : 'artist';
+				element.setAttribute('class','usingSearch');
 			
-			self.populate(method);
+				var searchContainer = document.createElement('div');
+				
+				searchContainer.setAttribute('class','search');
+				
+				require(['UI/Widget/TextInput/TextInput'],function(TextInput){
+				
+					var input = new TextInput({
+						appendTo : searchContainer,
+						placeholder : 'Search the collection.'
+					});
+				
+					input.on('input',function(search,key){
+					
+					
+						console.log(key);
+					
+						console.log('Search for ' + search);
+					
+					});
+					
+					// when the search input is cleared...
+					input.on('clear',function(){
+					
+						// repopulate the collection with the default type.
+						self.populate(type);
+					
+					});
+				
+				});
+				
+				element.appendChild(searchContainer);
+			}
+			
+			element.appendChild(listContainer);
+			
+			self.populate(type);
 			
 		});
 		
@@ -56,7 +96,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		api.once('error',function(){
 		
 			// log the error.
-			console.log("UICollection failed to create an Api instance. Cannot continue.");
+			console.error("UICollection failed to create an Api instance. Cannot continue.");
 		
 			// emit the error.
 			self.emit('error','ERR_CONNECT');
@@ -194,7 +234,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			}
 			
 			var options = {
-				'appendTo' : self.element,
+				'appendTo' : self.listContainer,
 				'isRootNode' : true,
 				'customClass' : method,
 				'setAttributes' : []
