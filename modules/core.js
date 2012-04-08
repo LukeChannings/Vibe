@@ -38,7 +38,7 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 					rootType : 'artist'
 				});
 				
-				collection.on('itemAdded',function(collectionItem){
+				collection.on('itemSelected',function(collectionItem){
 				
 					console.log(collectionItem.type + ' : ' + collectionItem.id);
 				

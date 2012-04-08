@@ -66,7 +66,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		// Drag And Drop
 		// If data from outside the browser is dropped the event 'dataDrop' is emitted
 		// with the mime type of the data and the base64-encoded binary data.
-		// If a collection item is dragged to the drop target the regular itemAdded event
+		// If a collection item is dragged to the drop target the regular itemSelected event
 		// is fired with the regular collectionItem object.
 		if ( self.useDragAndDrop )
 		{
@@ -134,7 +134,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				
 				if ( e.dataTransfer.getData('Text') )
 				{
-					self.emit('itemAdded',JSON.parse(e.dataTransfer.getData('Text')));
+					self.emit('itemSelected',JSON.parse(e.dataTransfer.getData('Text')));
 				}
 				else
 				{
@@ -246,7 +246,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 					}
 					else
 					{
-						self.emit('itemAdded',{
+						self.emit('itemSelected',{
 							'type' : type,
 							'id' : id
 						});
@@ -260,7 +260,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// handles a double click event on a treelist item.
 			list.on('itemDoubleClicked',function(item){
 			
-				self.emit('itemAdded',{
+				self.emit('itemSelected',{
 					'id' : item.getAttribute('data-id'),
 					'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
 				});

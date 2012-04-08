@@ -6,12 +6,12 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 
 	util.registerStylesheet(require.toUrl('./TextInput.css'));
 
-	function UIWidgetTextInput(config)
+	function UIWidgetTextInput(options)
 	{
 	
-		var config = ( config ) ? config : {};
+		var options = ( options ) ? options : {};
 		
-		var appendNode = config.appendNode || document.body;	
+		var appendNode = options.appendNode || document.body;	
 	
 		var self = this;
 		
@@ -27,9 +27,9 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			'type' : 'text'
 		});
 		
-		if ( config.placeholder )
+		if ( options.placeholder )
 		{
-			input.value = config.placeholder;
+			input.value = options.placeholder;
 			input.setAttribute('class','placeholder');
 		}
 		
@@ -47,9 +47,8 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 				
 				if ( ! e.shiftKey ) key = key.toLowerCase();
 			
-				console.log(key);
-			
 				clear.style.opacity = 1;
+				
 				self.emit('input',target.value,key);
 			}
 			else
@@ -66,9 +65,9 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			
 			self.emit('focus');
 			
-			if ( config.placeholder )
+			if ( options.placeholder )
 			{
-				if ( input.value == config.placeholder )
+				if ( input.value == options.placeholder )
 				{
 					input.value = '';
 					input.removeAttribute('class');
@@ -83,11 +82,11 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			
 			self.emit('blur');
 			
-			if ( config.placeholder )
+			if ( options.placeholder )
 			{
 				if ( input.value == '' )
 				{
-					input.value = config.placeholder;
+					input.value = options.placeholder;
 					input.setAttribute('class','placeholder');
 				}
 			}
