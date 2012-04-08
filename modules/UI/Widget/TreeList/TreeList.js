@@ -52,7 +52,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			
 			var itemInner = util.htmlEntities(itemObj.name || itemObj.title || 'Item ' + index)
 			
-			if ( options.wrapItemsIn )
+			if ( options.wrapItemsIn instanceof Array && options.wrapItemsIn.length == 2 )
 			{
 				if ( options.wrapItemsIn[0] && options.wrapItemsIn[1] )
 				{
@@ -63,22 +63,37 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			// give the item a title.
 			item.innerHTML = itemInner;
 		
-			// if there are attributes apply them.
-			if ( itemObj.attributes )
+			// set attributes specified in the item definition.
+			if ( typeof itemObj.setAttributes == 'object' )
 			{
 			
-				if ( itemObj.attributes.customClass )
+				// check for a customClass within setAttributes.
+				if ( itemObj.setAttributes.hasOwnProperty('customClass') )
 				{
-					itemClasses.push(itemObj.attributes.customClass);
-					delete itemObj.attributes.customClass;
+					// add the class to the class list.
+					itemClasses.push(itemObj.setAttributes.customClass);
+					
+					// remove it from the setAttributes object before setting attributes.
+					delete itemObj.setAttributes.customClass;
 				} 
 			
-				item.setAttributes(itemObj.attributes);
+				// set attributes.
+				item.setAttributes(itemObj.setAttributes);
 			}
 		
-			if ( itemObj.id ) item.setAttribute('data-id',itemObj.id);
+			// set attributes specified by options.
+			if ( typeof options.setAttributes == 'object' ) item.setAttributes(options.setAttributes);
+		
+			// set data-id.
+			if ( typeof itemObj.id == 'string' ) item.setAttribute('data-id',itemObj.id);
 			
-			if ( options.setAttributes ) item.setAttributes(options.setAttributes);
+			// check for item children.
+			if ( itemObj.children instanceof Array )
+			{
+				var child = new TreeList(itemObj.children,{
+					'appendTo' : item
+				});
+			}
 
 			// if there is a drag start method specified bind it to the dragstart event.
 			if ( typeof options.dragStartMethod == 'function' && options.isRootNode ) 

@@ -47,13 +47,13 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 				
 				if ( ! e.shiftKey ) key = key.toLowerCase();
 			
-				clear.style.opacity = 1;
+				clear.style.display = 'block';
 				
 				self.emit('input',target.value,key);
 			}
 			else
 			{
-				clear.style.opacity = 0;
+				clear.style.display = 'none';
 				self.emit('clear');
 			}
 		
@@ -95,7 +95,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		util.addListener(clear,'click',function(){
 		
-			clear.style.opacity = 0;
+			clear.style.display = 'none';
 			
 			input.value = '';
 		

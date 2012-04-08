@@ -35,6 +35,37 @@ specified as an object literal, and are documented below. Here is an example:
 	
 	});
 
+##Item:##
+
+Items are passed to the TreeList as an array, where each element in the array can be an item object.
+
+###item.name or item.title###
+
+The item name or title can be specified and if either is detected it will be set as the innerHTML of
+the current TreeList item. If both properties are specified, item.name takes priority and item.title 
+will be ignored.
+
+###item.children###
+
+The children property allows a deep structure to be defined in a single TreeList instance, allowing 
+pre-populated item trees to be created when the TreeList is defined. The children property will be an
+array of item objects, each object allowing the same properties as a standard item.
+
+If the children property is set and is not an array it will be ignored.
+
+###item.setAttributes###
+
+If setAttributes is specified and is either an object or an array then each attribute specified will be 
+set on for the current item in the TreeList.
+
+Attributes can either be an array of two-element arrays, where arr[0] is the key and arr[1] is the value, 
+or an object where the property is the key and the property value is the attribute value.
+
+###item.id###
+
+If the item.id property is specified (and is a string) the contents will be added to the data-id attribute
+of the current item. If you wish to set an id attribute for the item use setAttributes.
+
 ##Options:##
 
 The options are specified using a object notation, the possible properties are documented below.
@@ -44,18 +75,32 @@ The options are specified using a object notation, the possible properties are d
 If appendTo is specified and is an HTMLElement then the TreeList will be appended to that element. By default
 the TreeList is appended to document.body.
 
+###option.setAttributes###
+
+If setAttributes is specified and is either an object or an array then each attribute specified will be 
+set on for each item in the TreeList.
+
+Attributes can either be an array of two-element arrays, where arr[0] is the key and arr[1] is the value, 
+or an object where the property is the key and the property value is the attribute value.
+
 ###option.customClass###
 
 If customClass is specified and is a string then the string will be appended to the class attribute of the 
 generated TreeList.
 
-###option.setAttributes###
+###option.wrapItemsIn###
 
-If setAttributes is specified and is either an object or an array then each attribute specified will be 
-set on each __item__ within the TreeList.
+The wrapItemsIn property allows a tag to be specified that each item will be wrapped in. The property
+will consist of an array with two properties: the start tag and the end tag. The start tag can use whatever
+attributes are needed using HTML notation.
 
-Attributes can either be an array of two-element arrays, where arr[0] is the key and arr[1] is the value, 
-or an object where the property is the key and the property value is the attribute value.
+Example:
+
+	{
+		'wrapItemsIn' : ['<span class="someClass">','</span>']
+	}
+
+If the wrapItemsIn property is not an array of two elements it will be ignored.
 
 ##Events:##
 
