@@ -11,7 +11,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 	
 		var options = ( options ) ? options : {};
 		
-		var appendNode = options.appendNode || document.body;	
+		var appendTo = options.appendTo || document.body;	
 	
 		var self = this;
 		
@@ -107,7 +107,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		textInput.appendChild(clear);
 		
-		appendNode.appendChild(textInput);
+		appendTo.appendChild(textInput);
 		
 	}
 	

@@ -10,15 +10,15 @@
 	border: none;
 	height: 16px;
 	display: block;
-	float: left;
 	padding: 0;
 }
 
 .UIWidgetSearchInput > input{
-	width: 180px;
+	width: 85%;
 	background: transparent;
 	margin-left: 3px;
 	color: #333;
+	float: left;
 }
 
 .UIWidgetSearchInput > input.placeholder{color: #aaa}
@@ -27,6 +27,7 @@
 	width: 16px;
 	background: url('TextInput.png') no-repeat;
 	opacity: 0;
+	float: right;
 }
 
 body.svg .UIWidgetSearchInput > button{background-image: url('TextInput.svg')}
