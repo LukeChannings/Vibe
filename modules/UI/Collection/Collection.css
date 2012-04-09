@@ -19,12 +19,12 @@
 /* @group Search */
 
 #UICollection.usingSearch{
-	padding-top: 35px;
+	padding-top: 30px;
 	position: relative;
 }
 
 #UICollection.usingSearch > div.search{
-	height: 35px;
+	height: 30px;
 	width: 100%;
 	position: absolute;
 	top: 0;
@@ -32,7 +32,8 @@
 
 #UICollection.usingSearch > div.search > *{
 	width: 90%;
-	margin: 10px;
+	margin: 5px 10px;
+	border: 1px solid #eee;
 }
 
 #UICollection.usingSearch > div.listContainer{

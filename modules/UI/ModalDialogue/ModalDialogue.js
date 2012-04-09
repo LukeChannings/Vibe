@@ -1,9 +1,9 @@
 /**
  * ModalDialogue
  * @description Provides functionality for dynamically constructing modal dialogues.
- * @method createDialogue - Method for creating a simple dialogue.
+ * @method createSingle - Method for creating a simple dialogue.
  * @method createWizard - Method for creating a dialogue with multiple panes.
- * @method createViewBasedDialogue - Method for creating a view-based dialogue with sidebar navigation.
+ * @method createMultiView - Method for creating a view-based dialogue with sidebar navigation.
  * @dependencies - modules/util, modal.css, modal.mobile.css (For mobile.)
  */
 define(['require','util'],function(require,util){
@@ -404,10 +404,10 @@ define(['require','util'],function(require,util){
 	var ModalDialogue = {}
 
 	/**
-	 * createDialogue
+	 * createSingle
 	 * @description creates a simple dialogue from a Modal Dialogue Definition (MDD).
 	 */
-	ModalDialogue.createDialogue = function(MDD)
+	ModalDialogue.createSingle = function(MDD)
 	{
 	
 		var self = this;
@@ -423,7 +423,7 @@ define(['require','util'],function(require,util){
 		}
 		
 		// if there's no MDD, log an error.
-		else console.error('ModalDialogue::createDialogue - No MDD!');
+		else console.error('ModalDialogue::createSingle - No MDD!');
 	
 	}
 
@@ -522,11 +522,11 @@ define(['require','util'],function(require,util){
 	}
 
 	/**
-	 * createViewBasedDialogue
+	 * createMultiView
 	 * @description Creates a dialogue with a sidebar and views.
 	 * @param dialogueDefinition (object) - Defines the dialogue. (See documentation.)
 	 */
-	ModalDialogue.createViewBasedDialogue = function(dialogueDefinition)
+	ModalDialogue.createMultiView = function(dialogueDefinition)
 	{
 		var self = this;
 	
@@ -666,7 +666,7 @@ define(['require','util'],function(require,util){
 						// check for button definitions.
 						if ( view.buttons )
 						{
-							// remove buttons from the MDD. (createDialogueWithSidebar does not allow per-view buttons.)
+							// remove buttons from the MDD. (createSingleWithSidebar does not allow per-view buttons.)
 							delete view.buttons;
 						}
 						

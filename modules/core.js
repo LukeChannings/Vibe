@@ -35,7 +35,8 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 				// make a UICollection instance.
 				collection = new UICollection({
 					appendTo : document.getElementById('MusicMe'),
-					rootType : 'artist'
+					rootType : 'artist',
+					useSearchBar : true
 				});
 				
 				collection.on('itemSelected',function(collectionItem){
