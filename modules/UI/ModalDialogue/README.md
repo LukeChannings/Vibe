@@ -34,7 +34,7 @@ createSingle generates a simple single-view dialogue
 
 Example:
 
-	dialogue.createDialogue({
+	dialogue.createSingle({
 		'title' : 'Pane 3',
 		'body' : 'This is some body text.',
 		'buttons' : {close : true}
@@ -83,9 +83,9 @@ the standard close button is available as a template. Views are specified in the
 
 Example:
 
-	dialogue.createDialogueWithSidebar({
+	dialogue.createMultiView({
 		"title" : "Sidebar Title.",
-		"views" : [MDD,MDD,MDD,etc],
+		"views" : [MDD1,MDD2,MDDn],
 		"buttons" : {close:true}
 	});
 
