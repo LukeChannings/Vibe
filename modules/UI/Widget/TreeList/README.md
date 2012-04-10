@@ -53,6 +53,10 @@ array of item objects, each object allowing the same properties as a standard it
 
 If the children property is set and is not an array it will be ignored.
 
+###item.childrenOptions###
+
+Options for the TreeList that contains the children. The appendTo property will be overridden.
+
 ###item.setAttributes###
 
 If setAttributes is specified and is either an object or an array then each attribute specified will be 

@@ -75,7 +75,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 					
 					// remove it from the setAttributes object before setting attributes.
 					delete itemObj.setAttributes.customClass;
-				} 
+				}
 			
 				// set attributes.
 				item.setAttributes(itemObj.setAttributes);
@@ -90,9 +90,14 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			// check for item children.
 			if ( itemObj.children instanceof Array )
 			{
-				var child = new TreeList(itemObj.children,{
-					'appendTo' : item
-				});
+			
+				// if there are no children options...
+				if ( typeof itemObj.childrenOptions !== 'object' ) itemObj.childrenOptions = {};
+			
+				// append the treelist to the current item.
+				itemObj.childrenOptions.appendTo = item;
+			
+				new TreeList(itemObj.children,itemObj.childrenOptions);
 			}
 
 			// if there is a drag start method specified bind it to the dragstart event.

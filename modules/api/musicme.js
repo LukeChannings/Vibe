@@ -129,29 +129,47 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 	}
 	
-	Api.prototype.getMethodFor = function(type){
+	/**
+	 * search
+	 * @description Queries the collection for a specific result and returns complete TreeList branches.
+	 * @param query (string) - The string to search for in the collection.
+	 * @param callback (function) - The function to be sent the results.
+	 */
+	Api.prototype.search = function(query,callback){
 	
-		var types = {
-			'genre' : 'getArtistsInGenre',
-			'artist' : 'getAlbumsByArtist',
-			'album' : 'getTracksInAlbum'
-		}
+		this.connection.emit('search',query,function(result){
 		
-		if ( type in types ) return types[type];
-		else return false;
-	
-	}
-	
-	Api.prototype.getSubtype = function(type){
-	
-		var types = {
-			'genre' : 'artist',
-			'artist' : 'album',
-			'album' : 'track'
-		}
-	
-		if ( type in types ) return types[type];
-		else return false;
+			var items = [];
+			
+			result.forEach(function(item){
+			
+				items.push({
+					name : item.artistname,
+					id : item.artistid,
+					setAttributes : {customClass : 'expanded',draggable : 'true'},
+					children : [{
+						name : item.albumname,
+						id : item.albumid,
+						setAttributes : {customClass : 'expanded',draggable : 'true'},
+						children : [{
+							name : item.trackname,
+							id : item.trackid,
+							setAttributes : {draggable : 'true'},
+						}],
+						childrenOptions : {
+							customClass : 'track'
+						}
+					}],
+					childrenOptions : {
+						customClass : 'album'
+					}
+				});
+			
+			});
+		
+			callback(items);
+		
+		});
 	
 	}
 

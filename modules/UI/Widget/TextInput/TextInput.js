@@ -15,10 +15,10 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 	
 		var self = this;
 		
-		var textInput = document.createElement('div');
+		var textInput = this.element = document.createElement('div');
 		
 		textInput.setAttributes({
-			'class' : 'UIWidgetSearchInput'
+			'class' : 'TextInputWidget'
 		});
 		
 		var input = document.createElement('input');
@@ -61,7 +61,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		util.addListener(input,'focus',function(){
 			
-			textInput.setAttribute('class','UIWidgetSearchInput focus');
+			textInput.addClass('focus');
 			
 			self.emit('focus');
 			
@@ -78,7 +78,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		util.addListener(input,'blur',function(){
 			
-			textInput.setAttribute('class','UIWidgetSearchInput');
+			textInput.removeClass('focus');
 			
 			self.emit('blur');
 			
@@ -87,7 +87,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 				if ( input.value == '' )
 				{
 					input.value = options.placeholder;
-					input.setAttribute('class','placeholder');
+					input.addClass('placeholder');
 				}
 			}
 			

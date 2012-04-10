@@ -1,11 +1,11 @@
-.UIWidgetSearchInput{
+.TextInputWidget{
 	width: 200px;
 	border: 1px solid #aaa;
 	overflow: hidden;
 	padding: 3px 2px;
 }
 
-.UIWidgetSearchInput *{
+.TextInputWidget *{
 	outline: none;
 	border: none;
 	height: 16px;
@@ -13,7 +13,7 @@
 	padding: 0;
 }
 
-.UIWidgetSearchInput > input{
+.TextInputWidget > input{
 	width: 85%;
 	background: transparent;
 	margin-left: 3px;
@@ -21,15 +21,24 @@
 	float: left;
 }
 
-.UIWidgetSearchInput > input.placeholder{color: #aaa}
+.TextInputWidget.search > input{
+	margin-left: 24px;
+	width: 80%;
+}
 
-.UIWidgetSearchInput > button{
+.TextInputWidget > input.placeholder{color: #aaa}
+
+.TextInputWidget > button{
 	width: 16px;
 	background: url('TextInput.png') no-repeat;
 	display: none;
 	float: right;
 }
 
-body.svg .UIWidgetSearchInput > button{background-image: url('TextInput.svg')}
+body.svg .TextInputWidget > button{background-image: url('TextInput.svg')}
 
-.UIWidgetSearchInput > button:active{background-position: -16px 0}
+.TextInputWidget > button:active{background-position: -16px 0}
+
+.TextInputWidget.search{background: url('TextInput.png') no-repeat -32px}
+
+body.svg .TextInputWidget.search{background-image: url('TextInput.svg')}

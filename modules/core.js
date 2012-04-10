@@ -36,7 +36,8 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 				collection = new UICollection({
 					appendTo : document.getElementById('MusicMe'),
 					rootType : 'artist',
-					useSearchBar : true
+					useSearchBar : true,
+					dropTarget : document.getElementById('dropTarget')
 				});
 				
 				collection.on('itemSelected',function(collectionItem){

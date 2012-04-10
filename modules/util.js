@@ -87,7 +87,7 @@ define(function(){
 	
 	// Array indexOf. (for IE <= 8)
 	// From MDC - https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf#Compatibility
-	if (!Array.prototype.indexOf)
+	if (! Array.prototype.indexOf)
 	{
 	  Array.prototype.indexOf = function(elt /*, from*/)
 	  {
@@ -108,6 +108,38 @@ define(function(){
 	    }
 	    return -1;
 	  };
+	}
+	
+	// addClass
+	if ( ! Element.prototype.addClass )
+	{
+		Element.prototype.addClass = function(className){
+		
+			if ( this.className.length == 0 )
+			{
+				this.className = className;
+			}
+			else if ( ! new RegExp('(^| )' + className + '( |$)').test(this.className) )
+			{
+				this.className += ' ' + className;
+			}
+		
+		}
+	}
+
+	// removeClass
+	if ( ! Element.prototype.removeClass )
+	{
+		Element.prototype.removeClass = function(className){
+		
+			this.className = this.className.replace(new RegExp(' ?' + className + ' ?'),'');
+		
+			if ( this.className.length == 0 )
+			{
+				this.removeAttribute('class');
+			}
+		
+		}
 	}
 
 	/**
@@ -232,6 +264,13 @@ define(function(){
 				}
 			
 			});
+		
+		},
+		cacheImage : function(url){
+		
+			var image = new Image();
+			
+			image.src = url;
 		
 		}
 	}

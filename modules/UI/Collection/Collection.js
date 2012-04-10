@@ -28,7 +28,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		// create the list container element.
 		var listContainer = this.listContainer = document.createElement('div');
 	
-		listContainer.setAttribute('class','listContainer');
+		listContainer.addClass('listContainer');
 	
 		// set the Id.
 		element.setAttribute('id','UICollection');
@@ -37,12 +37,12 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		(options.appendTo || document.body).appendChild(element);
 	
 		// set loading class.
-		element.setAttribute('class','loading');
+		element.addClass('loading');
 
 		// wait for the API to connect.
 		api.once('ready',function(){
 			
-			element.removeAttribute('class');
+			element.removeClass('loading');
 
 			// determine the type of data to populate the collection with.
 			var type = ( /(artist|album|genre|track)/i.test(options.rootType) ) ? options.rootType : 'artist';
@@ -51,11 +51,11 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			if ( options.useSearchBar )
 			{
 			
-				element.setAttribute('class','usingSearch');
+				element.addClass('usingSearch');
 			
 				var searchContainer = document.createElement('div');
 				
-				searchContainer.setAttribute('class','search');
+				searchContainer.addClass('search');
 				
 				require(['UI/Widget/TextInput/TextInput'],function(TextInput){
 				
@@ -64,17 +64,90 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 						placeholder : 'Search the collection.'
 					});
 				
-					input.on('input',function(search,key){
+					input.element.addClass('search');
+				
+					input.on('input',function(query,key){
 					
+						if ( typeof window.timeout !== 'undefined' )
+						{
+							clearTimeout(window.timeout);
+							window.timeout = undefined;
+						}
 					
-						console.log(key);
-					
-						console.log('Search for ' + search);
+						window.timeout = setTimeout(function(){
+						
+							window.timeout = undefined;
+						
+							if ( key !== ' ' )
+							{
+								// query the api.
+								api.search(query,function(results){
+	
+									// clear the current list.
+									listContainer.removeChildren();
+									
+									// if there are results.
+									if ( results.length > 0 )
+									{
+										
+										// remove the noResults class if it's set.
+										self.element.removeClass('noResults');
+										
+										var options = {
+											appendTo : listContainer,
+											isRootNode : true,
+											customClass : 'artist',
+											setAttributes : []
+										}
+										
+										if ( self.useDragAndDrop )
+										{
+											options.setAttributes.push(['draggable','true']);
+											options.dragStartMethod = self.dragStart;
+										}
+										
+										// create a new TreeList based on the search results.
+										var search = new TreeList(results,options);
+										
+										// itemClicked
+										// handles populating sub-items.
+										search.on('itemClicked',function(item, isPopulated){
+										
+											itemClicked.call(self,item,isPopulated);
+										
+										});
+									
+										// itemDoubleClicked
+										// handles a double click event on a treelist item.
+										search.on('itemDoubleClicked',function(item){
+										
+											itemDoubleClicked.call(self,item);
+										
+										});
+									
+									}
+									
+									// if there are no results.
+									else
+									{
+										self.element.addClass('noResults');
+									}
+									
+								});
+							}
+						
+						},270);
 					
 					});
 					
 					// when the search input is cleared...
 					input.on('clear',function(){
+					
+						self.element.removeClass('noResults');
+					
+						clearTimeout(window.timeout);
+						
+						window.timeout = undefined;
 					
 						// repopulate the collection with the default type.
 						self.populate(type);
@@ -111,6 +184,10 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		if ( self.useDragAndDrop )
 		{
 		
+			// cache the default album art.
+			util.cacheImage(require.toUrl('./CollectionGenericAlbumArt.png'));
+			util.cacheImage(require.toUrl('./CollectionGenericArtistArt.png'));
+		
 			// dragstart.
 			// triggered when a draggable item is dragged.
 			self.dragStart = function(e){
@@ -131,6 +208,28 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 					'id' : id,
 					'type' : type
 				}));
+				
+				// Create a new ghost image.
+				var DragImage = new Image();
+				
+				if ( type == 'artist' )
+				{
+					var url = require.toUrl('./CollectionGenericArtistArt.png');
+				}
+				else if ( target.getAttribute('data-albumart') )
+				{
+					var url = target.getAttribute('data-albumart');
+				}
+				else
+				{
+					var url = require.toUrl('./CollectionGenericAlbumArt.png');
+				}
+				
+				// Set a generic album art.
+				DragImage.src = url;
+				
+				// Set the ghost image.
+				e.dataTransfer.setDragImage(DragImage,22,-20);
 			
 			}
 		
@@ -150,7 +249,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// triggered when the item enters the drop target.
 			util.addListener(options.dropTarget,'dragenter',function(e){
 			
-				(e.target || e.srcElement).setAttribute('class','dragentered');
+				(e.target || e.srcElement).addClass('dragentered');
 			
 				return false;
 			
@@ -160,7 +259,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// triggered when the dragged item leaves the drop target.
 			util.addListener(options.dropTarget,'dragleave',function(e){
 				
-				(e.target || e.srcElement).removeAttribute('class');
+				(e.target || e.srcElement).removeClass('dragentered');
 				
 			});
 			
@@ -170,7 +269,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				
 				var target = e.target || e.srcElement;
 				
-				target.removeAttribute('class');
+				target.removeClass('dragentered');
 				
 				if ( e.dataTransfer.getData('Text') )
 				{
@@ -208,6 +307,99 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 	
 	}
 	
+	function getMethodFor(type){
+	
+		var types = {
+			'genre' : 'getArtistsInGenre',
+			'artist' : 'getAlbumsByArtist',
+			'album' : 'getTracksInAlbum'
+		}
+		
+		if ( type in types ) return types[type];
+		else return false;
+	
+	}
+	
+	function getSubtype(type){
+	
+		var types = {
+			'genre' : 'artist',
+			'artist' : 'album',
+			'album' : 'track'
+		}
+	
+		if ( type in types ) return types[type];
+		else return false;
+	
+	}
+	
+	function itemClicked(item,isPopulated){
+	
+		if ( ! isPopulated )
+		{
+			// get the item id.
+			var id = item.getAttribute('data-id');
+		
+			// get the parent class.
+			var type = item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/);
+		
+			// determine the method.
+			type = ( type[0] ) ? type[0] : 'artist';
+		
+			var options = {
+				'appendTo' : item,
+				'customClass' : getSubtype(type),
+				'setAttributes' : []
+			};
+		
+			if ( this.useDragAndDrop )
+			{
+				options.setAttributes.push(['draggable','true']);
+				options.dragStartMethod = self.dragStart;
+			}
+			
+			if ( getMethodFor(type) )
+			{
+				this.api[getMethodFor(type)](id,function(items){
+				
+					if ( type == 'artist' )
+					{
+						items.forEach(function(album){
+						
+							album.setAttributes = {
+								'data-albumart' : album.art_medium
+							};
+							
+							util.cacheImage(album.art_medium);
+							
+						});
+					}
+				
+					new TreeList(items,options);
+				
+				});
+			}
+			else
+			{
+				this.emit('itemSelected',{
+					'type' : type,
+					'id' : id
+				});
+			}
+		
+		}
+	
+	}
+	
+	function itemDoubleClicked(item){
+	
+		this.emit('itemSelected',{
+			'id' : item.getAttribute('data-id'),
+			'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
+		});
+	
+	}
+	
 	Collection.prototype.populate = function(method)
 	{
 		
@@ -227,11 +419,23 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 					
 				});
 			}
-		
-			if ( self.options.appendTo.getElementsByTagName('ol')[0] )
+			else if ( method == 'album' )
 			{
-				self.options.appendTo.getElementsByTagName('ol')[0].removeNode();
+				
+				data.forEach(function(album){
+				
+					album.setAttributes = {
+						'data-albumart' : album.art_medium
+					};
+					
+					util.cacheImage(album.art_medium);
+					
+				});
+				
 			}
+		
+			// remove existing TreeLists.
+			self.listContainer.removeChildren();
 			
 			var options = {
 				'appendTo' : self.listContainer,
@@ -253,46 +457,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// handles populating sub-items.
 			list.on('itemClicked',function(item,isPopulated){
 			
-				if ( ! isPopulated )
-				{
-					// get the item id.
-					var id = item.getAttribute('data-id');
-				
-					// get the parent class.
-					var type = item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/);
-				
-					// determine the method.
-					type = ( type[0] ) ? type[0] : 'artist';
-				
-					var options = {
-						'appendTo' : item,
-						'customClass' : self.api.getSubtype(type),
-						'setAttributes' : []
-					};
-				
-					if ( self.useDragAndDrop )
-					{
-						options.setAttributes.push(['draggable','true']);
-						options.dragStartMethod = self.dragStart;
-					}
-					
-					if ( self.api.getMethodFor(type) )
-					{
-						self.api[self.api.getMethodFor(type)](id,function(items){
-						
-							new TreeList(items,options);
-						
-						});
-					}
-					else
-					{
-						self.emit('itemSelected',{
-							'type' : type,
-							'id' : id
-						});
-					}
-				
-				}
+				itemClicked.call(self,item,isPopulated);
 			
 			});
 		
@@ -300,10 +465,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// handles a double click event on a treelist item.
 			list.on('itemDoubleClicked',function(item){
 			
-				self.emit('itemSelected',{
-					'id' : item.getAttribute('data-id'),
-					'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
-				});
+				itemDoubleClicked.call(self,item);
 			
 			});
 		
