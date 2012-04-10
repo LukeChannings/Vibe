@@ -26,6 +26,8 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 		// emit ready event on connection.
 		this.connection.on('connect',function(){
 		
+			self.ready = true;
+		
 			self.emit('ready');
 		
 			// Api is now ready.
@@ -52,6 +54,12 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 	}
 
+	/**
+	 * getArtistsInGenre
+	 * @description Gets a list of artists that are in a genre.
+	 * @param genre (string) - The name of genre to list artists for.
+	 * @param callback (function) - Function to be sent the results.
+	 */
 	Api.prototype.getArtistsInGenre = function(genre,callback){
 	
 		var genre = decodeURIComponent(genre);
@@ -79,6 +87,12 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 	}
 	
+	/**
+	 * getAlbumsByArtist
+	 * @description Gets a list of albums by a given artist.
+	 * @param id (string) - The unique id of the artist.
+	 * @param callback (function) - The function that will be sent the list of albums.
+	 */
 	Api.prototype.getAlbumsByArtist = function(id,callback){
 	
 		this.connection.emit('getAlbumsByArtist',id,function(err,albums){
@@ -104,11 +118,47 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 	}
 	
-	Api.prototype.getTracksInAlbum = function(id,callback){
+	Api.prototype.getTracksInGenre = function(id,callback){
 	
-		this.connection.emit('getTracksInAlbum',id,function(err,tracks){
+		this.connection.emit('getTracksInGenre',function(tracks){
 		
 			callback(tracks);
+		
+		});
+	
+	}
+	
+	Api.prototype.getTracksByArtist = function(id,callback){
+	
+		this.connection.emit('getTracksByArtist',id,function(err,tracks){
+		
+			callback(tracks);
+		
+		});
+	
+	}
+	
+	/**
+	 * getTracksInAlbum
+	 * @description Get a list of tracks in a given album.
+	 * @param id (string) - The unique identifier for the album.
+	 * @param callback (function) - Function that will be sent the results.
+	 */
+	Api.prototype.getTracksInAlbum = function(id,callback,minimal){
+	
+		this.connection.emit('getTracksInAlbum',id,minimal,function(err,tracks){
+		
+			callback(tracks);
+		
+		});
+	
+	}
+	
+	Api.prototype.getTrack = function(id,callback){
+	
+		this.connection.emit('getTrack',id,function(err,track){
+		
+			callback(track);
 		
 		});
 	

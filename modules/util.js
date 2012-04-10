@@ -85,6 +85,25 @@ define(function(){
 		}
 	}
 	
+	// appendChildren
+	if ( typeof Element.prototype.appendChildren == 'undefined' )
+	{
+		Element.prototype.appendChildren = function(children)
+		{
+			
+			var self = this;
+			
+			children.forEach(function(child){
+			
+				if ( child instanceof Element )
+				{
+					self.appendChild(child);
+				}
+			})
+			
+		}
+	}
+	
 	// Array indexOf. (for IE <= 8)
 	// From MDC - https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf#Compatibility
 	if (! Array.prototype.indexOf)
@@ -271,6 +290,23 @@ define(function(){
 			var image = new Image();
 			
 			image.src = url;
+		
+		},
+		formatTime : function(seconds){
+		
+			// round.
+			seconds = Math.ceil(seconds);
+		
+			// minutes.
+			var minutes = Math.ceil(seconds / 60);
+			
+			var seconds = seconds % 60;
+			
+			if ( String(minutes).length == 1 ) minutes = '0' + String(minutes);
+			
+			if ( String(seconds).length == 1 ) seconds = '0' + String(seconds);
+			
+			return minutes + ':' + seconds;
 		
 		}
 	}

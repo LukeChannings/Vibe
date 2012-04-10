@@ -141,7 +141,7 @@ and the input element into the label.
 
 - __name__ - The input name.
 
-- __default__ - The default input value.
+- __placeholder__ - The default input value.
 
 ####MDD.alignment####
 

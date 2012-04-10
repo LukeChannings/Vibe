@@ -1,11 +1,40 @@
 body{
-	background: #eee;
+	background: #f9f9f9;
 	font-family: 'Lucida Sans', Helvetica, sans-serif, Arial;
 	font-size: 62.5%;
 	color: #333;
 }
 
+#MusicMe{
+	background: url('images/logo.png') no-repeat center 25px;
+	background-size: auto 32px;
+	width: 95%;
+	margin: auto;
+	padding-top: 100px;
+}
+
+#MusicMe #UICollection,#MusicMe #UIPlaylist{
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+#MusicMe #UICollection:hover,#MusicMe #UIPlaylist:hover{
+	border-color: #ddf;
+}
+
+#MusicMe #UIPlaylist.draghighlight{
+	border-color: #4277ef;
+}
+
 #MusicMe #UICollection{
 	float: left;
 	height: 400px;
+	width: 22%;
+}
+
+#MusicMe #UIPlaylist{
+	float: right;
+	height: 400px;
+	width: 75%;
 }

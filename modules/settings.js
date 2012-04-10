@@ -9,7 +9,7 @@ define(function(){
 		var self = this;
 	
 		// settings object.
-		var settings = {};
+		var settings = this.settings = {};
 	
 		/**
 		 * readSettings

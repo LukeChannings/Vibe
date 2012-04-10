@@ -2,7 +2,7 @@
  * MusicMe Collection
  * @description Provides an interface for representing the MusicMe collection.
  */
-define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/TreeList/TreeList'],function(util, require, EventEmitter, Api, TreeList){
+define(['util','require','dependencies/EventEmitter','UI/Widget/TreeList/TreeList'],function(util, require, EventEmitter, TreeList){
 
 	// include stylesheet.
 	util.registerStylesheet(require.toUrl('./Collection.css'));
@@ -16,8 +16,56 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		// make sure that options exists to prevent reference errors.
 		var options = this.options = options || {};
 	
-		// make an Api instance.
-		var api = this.api = new Api(settings.get('host'),settings.get('port'));
+		// check for a shared Api instance.
+		if ( typeof options.sharedApi == 'object' )
+		{
+			var api = this.api = options.sharedApi;
+			
+			if ( api.ready )
+			{
+				apiReady();
+			}
+			else
+			{
+				// wait for the Api to become ready.
+				api.once('ready',function(){
+				
+					apiReady.call(self);
+				
+				});
+			}
+			
+			// handle an api error.
+			api.once('error',function(){
+			
+				apiError.call(self);
+			
+			});
+		}
+		else
+		{
+			require(['api/musicme'],function(Api){
+			
+				// make an Api instance.
+				var api = this.api = new Api(settings.get('host'),settings.get('port'));
+			
+				// wait for the Api to become ready.
+				api.once('ready',function(){
+				
+					apiReady.call(self);
+				
+				});
+			
+				// handle an api error.
+				api.once('error',function(){
+				
+					apiError.call(self);
+				
+				});
+			
+			});
+			
+		}
 	
 		// create the UICollection element.
 		var element = this.element = document.createElement('div');
@@ -40,7 +88,9 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 		element.addClass('loading');
 
 		// wait for the API to connect.
-		api.once('ready',function(){
+		function apiReady(){
+			
+			var self = this;
 			
 			element.removeClass('loading');
 
@@ -163,18 +213,18 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			
 			self.populate(type);
 			
-		});
+		}
 		
 		// if the Api couldn't connect.
-		api.once('error',function(){
+		function apiError(){
 		
 			// log the error.
 			console.error("UICollection failed to create an Api instance. Cannot continue.");
 		
 			// emit the error.
-			self.emit('error','ERR_CONNECT');
+			this.emit('error','ERR_CONNECT');
 		
-		});
+		}
 	
 		// Drag And Drop
 		// If data from outside the browser is dropped the event 'dataDrop' is emitted
@@ -220,6 +270,10 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				{
 					var url = target.getAttribute('data-albumart');
 				}
+				else if ( target.parentNode.parentNode.getAttribute('data-albumart') )
+				{
+					var url = target.parentNode.parentNode.getAttribute('data-albumart');
+				}
 				else
 				{
 					var url = require.toUrl('./CollectionGenericAlbumArt.png');
@@ -229,7 +283,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				DragImage.src = url;
 				
 				// Set the ghost image.
-				e.dataTransfer.setDragImage(DragImage,22,-20);
+				e.dataTransfer.setDragImage(DragImage,-10,-10);
 			
 			}
 		
@@ -249,7 +303,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// triggered when the item enters the drop target.
 			util.addListener(options.dropTarget,'dragenter',function(e){
 			
-				(e.target || e.srcElement).addClass('dragentered');
+				options.dropTarget.addClass('draghighlight');
 			
 				return false;
 			
@@ -259,7 +313,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 			// triggered when the dragged item leaves the drop target.
 			util.addListener(options.dropTarget,'dragleave',function(e){
 				
-				(e.target || e.srcElement).removeClass('dragentered');
+				options.dropTarget.removeClass('draghighlight');
 				
 			});
 			
@@ -269,7 +323,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				
 				var target = e.target || e.srcElement;
 				
-				target.removeClass('dragentered');
+				options.dropTarget.removeClass('draghighlight');
 				
 				if ( e.dataTransfer.getData('Text') )
 				{
@@ -377,7 +431,7 @@ define(['util','require','dependencies/EventEmitter','api/musicme','UI/Widget/Tr
 				
 					new TreeList(items,options);
 				
-				});
+				},true);
 			}
 			else
 			{
