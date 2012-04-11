@@ -222,6 +222,40 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 		});
 	
 	}
+	
+	/**
+	 * getSubtype
+	 * @description Returns type below the specified type in the set hierarchy.
+	 */
+	Api.prototype.getSubtype = function(type){
+	
+		var types = {
+			'genre' : 'artist',
+			'artist' : 'album',
+			'album' : 'track'
+		}
+		
+		if ( type in types ) return types[type];
+		else return false;
+	
+	}
+
+	/**
+	 * getMethod
+	 * @description returns the corresponding Api method for a given type.
+	 */
+	Api.prototype.getMethod = function(type){
+	
+		var types = {
+			'genre' : 'getArtistsInGenre',
+			'artist' : 'getAlbumsByArtist',
+			'album' : 'getTracksInAlbum'
+		}
+		
+		if ( type in types ) return types[type];
+		else return false;
+	
+	}
 
 	return Api;
 

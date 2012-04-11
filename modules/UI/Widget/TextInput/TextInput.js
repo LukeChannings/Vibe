@@ -27,6 +27,8 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			'type' : 'text'
 		});
 		
+		if ( typeof options.customClass == 'string' ) textInput.addClass(options.customClass);
+		
 		if ( options.placeholder )
 		{
 			input.value = options.placeholder;

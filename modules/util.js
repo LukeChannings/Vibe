@@ -308,6 +308,51 @@ define(function(){
 			
 			return minutes + ':' + seconds;
 		
+		},
+		createElement : function(def){
+		
+			var self = this;
+		
+			// check that the definition is an object and contains a tag property.
+			if ( typeof def == 'object' && def.hasOwnProperty('tag') )
+			{
+				// create an element.
+				var element = document.createElement(def.tag);
+				
+				// set an Id.
+				if ( def.hasOwnProperty('id') ) element.setAttribute('id',def.id);
+				
+				// set a class.
+				if ( def.hasOwnProperty('customClass') ) element.setAttribute('class',def.customClass);
+				
+				// check for custom attributes.
+				if ( def.hasOwnProperty('setAttributes') ) element.setAttributes(def.setAttributes);
+				
+				// check for children.
+				if ( def.hasOwnProperty('children') && def.children instanceof Array )
+				{
+					def.children.forEach(function(child){
+					
+						child.appendTo = element;
+					
+						self.createElement(child);
+					
+					});
+				}
+				
+				// check if we're appending the element.
+				if ( def.hasOwnProperty('appendTo') && def.appendTo instanceof Element )
+				{
+					def.appendTo.appendChild(element);
+				}
+				
+				return element;
+				
+			}
+			
+			// return false if there is no definition.
+			else return false;
+		
 		}
 	}
 

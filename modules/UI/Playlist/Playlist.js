@@ -6,7 +6,7 @@ define(['require','util'],function(require,util){
 
 	util.registerStylesheet(require.toUrl('./Playlist.css'));
 
-	function Playlist(options)
+	function Playlist(appendTo, apiInstance)
 	{
 	
 		// make a playlist element.
@@ -38,24 +38,15 @@ define(['require','util'],function(require,util){
 
 		header.appendChild(legend);
 
-		if ( options.sharedApi )
-		{
-			api = this.api = options.sharedApi;
-		}
-		else
-		{
-			require(['api/musicme'],function(Api){
-			
-				api = self.api = new Api(settings.get('host'),settings.get('port'));
-			
-			});
-		}
+		var api = this.api = apiInstance;
+		
+		if ( ! api ) this.emit('error');
 	
 		// append the list.
 		element.appendChild(list);
 	
 		// append the element.
-		(options.appendTo || document.body).appendChild(element);
+		(appendTo || document.body).appendChild(element);
 	
 	}
 
@@ -105,7 +96,7 @@ define(['require','util'],function(require,util){
 	{
 		if ( type == 'genre' )
 		{
-			this.api.TracksInGenre(id,function(tracks){
+			this.api.getTracksInGenre(id,function(tracks){
 			
 				callback(tracks);
 			
@@ -145,7 +136,6 @@ define(['require','util'],function(require,util){
 	 */
 	Playlist.prototype.add = function(type, id)
 	{
-	
 		var self = this;
 	
 		getItems.call(this,type,id,function(items){

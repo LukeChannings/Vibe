@@ -76,10 +76,10 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 		{
 	
 			// fetch UICollection.
-			require(['UI/Collection/Collection','UI/Playlist/Playlist','api/musicme'],function(UICollection,UIPlaylist,Api){
+			require(['UI/Collection/CollectionRefactored','UI/Playlist/Playlist','api/musicme'],function(UICollection,UIPlaylist,Api){
 			
 				// make an api instance.
-				var api = new Api(settings.get('host'),settings.get('port'));
+				api = new Api(settings.get('host'),settings.get('port'));
 			
 				api.on('error',function(){
 				
@@ -87,26 +87,25 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 				
 				});
 			
-				// make a UIPlaylist instance.
-				playlist = new UIPlaylist({
-					appendTo : document.getElementById('MusicMe')
+				var musicme = document.getElementById('MusicMe');
+				
+				api.on('ready',function(){
+				
+					// make a UIPlaylist instance.
+					playlist = new UIPlaylist(musicme,api);
+					
+					// make a UICollection instance.
+					var collection = new UICollection('genre', musicme, api, playlist.element, true, true);
+					
+					collection.on('itemSelected',function(collectionItem){
+						
+						// add the item to the collection.
+						playlist.add(collectionItem.type,collectionItem.id);
+						
+					});
+				
 				});
 			
-				// make a UICollection instance.
-				var collection = new UICollection({
-					appendTo : document.getElementById('MusicMe'),
-					rootType : 'artist',
-					useSearchBar : true,
-					dropTarget : playlist.element,
-					sharedApi : api
-				});
-				
-				collection.on('itemSelected',function(collectionItem){
-					
-					// add the item to the collection.
-					playlist.add(collectionItem.type,collectionItem.id);
-					
-				});
 			});
 		
 		}
