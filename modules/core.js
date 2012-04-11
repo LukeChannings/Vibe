@@ -76,7 +76,7 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 		{
 	
 			// fetch UICollection.
-			require(['UI/Collection/CollectionRefactored','UI/Playlist/Playlist','api/musicme'],function(UICollection,UIPlaylist,Api){
+			require(['UI/Collection/Collection','UI/Playlist/Playlist','api/musicme'],function(UICollection,UIPlaylist,Api){
 			
 				// make an api instance.
 				api = new Api(settings.get('host'),settings.get('port'));
@@ -89,13 +89,13 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 			
 				var musicme = document.getElementById('MusicMe');
 				
-				api.on('ready',function(){
+				api.once('ready',function(){
 				
 					// make a UIPlaylist instance.
-					playlist = new UIPlaylist(musicme,api);
+					var playlist = new UIPlaylist(musicme,api);
 					
 					// make a UICollection instance.
-					var collection = new UICollection('genre', musicme, api, playlist.element, true, true);
+					collection = new UICollection('artist', musicme, api, playlist.element, true, true);
 					
 					collection.on('itemSelected',function(collectionItem){
 						

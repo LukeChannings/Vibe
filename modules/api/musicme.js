@@ -48,6 +48,16 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 		this.connection.emit('getArtists',function(err,artists){
 		
+			test = artists;
+		
+			artists.sort(function(a,b){
+			
+				if (a.name < b.name) return -1;
+				if (a.name > b.name)  return 1;
+				return 0;
+			
+			});
+		
 			callback(artists);
 		
 		});
@@ -66,6 +76,14 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 		this.connection.emit('getArtistsInGenre',genre,function(err,artists){
 		
+			artists.sort(function(a,b){
+			
+				if (a.name < b.name) return -1;
+				if (a.name > b.name)  return 1;
+				return 0;
+			
+			});
+		
 			callback(artists);
 		
 		});
@@ -80,6 +98,14 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	Api.prototype.getAlbums = function(callback){
 	
 		this.connection.emit('getAlbums',function(err,albums){
+		
+			albums.sort(function(a,b){
+			
+				if (a.title < b.title) return -1;
+				if (a.title > b.title)  return 1;
+				return 0;
+			
+			});
 		
 			callback(albums);
 		
@@ -96,6 +122,20 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	Api.prototype.getAlbumsByArtist = function(id,callback){
 	
 		this.connection.emit('getAlbumsByArtist',id,function(err,albums){
+		
+			albums.forEach(function(album){
+			
+				album.title = album.title || "Unknown Album.";
+			
+			});
+			
+			albums.sort(function(a,b){
+			
+				if (a.title < b.title) return -1;
+				if (a.title > b.title)  return 1;
+				return 0;
+			
+			});
 		
 			callback(albums);
 		
@@ -118,11 +158,21 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 	}
 	
-	Api.prototype.getTracksInGenre = function(id,callback){
+	Api.prototype.getTracksInGenre = function(genre,callback){
 	
-		this.connection.emit('getTracksInGenre',function(tracks){
+		genre = decodeURIComponent(genre);
+	
+		this.connection.emit('getTracksInGenre',genre,function(err,tracks){
 		
-			callback(tracks);
+			tracks.forEach(function(track){
+			
+				track.albumname = track.albumname || 'Unknown Album';
+			
+				track.artistname = track.artistname || 'Unknown Artist';
+			
+				track.trackname = track.trackname || 'Unknown Track';
+			
+			});
 		
 		});
 	
@@ -131,6 +181,16 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	Api.prototype.getTracksByArtist = function(id,callback){
 	
 		this.connection.emit('getTracksByArtist',id,function(err,tracks){
+		
+			tracks.forEach(function(track){
+			
+				track.albumname = track.albumname || 'Unknown Album';
+			
+				track.artistname = track.artistname || 'Unknown Artist';
+			
+				track.trackname = track.trackname || 'Unknown Track';
+			
+			});
 		
 			callback(tracks);
 		
@@ -148,6 +208,16 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 		this.connection.emit('getTracksInAlbum',id,minimal,function(err,tracks){
 		
+			tracks.forEach(function(track){
+			
+				track.albumname = track.albumname || 'Unknown Album';
+			
+				track.artistname = track.artistname || 'Unknown Artist';
+			
+				track.trackname = track.trackname || 'Unknown Track';
+			
+			});
+		
 			callback(tracks);
 		
 		});
@@ -158,7 +228,13 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	
 		this.connection.emit('getTrack',id,function(err,track){
 		
-			callback(track);
+			track.albumname = track.albumname || 'Unknown Album';
+			
+			track.artistname = track.artistname || 'Unknown Artist';
+			
+			track.trackname = track.trackname || 'Unknown Track';
+		
+			callback(track);	
 		
 		});
 	
@@ -172,6 +248,14 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	Api.prototype.getGenres = function(callback){
 	
 		this.connection.emit('getGenres',function(err,genres){
+		
+			genres.sort(function(a,b){
+			
+				if (a.genre < b.genre) return -1;
+				if (a.genre > b.genre)  return 1;
+				return 0;
+			
+			});
 		
 			callback(genres);
 		

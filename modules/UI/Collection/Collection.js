@@ -1,6 +1,6 @@
 /**
  * Collection
- * @description User Interface module to create a UICollection view.
+ * @description User Interface module to create a collection view.
  * @docs - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection
  * @dependencies - util, musicme/api, UI/Widget/TreeList, EventEmitter.
  */
@@ -14,7 +14,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @description creates a new collection instance.
 	 * @param config (object) - Object Literal options to initialise with.
 	 */
-	function Collection(type, appendTo, apiInstance, dropTarget, useSearchBar, useStatusBar){
+	function Collection(type, appendTo, apiInstance, dropTarget, useSearchBar, useInfoBar){
 
 		var self = this;
 
@@ -44,7 +44,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			
 			initList.call(this,type);
 			
-			if ( useStatusBar ) initStatusBar.call(this);
+			if ( useInfoBar ) initInfoBar.call(this);
 			
 			appendTo.appendChild(node);
 		}
@@ -91,7 +91,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			// Create a new ghost image.
 			var DragImage = new Image();
 			
-			if ( type == 'artist' )
+			if ( type == 'artist' || type == 'genre' )
 			{
 				var url = require.toUrl('./CollectionGenericArtistArt.png');
 			}
@@ -122,6 +122,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			
 			if (e.preventDefault) e.preventDefault();
 			
+			self.dropTarget.addClass('draghighlight');
+			
 			e.dataTransfer.effectAllowed = 'all';
 			
 			return false;
@@ -131,8 +133,6 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		// dragenter
 		// triggered when the item enters the drop target.
 		util.addListener(this.dropTarget,'dragenter',function(e){
-		
-			self.dropTarget.addClass('draghighlight');
 		
 			return false;
 		
@@ -156,6 +156,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			
 			if ( e.dataTransfer.getData('Text') )
 			{
+			
 				self.emit('itemSelected',JSON.parse(e.dataTransfer.getData('Text')));
 			}
 			else
@@ -319,10 +320,24 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	}
 
 	/**
-	 * initStatusBar
-	 * @description adds a status bar below the TreeList to indicate the number of items there are in the collection. e.g. 300 Artists.
+	 * initInfoBar
+	 * @description adds an info bar below the TreeList to indicate the number of items there are in the collection. e.g. 300 Artists.
 	 */
-	function initStatusBar(){}
+	function initInfoBar(){
+	
+		this.node.addClass('usingInfo');
+	
+		var statusBar = this.statusBar = util.createElement({tag : 'div', children : [{tag : 'span'}],customClass : 'statusBar', appendTo : this.node});
+	
+		this.updateStatusBar = function(type,itemCount){
+		
+			statusBar.getElementsByTagName('span')[0].innerHTML = itemCount + ' ' + type.charAt(0).toUpperCase() + type.slice(1);
+			
+			if ( itemCount > 1 ) statusBar.getElementsByTagName('span')[0].innerHTML += 's';
+		
+		}
+	
+	}
 
 	/**
 	 * populateWithType
@@ -383,6 +398,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			// create the tree list.
 			var list = new TreeList(data,options);
 			
+			if ( self.updateStatusBar ) self.updateStatusBar(type,data.length);
+			
 			// itemClicked
 			// handles populating sub-items.
 			list.on('itemClicked',function(item,isPopulated){
@@ -392,7 +409,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			});
 		
 			// itemDoubleClicked
-			// handles a double click event on a treelist item.
+			// handles a double click event on a tree list item.
 			list.on('itemDoubleClicked',function(item){
 			
 				doubleClickHandler.call(self,item);
@@ -428,7 +445,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				'setAttributes' : []
 			};
 		
-			if ( this.useDragAndDrop )
+			if ( this.dropTarget )
 			{
 				options.setAttributes.push(['draggable','true']);
 				options.dragStartMethod = self.dragStart;
@@ -441,6 +458,10 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 					if ( type == 'artist' )
 					{
 						items.forEach(function(album){
+						
+							console.log(this.api.getMethod(type));
+						
+							album.title = album.title || "Unknown Album";
 						
 							album.setAttributes = {
 								'data-albumart' : album.art_medium
@@ -475,6 +496,11 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	function doubleClickHandler(item){
 	
 		this.emit('itemSelected',{
+			'id' : item.getAttribute('data-id'),
+			'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
+		});
+		
+		console.log({
 			'id' : item.getAttribute('data-id'),
 			'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
 		});

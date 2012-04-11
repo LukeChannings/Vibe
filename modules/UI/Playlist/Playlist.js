@@ -73,7 +73,7 @@ define(['require','util'],function(require,util){
 				item[i] = util.formatTime(item[i]);
 			}
 			
-			columns[i].innerHTML = item[i];
+			columns[i].innerHTML = item[i] || '&nbsp;';
 			
 			columns[i].addClass(i);
 		}
