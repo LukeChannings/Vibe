@@ -462,8 +462,6 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 					{
 						items.forEach(function(album){
 						
-							console.log(this.api.getMethod(type));
-						
 							album.title = album.title || "Unknown Album";
 						
 							album.setAttributes = {
@@ -503,11 +501,6 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
 		});
 		
-		console.log({
-			'id' : item.getAttribute('data-id'),
-			'type' : item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0]
-		});
-	
 	}
 
 	// event emitter mixin.

@@ -33,7 +33,7 @@ body #UIPlaylist{
 	overflow: auto;
 }
 
-#UIPlaylist .list > li:nth-child(even){background: url('PlaylistZebraStripe.png') repeat-x}
+#UIPlaylist .list > li:nth-child(even){background: #f1f4ff}
 
 #UIPlaylist li > ol > li{
 	display: inline-block;
