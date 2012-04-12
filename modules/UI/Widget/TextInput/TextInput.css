@@ -23,7 +23,7 @@
 
 .TextInputWidget.search > input{
 	margin-left: 24px;
-	width: 80%;
+	width: 75%;
 }
 
 .TextInputWidget > input.placeholder{color: #aaa}

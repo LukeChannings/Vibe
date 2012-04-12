@@ -104,6 +104,15 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			if ( typeof options.dragStartMethod == 'function' && options.isRootNode ) 
 			{
 				util.addListener(item,'dragstart',options.dragStartMethod);
+				
+				util.addListener(item,'selectstart',function(e){
+			
+					(e.target || e.srcElement).dragDrop();
+			
+					return false;
+				
+				});
+				
 			}
 			
 			// insert item classes.

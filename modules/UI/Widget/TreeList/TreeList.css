@@ -23,10 +23,6 @@ body.svg .treeList{background-image: url('TreeListZebraStripes.svg')}
 	padding-left: 25px;
 	white-space: nowrap;
 	cursor: default;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
 	background: url('TreeListRightArrow.png') no-repeat 8.5px 8.5px;
 	overflow: hidden;
 	text-overflow: ellipsis;

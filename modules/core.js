@@ -92,7 +92,7 @@ require(['dep/domReady','settings','util'], function (domReady,Settings,util) {
 				api.once('ready',function(){
 				
 					// make a UIPlaylist instance.
-					var playlist = new UIPlaylist(musicme,api);
+					playlist = new UIPlaylist(musicme,api);
 					
 					// make a UICollection instance.
 					collection = new UICollection('artist', musicme, api, playlist.element, true, true);

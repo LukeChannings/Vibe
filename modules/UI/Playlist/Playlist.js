@@ -6,7 +6,7 @@ define(['require','util'],function(require,util){
 
 	util.registerStylesheet(require.toUrl('./Playlist.css'));
 
-	function Playlist(appendTo, apiInstance)
+	function Playlist(appendTo, apiInstance, useControls, useStatusBar)
 	{
 	
 		// make a playlist element.
@@ -47,6 +47,10 @@ define(['require','util'],function(require,util){
 	
 		// append the element.
 		(appendTo || document.body).appendChild(element);
+	
+		element.addClass('usingInfo');
+	
+		util.createElement({tag : 'div', customClass : 'infoBar', children : {tag : 'span'},appendTo : element});
 	
 	}
 

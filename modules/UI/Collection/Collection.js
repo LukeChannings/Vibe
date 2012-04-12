@@ -88,32 +88,35 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				'type' : type
 			}));
 			
-			// Create a new ghost image.
-			var DragImage = new Image();
-			
-			if ( type == 'artist' || type == 'genre' )
+			// set a drag image.
+			if ( e.dataTransfer.setDragImage )
 			{
-				var url = require.toUrl('./CollectionGenericArtistArt.png');
+				// Create a new ghost image.
+				var DragImage = new Image();
+				
+				if ( type == 'artist' || type == 'genre' )
+				{
+					var url = require.toUrl('./CollectionGenericArtistArt.png');
+				}
+				else if ( target.getAttribute('data-albumart') )
+				{
+					var url = target.getAttribute('data-albumart');
+				}
+				else if ( target.parentNode.parentNode.getAttribute('data-albumart') )
+				{
+					var url = target.parentNode.parentNode.getAttribute('data-albumart');
+				}
+				else
+				{
+					var url = require.toUrl('./CollectionGenericAlbumArt.png');
+				}
+				
+				// Set a generic album art.
+				DragImage.src = url;
+				
+				// Set the ghost image.
+				e.dataTransfer.setDragImage(DragImage,-10,-10);
 			}
-			else if ( target.getAttribute('data-albumart') )
-			{
-				var url = target.getAttribute('data-albumart');
-			}
-			else if ( target.parentNode.parentNode.getAttribute('data-albumart') )
-			{
-				var url = target.parentNode.parentNode.getAttribute('data-albumart');
-			}
-			else
-			{
-				var url = require.toUrl('./CollectionGenericAlbumArt.png');
-			}
-			
-			// Set a generic album art.
-			DragImage.src = url;
-			
-			// Set the ghost image.
-			e.dataTransfer.setDragImage(DragImage,-10,-10);
-		
 		}
 	
 		// dragover

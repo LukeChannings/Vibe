@@ -9,6 +9,7 @@ body{
 	background: url('images/logo.png') no-repeat center 25px;
 	background-size: auto 32px;
 	width: 95%;
+	min-width: 900px;
 	margin: auto;
 	padding-top: 100px;
 }
@@ -20,7 +21,7 @@ body{
 }
 
 #MusicMe #UICollection:hover,#MusicMe #UIPlaylist:hover{
-	border-color: #ddf;
+	border-color: #ccd4ee;
 }
 
 #MusicMe #UIPlaylist.draghighlight{
