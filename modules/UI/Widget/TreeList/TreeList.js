@@ -109,6 +109,8 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			
 					(e.target || e.srcElement).dragDrop();
 			
+					if ( e.preventDefault ) e.preventDefault();
+			
 					return false;
 				
 				});
