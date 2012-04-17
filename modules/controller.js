@@ -14,7 +14,7 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 		window.settings = new Settings();
 	
 		// make an Api instance.
-		api = new Api();
+		var api = new Api();
 		
 		// get the musicme element.
 		var musicme = document.getElementById('MusicMe');
