@@ -353,6 +353,17 @@ define(function(){
 			// return false if there is no definition.
 			else return false;
 		
+		},
+		error : function(message, type){
+		
+			var error = new Error();
+		
+			error.message = message || 'Unknown error.'
+		
+			error.type = type;
+		
+			return error;
+		
 		}
 	}
 
