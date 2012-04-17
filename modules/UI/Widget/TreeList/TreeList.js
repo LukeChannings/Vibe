@@ -104,18 +104,21 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			if ( typeof options.dragStartMethod == 'function' && options.isRootNode ) 
 			{
 				util.addListener(item,'dragstart',options.dragStartMethod);
-				
-				util.addListener(item,'selectstart',function(e){
 			
-					(e.target || e.srcElement).dragDrop();
-			
-					if ( e.preventDefault ) e.preventDefault();
-			
-					return false;
-				
-				});
-				
 			}
+			
+			util.addListener(item,'selectstart',function(e){
+			
+				if ( e.preventDefault ) e.preventDefault();
+			
+				if ( typeof options.dragStartMethod == 'function' && options.isRootNode )
+				{
+					(e.target || e.srcElement).dragDrop();
+				}
+			
+				return false;
+				
+			});
 			
 			// insert item classes.
 			if ( itemClasses.length !== 0 ) item.setAttribute('class',itemClasses.join(' '));

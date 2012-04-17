@@ -14,43 +14,60 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @description creates a new collection instance.
 	 * @param config (object) - Object Literal options to initialise with.
 	 */
-	function Collection(type, appendTo, apiInstance, dropTarget, useSearchBar, useInfoBar){
+	function Collection(options){
 
+		// check for a valid options object.
+		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
+		{
+			this.emit('error',util.error('A valid options object was not passed to the UICollection constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection.','OPT_ERR'));
+		}
+		
 		var self = this;
+		
+		// check for a node to append the UICollection to.
+		var appendTo = this.parentNode = ( options.appendTo instanceof Element ) ? options.appendTo : document.body;
+
+		// set the root type.
+		var type = this.type = options.withRootType || 'artist';
+		
+		// set api.
+		var api = this.api = options.withApi;
 
 		// create a collection node.
 		var node = this.node = util.createElement({tag : 'div', id : 'UICollection'});
 
-		// set the root type.
-		var type = this.type = type || 'artist';
-
-		// set element to append to.
-		var appendTo = this.parentNode = ( appendTo instanceof Element ) ? appendTo : document.body;
-		
-		if ( dropTarget instanceof Element )
-		{
-		
-			this.dropTarget = dropTarget;
-		
-			initDragAndDrop.call(this);
-		}
-		
-		// set api.
-		var api = this.api = apiInstance;
-		
+		// check for an Api instance.
 		if ( api )
 		{
-			if ( useSearchBar ) initSearchBar.call(this);
+			// check for the search bar option.
+			if ( options.usingSearch ) initSearchBar.call(this);
 			
+			// create the collection tree list.
 			initList.call(this,type);
 			
-			if ( useInfoBar ) initInfoBar.call(this);
+			// check for the info bar option.
+			if ( options.usingInfoBar ) initInfoBar.call(this);
 			
+			// append the UICollection to the set parent node.
 			appendTo.appendChild(node);
 		}
+		
+		// if there is no Api instance emit an error.
 		else
 		{
-			this.emit('error');
+			this.emit('error',util.error('A valid Api instance was not passed to the UICollection constructor.','API_ERR'));
+			
+		}
+
+		// check for a drag and drop element.
+		if ( options.dragAndDropElement instanceof Element )
+		{
+		
+			// if there is a drag and drop element set it as a property,
+			this.dropTarget = options.dragAndDropElement;
+		
+			// initialise DnD methods.
+			initDragAndDrop.call(this);
 		}
 
 	}

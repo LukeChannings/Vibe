@@ -5,6 +5,15 @@ body{
 	color: #333;
 }
 
+html{
+	height: 100%;
+}
+
+body.loading{
+	height: 100%;
+	background: #f9f9f9 url('modules/UI/Collection/CollectionLoadingThrobber.gif') no-repeat center center;
+}
+
 #MusicMe{
 	background: url('images/logo.png') no-repeat center 25px;
 	background-size: auto 32px;
@@ -12,6 +21,9 @@ body{
 	min-width: 900px;
 	margin: auto;
 	padding-top: 100px;
+	/* keep the app layer above the overlay by default. */
+	position: relative;
+	z-index: 1;
 }
 
 #MusicMe #UICollection,#MusicMe #UIPlaylist{

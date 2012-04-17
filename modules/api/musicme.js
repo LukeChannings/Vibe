@@ -2,22 +2,51 @@
  * MusicMe API
  * @description MusicMe Application Programming Interface. Allows interfacing with a MusicMe server.
  */
-define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmitter){
+define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(EventEmitter, util){
 
 	// constructor.
-	function Api(host,port)
+	function Api()
 	{
 	
 		var self = this;
 
-		// set ready default.
-		this.ready = false;
+		// connect.
+		this.connect();
+	}
+	
+	EventEmitter.augment(Api.prototype);
 
+	/**
+	 * reconnect
+	 * @description Attempt to reconnect to the MusicMe server.
+	 */
+	Api.prototype.connect = function(){
+	
+		var self = this;
+		
+		this.connection = null;
+		
 		// connect to the MusicMe server.
-		this.connection = io.connect( 'http://' + ( host || 'localhost' ) + ':' + ( port || 6232 ) );
+		this.connection = io.connect( 'http://' + settings.get('host')  + ':' + settings.get('port')  );
+
+		document.body.addClass('loading');
+
+		window.apiTimeout = setTimeout(function(){
+		
+			document.body.removeClass('loading');
+		
+			self.emit('error');
+		
+		},1500);
 
 		// create an error dialogue on error.
 		this.connection.on('error',function(){
+
+			document.body.removeClass('loading');
+
+			clearTimeout(window.apiTimeout);
+
+			window.apiTimeout = undefined;
 
 			self.emit('error');
 
@@ -26,18 +55,29 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 		// emit ready event on connection.
 		this.connection.on('connect',function(){
 		
+			clearTimeout(window.apiTimeout);
+			
+			window.apiTimeout = undefined;
+		
+			document.body.removeClass('loading');
+		
 			self.ready = true;
 		
-			self.emit('ready');
+			self.emit('connected');
 		
 			// Api is now ready.
 			self.ready = true;
 		
 		});
+	
+		// disconnect event.
+		this.connection.on('disconnect',function(){
+			
+			self.emit('disconnected');
+			
+		});
 
 	}
-	
-	EventEmitter.augment(Api.prototype);
 
 	/**
 	 * getArtists
@@ -47,8 +87,6 @@ define(['dependencies/EventEmitter','dependencies/socket.io'],function(EventEmit
 	Api.prototype.getArtists = function(callback){
 	
 		this.connection.emit('getArtists',function(err,artists){
-		
-			test = artists;
 		
 			artists.sort(function(a,b){
 			

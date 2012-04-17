@@ -6,8 +6,14 @@ define(['require','util'],function(require,util){
 
 	util.registerStylesheet(require.toUrl('./Playlist.css'));
 
-	function Playlist(appendTo, apiInstance, useControls, useStatusBar)
+	function Playlist(options)
 	{
+	
+		// check for a valid options object.
+		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
+		{
+			this.emit('error',util.error('A valid options object was not passed to the UIPlaylist constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Playlist.','OPT_ERR'));
+		}
 	
 		// make a playlist element.
 		var element = this.element = document.createElement('div'),
@@ -38,7 +44,7 @@ define(['require','util'],function(require,util){
 
 		header.appendChild(legend);
 
-		var api = this.api = apiInstance;
+		var api = this.api = options.withApi;
 		
 		if ( ! api ) this.emit('error');
 	
@@ -46,7 +52,7 @@ define(['require','util'],function(require,util){
 		element.appendChild(list);
 	
 		// append the element.
-		(appendTo || document.body).appendChild(element);
+		(options.appendTo || document.body).appendChild(element);
 	
 		element.addClass('usingInfo');
 	
