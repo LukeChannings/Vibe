@@ -113,11 +113,13 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	 */
 	UIPlaylist.prototype.redraw = function(items){
 	
+		var self = this;
+	
 		items.forEach(function(item){
 		
-			var node = createItemNode(item,this.columns);
+			var node = createItemNode(item,self.columns);
 			
-			this.node.appendChild(node);
+			self.node.appendChild(node);
 		
 		});
 	
