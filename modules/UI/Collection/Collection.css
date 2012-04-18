@@ -70,14 +70,14 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 	width: 100%;
 	height: 19px;
 	border-top: 1px solid #ddd;
-	background: #ffffff;
-	background: -moz-linear-gradient(top,  #ffffff 0%, #dddddd 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#dddddd));
-	background: -webkit-linear-gradient(top,  #ffffff 0%,#dddddd 100%);
-	background: -o-linear-gradient(top,  #ffffff 0%,#dddddd 100%);
-	background: -ms-linear-gradient(top,  #ffffff 0%,#dddddd 100%);
-	background: linear-gradient(top,  #ffffff 0%,#dddddd 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 );
+	background: #fff;
+	background: -moz-linear-gradient(top,  #fff 0%, #ddd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#ddd));
+	background: -webkit-linear-gradient(top,  #fff 0%,#ddd 100%);
+	background: -o-linear-gradient(top,  #fff 0%,#ddd 100%);
+	background: -ms-linear-gradient(top,  #fff 0%,#ddd 100%);
+	background: linear-gradient(top,  #fff 0%,#ddd 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#ddd',GradientType=0 );
 	border-bottom-right-radius: 2px;
 	border-bottom-left-radius: 2px;
 }
@@ -89,7 +89,7 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 	color: #333;
 	margin: 2px 5px;
 	display: block;
-	text-shadow: 1px 2px 3px #bbb;
+	text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
 }
 
 /* @end */

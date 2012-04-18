@@ -160,35 +160,59 @@ define(function(){
 		
 		}
 	}
+	
+	// console exception prevention.
+	if ( ! window.console || ! window.console.log || ! window.console.warn || ! window.console.error )
+	{
+		if ( ! window.console ) window.console = {};
+		
+		if ( ! console.log ) window.console.log = function(){}
+		
+		if ( ! console.warn ) window.console.warn = function(){}
+		
+		if ( ! console.error ) window.console.error = function(){} 
+	}
 
 	/**
 	 * Util Object.
 	 */
 	var Util = {
-		addListener : function(element,listenFor,callback){
+		addListener : (function(){
 		
 			if ( document.addEventListener )
 			{
-				element.addEventListener(listenFor,callback,false);
+				return function(element,listenFor,callback)
+				{
+					element.addEventListener(listenFor,callback,false);
+				}
 			}
 			else
 			{
-				element.attachEvent('on' + listenFor, callback);
+				return function(element,listenFor,callback)
+				{
+					element.attachEvent('on' + listenFor, callback);
+				}
 			}
 		
-		},
-		removeListener : function(element,listenFor,dispatch){
+		})(),
+		removeListener : (function(){
 		
 			if ( document.removeEventListener )
 			{
-				element.removeEventListener(listenFor,dispatch,false);
+				return function(element,listenFor,dispatch)
+				{
+					element.removeEventListener(listenFor,dispatch,false);
+				}
 			}
 			else
 			{
-				element.detachEvent(listenFor,dispatch);
+				return function(element,listenFor,dispatch)
+				{
+					element.detachEvent(listenFor,dispatch);
+				}
 			}
 		
-		},
+		})(),
 		registerStylesheet : function(url){
 		
 			if ( ! window.registeredStylesheets ) window.registeredStylesheets = [];

@@ -1,172 +1,141 @@
 /**
  * MusicMe Playlist
- * @description Provides a user interface for manipulating the playlist.
+ * @description Provides the Playlist view and mutator methods.
  */
-define(['require','util'],function(require,util){
+define(['require','util','dependencies/EventEmitter'],function(require, util, EventEmitter){
 
+	// register the view stylesheet.
 	util.registerStylesheet(require.toUrl('./Playlist.css'));
-
-	function Playlist(options)
-	{
 	
-		// check for a valid options object.
-		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
+	// constructor.
+	var UIPlaylist = function(options){
+	
+		// check for options.
+		if ( typeof options !== 'object' ) options = {};
+	
+		// determine the parent node.
+		var parentNode = this.parentNode = ( options.appendTo instanceof Element ) ? options.appendTo : document.body;
+	
+		// create the UIPlaylist node.
+		var node = this.node = util.createElement({tag : 'div', id : 'UIPlaylist', appendTo : parentNode});
+	
+		// set the column definition.
+		var columns = this.columns = ['trackno','trackname','albumname','artistname','tracklength'];
+	
+		if ( options.usingControlBar )
 		{
-			this.emit('error',util.error('A valid options object was not passed to the UIPlaylist constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Playlist.','OPT_ERR'));
+			initControlBar.call(this);
 		}
 	
-		// make a playlist element.
-		var element = this.element = document.createElement('div'),
-			self = this,
-			api = true,
-			list = this.list = document.createElement('ol'),
-			header = this.header = document.createElement('div');
-	
-		// set the id.
-		element.setAttribute('id','UIPlaylist');
-
-		header.addClass('header');
-
-		list.addClass('list');
-
-		// make the list legend.
-		var legend = constructPlaylistItem({
-			'trackno' : "#",
-			'trackname' : "Name",
-			'albumname' : "Album",
-			'artistname' : "Artist",
-			'tracklength' : "Length"
-		});
-
-		legend.addClass('legend');
-
-		element.appendChild(header);
-
-		header.appendChild(legend);
-
-		var api = this.api = options.withApi;
+		// create the legend.
+		var legend = createItemNode({trackno : '#', title : 'Name', artist : 'Artist', album : 'Album', length : 'Length'});
 		
-		if ( ! api ) this.emit('error');
-	
-		// append the list.
-		element.appendChild(list);
-	
-		// append the element.
-		(options.appendTo || document.body).appendChild(element);
-	
-		element.addClass('usingInfo');
-	
-		util.createElement({tag : 'div', customClass : 'infoBar', children : {tag : 'span'},appendTo : element});
+		legend.addClass('legend');
+		
+		if ( options.usingInfoBar )
+		{
+			initInfoBar.call(this);
+		}
 	
 	}
-
+	
+	// use EventEmitter.
+	EventEmitter.augment(UIPlaylist.prototype);
+	
 	/**
-	 * constructPlaylistItem
-	 * @description Generates a playlist item from a playlist object.
-	 * 
+	 * createItemNode
+	 * @description creates an HTMLLIElement that represents each property of the item as a column.
+	 * @param item (object) - playlistModel item object.
+	 * @param useColumns (array) - list of columns to use. (If undefined, all columns are used.)
+	 * @param index (int) - the index of the item in the model array.
 	 */
-	function constructPlaylistItem(item)
-	{
-		// create a playlist row.
-		var row = document.createElement('li');
-		
-		var rowContainer = document.createElement('ol');
-		
-		var columns = {};
-		
-		for ( var i in item )
+	var createItemNode = function(item,useColumns,index){
+	
+		if ( typeof item == 'object' )
 		{
-			columns[i] = document.createElement('li');
+			var rowContainer = util.createElement({tag : 'li', children : [{tag : 'ol'}]});
 			
-			if ( i == 'tracklength' && typeof item[i] == 'number' )
+			var row = rowContainer.getElementsByTagName('ol')[0];
+			
+			var columns = {};
+			
+			for ( var i in item )
 			{
-				item[i] = util.formatTime(item[i]);
+				var column = document.createElement('li');
+				
+				if ( i == 'tracklength' && typeof item[i] == 'number' )
+				{
+					item[i] = util.formatTime(item[i]);
+				}
+				
+				column.innerHTML = item[i] || '&nbsp;';
+				
+				column.addClass(i);
+				
+				columns[i] = column;
+				
 			}
 			
-			columns[i].innerHTML = item[i] || '&nbsp;';
+			if ( useColumns instanceof Array )
+			{
+				
+				useColumns.forEach(function(columnName){
+				
+					if ( columns[columnName] )
+					{
+						row.appendChild(columns[columnName]);
+					}
+					else
+					{
+						console.warn(columnName + " does not exist.");
+					}
+				});
+				
+			}
+			else
+			{
+				for ( var i in columns )
+				{
+					row.appendChild(columns[i]);
+				}
+			}
 			
-			columns[i].addClass(i);
+			return rowContainer;
+			
 		}
-		
-		rowContainer.appendChildren([columns.trackno,columns.trackname,columns.artistname,columns.albumname,columns.tracklength]);
-		
-		row.appendChild(rowContainer);
-		
-		// return the row.
-		return row;
+	
 	}
-
+	
 	/**
-	 * getItems
-	 * @description Fetches the items for the corresponding type and id.
-	 * @param type (string) - The type of items to get.
-	 * @param id (string) - The unique identifier for the type.
+	 * redraw
+	 * @description redraws the playlist.
+	 * @param items (array) - list of playlist item objects.
 	 */
-	function getItems(type,id,callback)
-	{
-		if ( type == 'genre' )
-		{
-			this.api.getTracksInGenre(id,function(tracks){
+	UIPlaylist.prototype.redraw = function(items){
+	
+		items.forEach(function(item){
+		
+			var node = createItemNode(item,this.columns);
 			
-				callback(tracks);
-			
-			});
-		}
-		else if ( type == 'artist' )
-		{
-			this.api.getTracksByArtist(id,function(tracks){
-			
-				callback(tracks);
-			
-			});
-		}
-		else if ( type == 'album' )
-		{
-			this.api.getTracksInAlbum(id,function(tracks){
-			
-				callback(tracks);
-			
-			});
-		}
-		else if ( type == 'track' )
-		{
-			this.api.getTrack(id,function(tracks){
-			
-				callback(tracks);
-			
-			});
-		}
+			this.node.appendChild(node);
+		
+		});
+	
 	}
 	
 	/**
 	 * add
-	 * @description Adds a collection item to the playlist.
-	 * @param type (string) - The type of item to add to the collection. (artist, album, etc.)
-	 * @param id (string) - The unique identifier for the type.
+	 * @description creates a playlist item from an object and inserts that object into the playlist.
 	 */
-	Playlist.prototype.add = function(type, id)
-	{
-		var self = this;
+	UIPlaylist.prototype.add = function(item){
 	
-		getItems.call(this,type,id,function(items){
+		var node = createItemNode(item,this.columns);
 		
-			items.forEach(function(item){
-			
-				var playlistItem = constructPlaylistItem.call(self, item);
-				
-				self.list.appendChild(playlistItem);
-			
-			});
-		
-		});
-			
+		this.node.appendChild(node);
+	
 	}
 	
-	Playlist.prototype.clear = function()
-	{
-		this.list.removeChildren();
-	}
-
-	return Playlist;
+	// define UIPlaylist module.
+	return UIPlaylist;
 
 });

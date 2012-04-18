@@ -21,24 +21,28 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 		
 		var initUI = function(){
 			
-			// check for a previous collection.
-			if ( document.getElementById('UICollection') ) document.getElementById('UICollection').removeNode();
+			// fetch previous node.
+			var collection = document.getElementById('UICollection'),
+				playlist = document.getElementById('UIPlaylist'),
+				overlay = document.getElementById('ModalDialogueOverlay');
 			
-			// check for a previous playlist.
-			if ( document.getElementById('UIPlaylist') ) document.getElementById('UIPlaylist').removeNode();
-			
-			if ( document.getElementById('ModalDialogueOverlay') ) document.getElementById('ModalDialogueOverlay').removeNode();
+			// check for previous nodes and remove them.
+			if ( collection ) collection.removeNode();
+			if ( playlist ) playlist.removeNode();
+			if ( overlay ) overlay.removeNode();
 			
 			// require the UI partials.
-			require(['UI/Collection/Collection','UI/Playlist/Playlist'],function(UICollection,UIPlaylist){
+			require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist'],function(UICollection,UIPlaylist,ModelPlaylist){
 			
-				var playlist = new UIPlaylist({withApi : api, appendTo : musicme});
+				var playlist = new UIPlaylist({appendTo : musicme});
 			
-				var collection = new UICollection({withApi : api, appendTo : musicme, usingSearch : true, usingInfoBar : true, dragAndDropElement: playlist.element});
+				playlistModel = new ModelPlaylist({withUI : playlist, withApi : api});
+			
+				var collection = new UICollection({withApi : api, appendTo : musicme, usingSearch : true, usingInfoBar : true, dragAndDropElement: playlist.node});
 			
 				collection.on('itemSelected',function(item){
 				
-					playlist.add(item.type,item.id);
+					playlistModel.add(item.type,item.id);
 				
 				});
 			

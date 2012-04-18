@@ -14,7 +14,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @description creates a new collection instance.
 	 * @param config (object) - Object Literal options to initialise with.
 	 */
-	function Collection(options){
+	var Collection = function(options){
 
 		// check for a valid options object.
 		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
@@ -76,7 +76,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * initDragAndDrop
 	 * @description sets drag and drop methods dragstart, dragover, dragenter, dragleave and drop.
 	 */
-	function initDragAndDrop(){
+	var initDragAndDrop = function(){
 	
 		var self = this;
 	
@@ -214,7 +214,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @description initialise the TreeList view.
 	 * @param type (string) - Top-level type to initialise with. e.g. genre, artist, album or track.
 	 */
-	function initList(){
+	var initList = function(){
 	
 		var self = this;
 		
@@ -228,7 +228,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * initSearchBar
 	 * @description adds a search bar above the TreeList for searching the collection.
 	 */
-	function initSearchBar(){
+	var initSearchBar = function(){
 	
 		var self = this;
 	
@@ -343,7 +343,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * initInfoBar
 	 * @description adds an info bar below the TreeList to indicate the number of items there are in the collection. e.g. 300 Artists.
 	 */
-	function initInfoBar(){
+	var initInfoBar = function(){
 	
 		this.node.addClass('usingInfo');
 	
@@ -446,7 +446,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @param item (HTMLLIElement) - the item clicked.
 	 * @param isPopulated (bool) - boolean tells if data-populated is set on the item.
 	 */
-	function clickHandler(item,isPopulated){
+	var clickHandler = function(item,isPopulated){
 	
 		if ( ! isPopulated )
 		{
@@ -511,7 +511,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @description handles a double click on a TreeList item.
 	 * @param item (HTMLLIElement) - the item clicked.
 	 */
-	function doubleClickHandler(item){
+	var doubleClickHandler = function(item){
 	
 		this.emit('itemSelected',{
 			'id' : item.getAttribute('data-id'),
