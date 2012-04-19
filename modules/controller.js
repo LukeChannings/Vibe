@@ -13,11 +13,36 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 		// make a global settings instance.
 		window.settings = new Settings();
 	
-		// make an Api instance.
-		var api = new Api();
-		
 		// get the musicme element.
-		var musicme = document.getElementById('MusicMe');
+		var musicme = document.getElementById('MusicMe'),
+			api;
+		
+		var init = function()
+		{
+			if ( settings.get('host') && settings.get('port') )
+			{
+				// make an Api instance.
+				api = new Api();
+			
+				// listen for connection.
+				api.once('connected', initUI);
+					
+				// listen for error.
+				api.on('error', promptConnectionString);
+				
+				// listen for disconnection.
+				api.on('disconnected',function(){
+					
+					console.log("Api lost connection.");
+					
+				});
+			}
+			else
+			{
+				promptConnectionString();
+			}
+			
+		}
 		
 		var initUI = function(){
 			
@@ -84,8 +109,8 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 			MDD.buttons = {'Go' : function(){
 			
 				// get the settings from the form.
-				var host = document.forms['gettingstarted']['host'].value || 'localhost';
-				var port = parseInt(document.forms['gettingstarted']['port'].value) || 6232
+				var host = document.forms['gettingstarted']['host'].value || document.forms['gettingstarted']['host'].placeholder || 'localhost';
+				var port = parseInt(document.forms['gettingstarted']['port'].value) || document.forms['gettingstarted']['port'].placeholder ||6232
 			
 				// set the settings.
 				settings.set('host', host);
@@ -95,8 +120,9 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 				this.close();
 				
 				// reconnect the Api.
-				api.connect();
-			
+				if ( api ) api.connect();
+				else init();
+
 			}};
 		
 			// require the modal dialogue component.
@@ -112,19 +138,8 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 		
 		var disconnected = function(){}
 		
-		// listen for connection.
-		api.once('connected', initUI);
+		init();
 		
-		// listen for error.
-		api.on('error', promptConnectionString);
-	
-		// listen for disconnection.
-		api.on('disconnected',function(){
-		
-			console.log("Api lost connection.");
-		
-		});
-	
 	});
 
 });
