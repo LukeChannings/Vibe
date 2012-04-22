@@ -68,6 +68,29 @@ define(['util'],function(){
 	}
 	
 	/**
+	 * UndoManager
+	 * @description records modifications to the playlist and allows for undo and redo operations to be performed.
+	 */
+	PlaylistModel.prototype.UndoManager = function(){
+	
+		// array to store recorded states.
+		this.states = [];
+	
+	}
+	
+	/**
+	 * undo
+	 * @description undoes the last modification to the playlist.
+	 */
+	PlaylistModel.prototype.UndoManager.prototype.undo = function(){}
+	
+	/**
+	 * redo
+	 * @description redoes a previously undone modification to the playlist.
+	 */
+	PlaylistModel.prototype.UndoManager.prototype.redo = function(){}
+	
+	/**
 	 * clear
 	 * @description flushes the model, localStorage and clears the UI.
 	 */
