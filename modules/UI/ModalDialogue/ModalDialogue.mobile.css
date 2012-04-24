@@ -10,10 +10,11 @@
 	box-shadow: none;
 	background-size: 100% !important;
 	border: none;
+	font-size: 30px;
 }
 
-#ModalDialogueOverlay #ModalDialogue > p{font-size: 2.5em}
-#ModalDialogueOverlay #ModalDialogue > h1{font-size: 4em}
+#ModalDialogueOverlay #ModalDialogue > p{font-size: 40px}
+#ModalDialogueOverlay #ModalDialogue > h1{font-size: 25px}
 
 #ModalDialogueOverlay #ModalDialogue *{margin: 1em 0}
 

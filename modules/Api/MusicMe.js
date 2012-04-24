@@ -210,6 +210,8 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 			
 				track.trackname = track.trackname || 'Unknown Track';
 			
+				track.trackno = track.trackno || '0';
+			
 			});
 		
 		});
@@ -227,6 +229,8 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 				track.artistname = track.artistname || 'Unknown Artist';
 			
 				track.trackname = track.trackname || 'Unknown Track';
+			
+				track.trackno = track.trackno || '0';
 			
 			});
 		
@@ -254,6 +258,8 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 			
 				track.trackname = track.trackname || 'Unknown Track';
 			
+				track.trackno = track.trackno || '0';
+			
 			});
 		
 			callback(tracks);
@@ -271,6 +277,8 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 			track.artistname = track.artistname || 'Unknown Artist';
 			
 			track.trackname = track.trackname || 'Unknown Track';
+		
+			track.trackno = track.trackno || '0';
 		
 			callback(track);	
 		

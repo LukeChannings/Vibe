@@ -8,7 +8,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	util.registerStylesheet(require.toUrl('./Playlist.css'));
 	
 	// constructor.
-	var UIPlaylist = function(options){
+	var UIPlaylist = function(options) {
 	
 		// check for options.
 		if ( typeof options !== 'object' ) options = {};
@@ -49,7 +49,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	 * @param useColumns (array) - list of columns to use. (If undefined, all columns are used.)
 	 * @param index (int) - the index of the item in the model array.
 	 */
-	var createItemNode = function(item,useColumns,index){
+	var createItemNode = function(item,useColumns,index) {
 	
 		if ( typeof item == 'object' )
 		{
@@ -68,7 +68,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 					item[i] = util.formatTime(item[i]);
 				}
 				
-				column.innerHTML = item[i] || '&nbsp;';
+				column.innerHTML = ( item[i] !== undefined && item[i] !== null ) ? item[i] : '&nbsp;';
 				
 				column.addClass(i);
 				
@@ -111,9 +111,11 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	 * @description redraws the playlist.
 	 * @param items (array) - list of playlist item objects.
 	 */
-	UIPlaylist.prototype.redraw = function(items){
+	UIPlaylist.prototype.redraw = function(items) {
 	
 		var self = this;
+	
+		self.node.removeChildren();
 	
 		items.forEach(function(item){
 		
@@ -122,6 +124,8 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			self.node.appendChild(node);
 		
 		});
+		
+		self.node.scrollTop = self.node.scrollHeight
 	
 	}
 	
@@ -129,7 +133,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	 * add
 	 * @description creates a playlist item from an object and inserts that object into the playlist.
 	 */
-	UIPlaylist.prototype.add = function(item){
+	UIPlaylist.prototype.add = function(item) {
 	
 		var node = createItemNode(item,this.columns);
 		
