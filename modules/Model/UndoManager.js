@@ -34,6 +34,7 @@ define(['util','dependencies/md5'],function(util,MD5){
 			}
 		
 		}
+		
 		var save = function() {
 		
 			if ( persistentStorageId )

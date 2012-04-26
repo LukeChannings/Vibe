@@ -173,6 +173,12 @@ define(function(){
 		if ( ! console.error ) window.console.error = function(){} 
 	}
 
+	// prevent settings exception.
+	if ( typeof settings == 'undefined' )
+	{
+		settings = {get : function(){return false}};
+	}
+
 	/**
 	 * Util Object.
 	 */

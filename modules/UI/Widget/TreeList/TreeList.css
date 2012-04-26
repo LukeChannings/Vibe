@@ -1,8 +1,8 @@
 /**
- * TreeList
+ *  UITreeListWidget
  * @description stylesheet for the TreeList widget.
  */
-.treeList{
+.UITreeListWidget{
 	width: 100%;
 	overflow: auto;
 	background: #fff url('TreeListZebraStripes.png');
@@ -10,14 +10,14 @@
 	padding: 0;
 }
 
-body.svg .treeList{background-image: url('TreeListZebraStripes.svg')}
+body.svg .UITreeListWidget{background-image: url('TreeListZebraStripes.svg')}
 
-.treeList *{
+.UITreeListWidget *{
 	margin: 0;
 	padding: 0;
 }
 
-.treeList li{
+.UITreeListWidget li{
 	line-height: 25px;
 	font-size: 12px;
 	padding-left: 25px;
@@ -29,19 +29,19 @@ body.svg .treeList{background-image: url('TreeListZebraStripes.svg')}
 	white-space: nowrap;
 }
 
-body.svg .treeList li{
+body.svg .UITreeListWidget li{
 	background-image: url('TreeListRightArrow.svg');
 	background-size: 8px 8px
 }
 
-.treeList li.expanded{
+.UITreeListWidget li.expanded{
 	background-image: url('TreeListDownArrow.png');
 	background-position: 6px 8.5px;
 	background-size: 8px 8px
 }
 
-body.svg .treeList li.expanded{background-image: url('TreeListDownArrow.svg')}
+body.svg .UITreeListWidget li.expanded{background-image: url('TreeListDownArrow.svg')}
 
-.treeList li > ol{display: none}
+.UITreeListWidget li > ol{display: none}
 
-.treeList li.expanded > ol{display: block}
+.UITreeListWidget li.expanded > ol{display: block}

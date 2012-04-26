@@ -1,5 +1,5 @@
 /**
- * TreeList
+ * UITreeListWidget
  * @description Generates a tree list view that displays a list based on an array of objects.
  */
 define(['require','util','dependencies/EventEmitter'],function(require,util, EventEmitter){
@@ -12,7 +12,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 	 * @param list (array) - List of objects that will specify an item.
 	 * @param options (object) - options for generating the list.
 	 */
-	function TreeList(list,options){
+	var UITreeListWidget = function(list,options){
 	
 		// make sure there is a list to work with.
 		if ( ! list || ! ( list instanceof Array ) )
@@ -32,16 +32,15 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 		var appendTo = options.appendTo || document.body;
 	
 		// create the list.
-		var node = this.node = document.createElement('ol');
-	
-		// list of classes to be set for the node.
-		var nodeClasses = [];
+		var node = this.node = util.createElement({
+			'tag' : 'ol'
+		});
 	
 		// set treelist class for root node.
-		if ( options.isRootNode ) nodeClasses.push('treeList');
+		if ( options.isRootNode ) node.addClass('UITreeListWidget');
 	
 		// check for custom classes.
-		if ( typeof options.customClass == "string" ) nodeClasses.push(options.customClass);
+		if ( typeof options.customClass == "string" ) node.addClass(options.customClass);
 	
 		// iterate the list.
 		list.forEach(function(itemObj,index){
@@ -71,7 +70,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 				if ( itemObj.setAttributes.hasOwnProperty('customClass') )
 				{
 					// add the class to the class list.
-					itemClasses.push(itemObj.setAttributes.customClass);
+					item.addClass(itemObj.setAttributes.customClass);
 					
 					// remove it from the setAttributes object before setting attributes.
 					delete itemObj.setAttributes.customClass;
@@ -97,7 +96,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 				// append the treelist to the current item.
 				itemObj.childrenOptions.appendTo = item;
 			
-				new TreeList(itemObj.children,itemObj.childrenOptions);
+				new UITreeListWidget(itemObj.children,itemObj.childrenOptions);
 			}
 
 			// if there is a drag start method specified bind it to the dragstart event.
@@ -119,9 +118,6 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 				return false;
 				
 			});
-			
-			// insert item classes.
-			if ( itemClasses.length !== 0 ) item.setAttribute('class',itemClasses.join(' '));
 			
 			// append the item to the list.
 			node.appendChild(item);
@@ -157,16 +153,13 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 			
 		}
 	
-		// set the node classes.
-		if ( nodeClasses.length !== 0 ) node.setAttribute('class', nodeClasses.join(' '));
-	
 		// append the list.
 		appendTo.appendChild(node);
 	
 	}
 	
-	EventEmitter.augment(TreeList.prototype);
+	EventEmitter.augment(UITreeListWidget.prototype);
 	
-	return TreeList;
+	return UITreeListWidget;
 
 });
