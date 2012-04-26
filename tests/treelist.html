@@ -28,7 +28,7 @@
 		
 		require(['UI/Widget/TreeList/TreeList'],function(TreeList){
 		
-			var tree = new TreeList(data,{isRootNode : true});
+			var tree = new TreeList(data,{isRootNode : true, isRootListener : true});
 		
 			tree.on('itemClicked',function(item, isPopulated){
 			

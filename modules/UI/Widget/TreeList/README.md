@@ -74,6 +74,17 @@ of the current item. If you wish to set an id attribute for the item use setAttr
 
 The options are specified using a object notation, the possible properties are documented below.
 
+###options.isRootListener###
+
+Set to true or false, indicates that the click/double click event handler will be bound to the root element
+and the same handlers will be used for all children. (As opposed to specifying a handler for each child.)
+
+###options.isRootNode###
+
+Set to true or false, indicates that the UITreeListWidget instance is the root instance and will have child
+instances. This sets the UITreeListWidget class on the node so that all children will conform to a standard 
+style. Specify setAttributes({customClass : 'className'}) for a custom stylesheet.
+
 ###option.appendTo###
 
 If appendTo is specified and is an HTMLElement then the TreeList will be appended to that element. By default

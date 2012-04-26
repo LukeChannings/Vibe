@@ -277,6 +277,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 								var options = {
 									appendTo : self.listContainer,
 									isRootNode : true,
+									isRootListener : true,
 									customClass : 'artist',
 									setAttributes : []
 								}

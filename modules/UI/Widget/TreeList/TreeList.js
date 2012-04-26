@@ -2,7 +2,7 @@
  * UITreeListWidget
  * @description Generates a tree list view that displays a list based on an array of objects.
  */
-define(['require','util','dependencies/EventEmitter'],function(require,util, EventEmitter){
+define(['require','util','dependencies/EventEmitter'],function(require, util, EventEmitter){
 
 	// include stylesheet.
 	util.registerStylesheet(require.toUrl('./TreeList.css'));
@@ -124,7 +124,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util, Eve
 		
 		});
 		
-		if ( options.isRootNode )
+		if ( options.isRootListener )
 		{
 			util.doubleClick(node,function(target){
 			
