@@ -39,8 +39,29 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		var clear = document.createElement('button');
 		
-		util.addListener(input,'keyup',function(e){
+		util.addListener(input,'keydown',function(e){
+			
+			if ( e.keyCode == 13 )
+			{
+			
+				var target = e.target || e.srcElement;
+			
+				self.emit('enter',target.value);
+				
+				if ( e.preventDefault ) e.preventDefault();
+				else if ( e.stopPropogation ) e.stopPropogation();
+				else e.returnValue = false;
+				
+				return false;
+			}
 		
+		});
+		
+		util.addListener(input,'keyup',function(e){
+
+			// don't handle enter or key presses with meta, ctrl, alt or shift.
+			if ( e.keyCode.toString().match(/(1(3|7|8)|91)/) || e.metaKey || e.ctrlKey ) return;
+
 			var target = e.target || e.srcElement;
 
 			if ( target.value.length > 0 )

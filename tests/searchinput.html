@@ -10,26 +10,32 @@
 				'baseUrl' : '../modules'
 			});
 		
-			require(['UI/Widget/TextInput'],function(TextInput){
+			require(['UI/Widget/TextInput/TextInput'],function(TextInput){
 			
 				var search = new TextInput({
-					appendNode : document.body,
-					placeholder : "Search With Me!"
+					placeholder : "Search With Me!",
+					customClass : 'search'
 				});
 			
 				search.on('clear',function(){
 				
+					// handle input clearing...
+					
 					console.log("Input cleared!");
 				
 				});
 				
 				search.on('input',function(newinput){
 				
+					// handle input.
+					
 					console.log(newinput);
 				
 				});
 			
 				search.on('focus',function(){
+				
+					// handle input focus.
 				
 					console.log("Focused.");
 				
@@ -37,7 +43,17 @@
 			
 				search.on('blur',function(){
 				
+					// handle input blur.
+				
 					console.log("Blurred.");
+				
+				});
+			
+				search.on('enter',function(value){
+				
+					// handle enter.
+				
+					console.log("ENTER: " + value);
 				
 				});
 			
@@ -45,7 +61,5 @@
 		
 		</script>
 	</head>
-	<body class="svg">
-		
-	</body>
+	<body></body>
 </html>

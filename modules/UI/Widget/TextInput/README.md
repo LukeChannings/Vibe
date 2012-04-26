@@ -50,3 +50,9 @@ that has just been inputted.
 
 The clear event is emitted when either the clear button is pressed (causing the input to be cleared,)
 or the input is otherwise cleared using the backspace key.
+
+###enter###
+
+The enter event is emitted when the enter button is pressed whilst the input is in focus. The event
+is sent the current value of the input as a parameter. Note: The input event is not fired when the
+enter key is pressed and the input is in focus.
