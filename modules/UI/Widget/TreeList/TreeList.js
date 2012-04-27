@@ -17,7 +17,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 		// make sure there is a list to work with.
 		if ( ! list || ! ( list instanceof Array ) )
 		{
-			consnodee.error("TreeList was instantiated without a list array. This obviously won't work.");
+			console.error("TreeList was instantiated without a list array. This obviously won't work.");
 			
 			return false;
 		} 
@@ -39,6 +39,8 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 		// set treelist class for root node.
 		if ( options.isRootNode ) node.addClass('UITreeListWidget');
 	
+		if ( options.isFinalNode ) node.addClass('finalNode');
+	
 		// check for custom classes.
 		if ( typeof options.customClass == "string" ) node.addClass(options.customClass);
 	
@@ -46,8 +48,6 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 		list.forEach(function(itemObj,index){
 		
 			var item = document.createElement('li');
-			
-			var itemClasses = [];
 			
 			var itemInner = util.htmlEntities(itemObj.name || itemObj.title || 'Item ' + index)
 			
@@ -91,12 +91,14 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			{
 			
 				// if there are no children options...
-				if ( typeof itemObj.childrenOptions !== 'object' ) itemObj.childrenOptions = {};
+				if ( typeof itemObj.options !== 'object' ) itemObj.options = {};
+			
+				if ( itemObj.options.isExpanded ) item.addClass('expanded');
 			
 				// append the treelist to the current item.
-				itemObj.childrenOptions.appendTo = item;
+				itemObj.options.appendTo = item;
 			
-				new UITreeListWidget(itemObj.children,itemObj.childrenOptions);
+				new UITreeListWidget(itemObj.children,itemObj.options);
 			}
 
 			// if there is a drag start method specified bind it to the dragstart event.

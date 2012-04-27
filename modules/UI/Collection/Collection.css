@@ -14,12 +14,6 @@
 
 body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResults.svg')}
 
-#UICollection ol.UITreeListWidget ol.track > li{
-	background: none;
-	padding-left: 0;
-	list-style: inside decimal;
-}
-
 /* @group Search */
 
 #UICollection.usingSearch{

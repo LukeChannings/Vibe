@@ -40,6 +40,12 @@ body.svg .UITreeListWidget li{
 	background-size: 8px 8px
 }
 
+.UITreeListWidget ol.finalNode > li{
+	background: none;
+	padding-left: 0;
+	list-style: inside decimal;
+}
+
 body.svg .UITreeListWidget li.expanded{background-image: url('TreeListDownArrow.svg')}
 
 .UITreeListWidget li > ol{display: none}

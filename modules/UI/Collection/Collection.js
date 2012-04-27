@@ -218,7 +218,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	
 		var self = this;
 		
-		this.listContainer = util.createElement({tag : 'div',customClass : 'listContainer',appendTo : this.node});
+		this.listContainer = util.createElement({tag : 'div', customClass : 'listContainer',appendTo : this.node});
 		
 		this.populateWithType(self.type);
 	
@@ -406,6 +406,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			var options = {
 				'appendTo' : self.listContainer,
 				'isRootNode' : true,
+				'isRootListener' : true,
 				'customClass' : type,
 				'setAttributes' : []
 			}
@@ -465,6 +466,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				'customClass' : this.api.getSubtype(type),
 				'setAttributes' : []
 			};
+		
+			if ( options.customClass == 'track' ) options.isFinalNode = true;
 		
 			if ( this.dropTarget )
 			{

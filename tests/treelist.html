@@ -6,20 +6,51 @@
 		<script src="../modules/dependencies/require.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		
-		var data = [{
-			'name' : 'Alice',
-			'setAttributes' : {'class' : 'expanded'},
-			'children' : [{
-				'name' : 'Luke'
-			}]
-		},{
-			'name' : 'Bob'
-		},{
-			'name' : 'Eve'
-		},{
-			'name' : 'Dave'
-		},{
-			'name' : 'Sue'
+		var familyTree = [{
+				name : 'Robert Channings',
+				options : {isFinalNode : true},
+				children : [{
+					name : 'Bianca Channings'
+				},{
+					name : 'Charlotte Channings'
+				},{
+					name : 'Deborah Channings'
+				},{
+					name : 'Joshua Channings'
+				},{
+					name : 'Esther Channings'
+				},{
+					name : 'Luke Channings'
+				},{
+					name : 'Grace Channings'
+				},{
+					name : 'Olivia Channings'
+				},{
+					name : 'Nathanael Channings'
+				},{
+					name : 'Joseph Channings'
+				}]
+			},{
+				name : 'Stephanie Moss',
+				options : {isFinalNode : true, isExpanded : true},
+				children : [{
+					name : 'Deborah Channings'
+				},{
+					name : 'Joshua Channings'
+				},{
+					name : 'Esther Channings'
+				},{
+					name : 'Luke Channings'
+				},{
+					name : 'Grace Channings'
+				},{
+					name : 'Olivia Channings'
+				},{
+					name : 'Nathanael Channings'
+				},{
+					name : 'Joseph Channings'
+				}
+			]
 		}];
 		
 		require.config({
@@ -28,7 +59,7 @@
 		
 		require(['UI/Widget/TreeList/TreeList'],function(TreeList){
 		
-			var tree = new TreeList(data,{isRootNode : true, isRootListener : true});
+			var tree = new TreeList(familyTree,{isRootNode : true, isRootListener : true});
 		
 			tree.on('itemClicked',function(item, isPopulated){
 			
