@@ -134,8 +134,10 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 				{
 					var isPopulated = !! target.getAttribute('data-populated');
 
-					target.toggleClass('expanded');
-
+					if ( target.parentNode.hasClass('finalNode') ) isPopulated = true;
+					
+					else target.toggleClass('expanded');
+					
 					// emit the clicked event and send the target element.
 					self.emit('itemClicked', target, isPopulated);
 

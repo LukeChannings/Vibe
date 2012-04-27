@@ -161,6 +161,16 @@ define(function(){
 		}
 	}
 	
+	// hasClass
+	if ( ! Element.prototype.hasClass )
+	{
+		Element.prototype.hasClass = function(className){
+		
+			return new RegExp("(^| )" + className + "$| ").test(this.className);
+			
+		}
+	}
+	
 	// console exception prevention.
 	if ( ! window.console || ! window.console.log || ! window.console.warn || ! window.console.error )
 	{
