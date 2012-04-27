@@ -59,11 +59,11 @@ require(['dependencies/domReady','Model/Settings','util','Api/MusicMe'], functio
 			// require the UI partials.
 			require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist'],function(UICollection,UIPlaylist,ModelPlaylist){
 			
-				var playlist = new UIPlaylist({appendTo : musicme});
+				var playlist = new UIPlaylist({appendTo : musicme, useControlBar : true, useInfoBar : true});
 			
 				playlistModel = new ModelPlaylist({withUI : playlist, withApi : api});
 			
-				var collection = new UICollection({withApi : api, appendTo : musicme, usingSearch : true, usingInfoBar : true, dragAndDropElement: playlist.node});
+				var collection = new UICollection({withApi : api, appendTo : musicme, usingSearch : true, usingInfoBar : true, dragAndDropElement: playlist.node, withRootType : 'genre'});
 			
 				collection.on('itemSelected',function(item){
 				

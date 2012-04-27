@@ -10,137 +10,84 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	// constructor.
 	var UIPlaylist = function(options) {
 	
-		// check for options.
-		if ( typeof options !== 'object' ) options = {};
+		// make sure options exists.
+		var option = this.options = ( typeof options == 'object' ) ? options : {};
 	
-		// determine the parent node.
-		var parentNode = this.parentNode = ( options.appendTo instanceof Element ) ? options.appendTo : document.body;
+		var node = this.node = util.createElement({ 'tag' : 'div', 'id' : 'UIPlaylist', appendTo : options.appendTo || document.body });
 	
-		// create the UIPlaylist node.
-		var node = this.node = util.createElement({tag : 'div', id : 'UIPlaylist', appendTo : parentNode});
+		// use the control bar if needed.
+		if ( options.useControlBar ) initControlBar.call(this);
+		
+		// define the list container.
+		var listContainer = util.createElement({
+			'tag' : 'div',
+			'customClass' : 'listContainer',
+			'appendTo' : node
+		});
+		
+		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer});
+		
+		// use the info bar if needed.
+		if ( options.useInfoBar ) initInfoBar.call(this);
 	
-		// set the column definition.
-		var columns = this.columns = ['trackno','trackname','albumname','artistname','tracklength'];
+	}
 	
-		if ( options.usingControlBar )
+	var initControlBar = function() {
+	
+		var controlBar = this.controlBar = util.createElement({ 'tag' : 'div', 'customClass' : 'controlBar', appendTo : this.node });
+	
+		this.node.addClass('usingControlBar');
+	
+	}
+	var initInfoBar = function() {
+	
+		var infoBar = this.infoBar = util.createElement({ 'tag' : 'div', 'customClass' : 'infoBar', appendTo : this.node });
+	
+		this.node.addClass('usingInfoBar');
+	
+	}
+	
+	var createPlaylistRow = function(itemDefinition, columnsToUse) {
+	
+		var item = util.createElement({ 'tag' : 'ol' });
+	
+		var columns = {};
+	
+		for ( var i in itemDefinition )
 		{
-			initControlBar.call(this);
+			var column = document.createElement('li');
+			column.innerHTML = itemDefinition[i];
+			column.addClass(i);
+			columns[i] = column;
 		}
 	
-		// create the legend.
-		var legend = createItemNode({trackno : '#', title : 'Name', artist : 'Artist', album : 'Album', length : 'Length'});
+		item.appendChildren([columns.trackname, columns.trackno, columns.albumname, columns.artistname]);
+	
+		return item;
+	
+	}
+	
+	UIPlaylist.prototype.redraw = function(items) {
+	
+		var self = this;
+	
+		var columns = ( this.options.columns instanceof Array ) ? this.options.columns : ['trackname','trackno','albumname','artistname'];
+	
+		items.forEach(function(item){
 		
-		legend.addClass('legend');
+			var node = util.createElement({'tag' : 'li', appendTo : self.list});
 		
-		if ( options.usingInfoBar )
-		{
-			initInfoBar.call(this);
-		}
+			var row = createPlaylistRow(item,columns);
+		
+			node.appendChild(row);
+		
+		});
 	
 	}
 	
 	// use EventEmitter.
 	EventEmitter.augment(UIPlaylist.prototype);
-	
-	/**
-	 * createItemNode
-	 * @description creates an HTMLLIElement that represents each property of the item as a column.
-	 * @param item (object) - playlistModel item object.
-	 * @param useColumns (array) - list of columns to use. (If undefined, all columns are used.)
-	 * @param index (int) - the index of the item in the model array.
-	 */
-	var createItemNode = function(item,useColumns,index) {
-	
-		if ( typeof item == 'object' )
-		{
-			var rowContainer = util.createElement({tag : 'li', children : [{tag : 'ol'}]});
-			
-			var row = rowContainer.getElementsByTagName('ol')[0];
-			
-			var columns = {};
-			
-			for ( var i in item )
-			{
-				var column = document.createElement('li');
-				
-				if ( i == 'tracklength' && typeof item[i] == 'number' )
-				{
-					item[i] = util.formatTime(item[i]);
-				}
-				
-				column.innerHTML = ( item[i] !== undefined && item[i] !== null ) ? item[i] : '&nbsp;';
-				
-				column.addClass(i);
-				
-				columns[i] = column;
-				
-			}
-			
-			if ( useColumns instanceof Array )
-			{
-				
-				useColumns.forEach(function(columnName){
-				
-					if ( columns[columnName] )
-					{
-						row.appendChild(columns[columnName]);
-					}
-					else
-					{
-						console.warn(columnName + " does not exist.");
-					}
-				});
-				
-			}
-			else
-			{
-				for ( var i in columns )
-				{
-					row.appendChild(columns[i]);
-				}
-			}
-			
-			return rowContainer;
-			
-		}
-	
-	}
-	
-	/**
-	 * redraw
-	 * @description redraws the playlist.
-	 * @param items (array) - list of playlist item objects.
-	 */
-	UIPlaylist.prototype.redraw = function(items) {
-	
-		var self = this;
-	
-		self.node.removeChildren();
-	
-		items.forEach(function(item){
 		
-			var node = createItemNode(item,self.columns);
-			
-			self.node.appendChild(node);
-		
-		});
-		
-		self.node.scrollTop = self.node.scrollHeight
-	
-	}
-	
-	/**
-	 * add
-	 * @description creates a playlist item from an object and inserts that object into the playlist.
-	 */
-	UIPlaylist.prototype.add = function(item) {
-	
-		var node = createItemNode(item,this.columns);
-		
-		this.node.appendChild(node);
-	
-	}
-	
 	// define UIPlaylist module.
 	return UIPlaylist;
 

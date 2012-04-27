@@ -359,17 +359,20 @@ define(function(){
 				// create an element.
 				var element = document.createElement(def.tag);
 				
+				// set inner.
+				if ( typeof def.inner == 'string' ) element.innerHTML = def.inner;
+				
 				// set an Id.
-				if ( def.hasOwnProperty('id') ) element.setAttribute('id',def.id);
+				if ( def.id ) element.setAttribute('id',def.id);
 				
 				// set a class.
-				if ( def.hasOwnProperty('customClass') ) element.setAttribute('class',def.customClass);
+				if ( def.customClass ) element.setAttribute('class',def.customClass);
 				
 				// check for custom attributes.
-				if ( def.hasOwnProperty('setAttributes') ) element.setAttributes(def.setAttributes);
+				if ( def.setAttributes ) element.setAttributes(def.setAttributes);
 				
 				// check for children.
-				if ( def.hasOwnProperty('children') && def.children instanceof Array )
+				if ( def.children && def.children instanceof Array )
 				{
 					def.children.forEach(function(child){
 					
@@ -381,7 +384,7 @@ define(function(){
 				}
 				
 				// check if we're appending the element.
-				if ( def.hasOwnProperty('appendTo') && def.appendTo instanceof Element )
+				if ( def.appendTo && def.appendTo instanceof Element )
 				{
 					def.appendTo.appendChild(element);
 				}
