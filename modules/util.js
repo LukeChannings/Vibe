@@ -166,7 +166,7 @@ define(function(){
 	{
 		Element.prototype.hasClass = function(className){
 		
-			return new RegExp("(^| )" + className + "$| ").test(this.className);
+			return new RegExp("(^| )" + className + "($| )").test(this.className);
 			
 		}
 	}
