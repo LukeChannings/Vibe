@@ -10,11 +10,8 @@
 	box-shadow: none;
 	background-size: 100% !important;
 	border: none;
-	font-size: 30px;
+	font-size: 20px;
 }
-
-#ModalDialogueOverlay #ModalDialogue > p{font-size: 40px}
-#ModalDialogueOverlay #ModalDialogue > h1{font-size: 25px}
 
 #ModalDialogueOverlay #ModalDialogue *{margin: 1em 0}
 
@@ -26,6 +23,13 @@
 	border-bottom: 1px solid #aaa;
 	padding-bottom: 0.2em;
 	margin-bottom: 0.5em;
+	font-size: 60px;
+	margin-top: 10px;
+}
+
+#ModalDialogueOverlay #ModalDialogue p{
+	font-size: 28px;
+	text-align: justify;
 }
 
 #ModalDialogueOverlay #ModalDialogue.center h1{border-bottom: none}

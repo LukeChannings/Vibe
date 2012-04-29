@@ -30,11 +30,7 @@ define(['require','util'],function(require,util){
 	}
 	else
 	{
-		overlay = document.createElement('div');
-		
-		overlay.setAttribute('id','ModalDialogueOverlay');
-		
-		document.body.appendChild(overlay);
+		overlay = util.createElement({'tag' : 'div', 'id' : 'ModalDialogueOverlay', appendTo : document.body});
 	}
 	
 	/**
@@ -103,7 +99,7 @@ define(['require','util'],function(require,util){
 			var classes = ['visible'];
 		
 			// check if this is an error dialogue
-			if ( MDD.errorDialogue ) classes.push('error');
+			if ( MDD.errorDialogue == true ) classes.push('error');
 		
 			// check for custom alignment specification.
 			if ( MDD.alignment && /^(center|right|justify)$/.test(MDD.alignment) )
@@ -194,10 +190,6 @@ define(['require','util'],function(require,util){
 							
 						});
 						
-						if ( input.placeholder )
-						{
-							element.value = input.placeholder;
-						}
 					}
 				
 					// otherwise it's just a regular <input/>
@@ -207,40 +199,29 @@ define(['require','util'],function(require,util){
 						
 						element.setAttribute('name', input.name || MDD.form.name + '-' + index);
 						
-						element.setAttribute('type', input.type || 'text')
+						element.setAttribute('type', input.type || 'text');
 						
-						if ( input.placeholder )
+					}
+				
+					// check for a placeholder.
+					if ( input.placeholder )
+					{
+					
+						// check for native placeholder support.
+						if ( 'placeholder' in element )
 						{
-							if ( ! ( 'placeholder' in element ) )
-							{
-								element.value = input.placeholder;
-								
-								util.addListener(element,'focus',function(e){
-									
-									var element = (e.target || e.srcElement);
-									
-									if ( element.getAttribute('value') == element.getAttribute('placeholder') )
-									{
-										element.setAttribute('value','');
-									}
-									
-								});
-								
-								util.addListener(element,'blur',function(e){
-								
-									var element = (e.target || e.srcElement);
-								
-									if ( element.getAttribute('value') == '' )
-									{
-										element.setAttribute('value',element.getAttribute('placeholder'));
-									}
-								
-								});
-							}
-							
-							element.setAttribute('placeholder', input.placeholder);
+							element.setAttribute('placeholder',input.placeholder);
 						}
 						
+						// if there is no native support then shim it.
+						else
+						{
+							require(['UI/Widget/Placeholder/Placeholder'],function(Placeholder) {
+							
+								new Placeholder(element,input.placeholder);
+							
+							});
+						}
 					}
 				
 					// if the MDD specified an input title..
@@ -581,7 +562,7 @@ define(['require','util'],function(require,util){
 					
 					var button = document.createElement('button');
 				
-					if ( i == "close" && typeof dialogueDefinition.buttons[i] !== "function"  )
+					if ( /close/i.test(i) && typeof dialogueDefinition.buttons[i] !== "function"  )
 					{
 						button.innerHTML = "Close";
 						
@@ -626,7 +607,9 @@ define(['require','util'],function(require,util){
 					if ( ! ( currentViewIndex == target.getAttribute('data-viewIndex') ) )
 					{
 						// close the current view.
-						views[currentViewIndex].removeNode();
+						views[currentViewIndex].removeNode(true);
+						
+						//views[currentViewIndex].parentNode.removeChild(views[currentViewIndex]);
 						
 						// append the specified view.
 						viewContainer.appendChild(views[parseInt(target.getAttribute('data-viewIndex'))]);

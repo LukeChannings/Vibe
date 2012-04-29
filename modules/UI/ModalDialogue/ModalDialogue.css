@@ -11,9 +11,11 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	background: #f9f9f9;
 	background: rgba(0,0,0,0.7);
 	z-index: 0;
 	opacity: 0;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 	overflow: hidden;
 }
 
@@ -27,6 +29,7 @@
 #ModalDialogueOverlay.visible{
 	z-index: 1000;
 	opacity: 1;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
 /* @end */
@@ -60,11 +63,11 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 
 #ModalDialogue.error > p{font-size: 1.5em}
 
-#ModalDialogue.center{text-align: center}
+#ModalDialogue.center, #ModalDialogue .center{text-align: center}
 
-#ModalDialogue.right{text-align: right}
+#ModalDialogue.right, #ModalDialogue .right{text-align: right}
 
-#ModalDialogue.justify{text-align: justify}
+#ModalDialogue.justify, #ModalDialogue .justify{text-align: justify}
 
 #ModalDialogue *{margin: 1em 0}
 
@@ -139,6 +142,8 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	cursor: default;
 }
 
+#ModalDialogue.sidebar form > label > input{margin-left: 1em}
+
 #ModalDialogue.sidebar{
 	padding: 0;
 	background: #fff;
@@ -146,6 +151,8 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 }
 
 #ModalDialogue.sidebar *{margin: 0}
+
+#ModalDialogue.sidebar div.center h1{text-align: left}
 
 #ModalDialogue.sidebar > div.navigation{
 	float: left;
@@ -200,15 +207,25 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 
 #ModalDialogue.sidebar > div.views > .view{padding: 1em}
 
-#ModalDialogue.sidebar > div.views > .view > h1{
+#ModalDialogue.sidebar > div.views > .view h1{
 	border-bottom: 1px solid #d9d9d9;
 	margin-bottom: 0.5em;
 	padding-bottom: 0.2em;
 }
 
-#ModalDialogue.sidebar > div.views > .view > p{
+#ModalDialogue.sidebar > div.views > .view p{
 	font-size: 1.5em;
 	color: #333;
+	margin: 10px 0;
+}
+
+#ModalDialogue.sidebar > div.views > .view a{
+	color: #000;
+	text-decoration: none;
+}
+
+#ModalDialogue.sidebar > div.views > .view a:hover{
+	text-decoration: underline;
 }
 
 #ModalDialogue.sidebar > div.views > div.buttons{
@@ -222,5 +239,11 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	margin: 1em 0;
 	padding-right: 1em;
 }
+
+/* @end */
+
+/* @group Placeholder */
+
+#ModalDialogueOverlay #ModalDialogue .placeholder{color: #bbb}
 
 /* @end */
