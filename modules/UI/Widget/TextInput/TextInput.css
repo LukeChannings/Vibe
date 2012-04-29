@@ -39,6 +39,6 @@ body.svg .TextInputWidget > button{background-image: url('TextInput.svg')}
 
 .TextInputWidget > button:active{background-position: -16px 0}
 
-.TextInputWidget.search{background: url('TextInput.png') no-repeat -32px}
+.TextInputWidget.search{background: url('TextInput.png') no-repeat -33px}
 
 body.svg .TextInputWidget.search{background-image: url('TextInput.svg')}

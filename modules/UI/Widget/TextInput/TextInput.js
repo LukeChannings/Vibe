@@ -31,8 +31,18 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 		
 		if ( options.placeholder )
 		{
-			input.value = options.placeholder;
-			input.setAttribute('class','placeholder');
+			if ( 'placeholder' in input )
+			{
+				input.setAttribute('placeholder',options.placeholder);
+			}
+			else
+			{
+				require(['UI/Widget/Placeholder/Placeholder'],function(PlaceholderShim){
+				
+					new PlaceholderShim(input, options.placeholder);
+				
+				});
+			}
 		}
 		
 		textInput.appendChild(input);
@@ -87,16 +97,6 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			textInput.addClass('focus');
 			
 			self.emit('focus');
-			
-			if ( options.placeholder )
-			{
-				if ( input.value == options.placeholder )
-				{
-					input.value = '';
-					input.removeAttribute('class');
-				}
-			}
-			
 		});
 		
 		util.addListener(input,'blur',function(){
@@ -104,15 +104,6 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			textInput.removeClass('focus');
 			
 			self.emit('blur');
-			
-			if ( options.placeholder )
-			{
-				if ( input.value == '' )
-				{
-					input.value = options.placeholder;
-					input.addClass('placeholder');
-				}
-			}
 			
 		});
 		
