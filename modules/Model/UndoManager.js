@@ -69,8 +69,6 @@ define(['util','dependencies/md5'],function(util,MD5){
 				currentBranch = persistence.currentBranch; // load the current branch pointer.
 			}
 			
-			// prune on reload.
-			util.addListener(window,'beforeunload',self.prune);
 		}
 		
 		// utility methods.
@@ -228,15 +226,28 @@ define(['util','dependencies/md5'],function(util,MD5){
 			
 			save();
 		}
-		this.clear = function() {
+		this.clear = function(purge) {
 		
-			// set defaults.
-			branches = [[]];
-			currentBranch = 0;
-			store = {};
+			if ( purge )
+			{
+				// set defaults.
+				branches = [[]];
+				currentBranch = 0;
+				store = {};
 			
-			// clear the localStorage.
-			delete localStorage['undoManagerStorage' + persistentStorageId];
+				// clear the localStorage.
+				delete localStorage['undoManagerStorage' + persistentStorageId];
+			
+			}
+			
+			else
+			{
+				fork();
+				
+				branches[currentBranch] = [];
+				
+				save();
+			}
 		
 		}
 		

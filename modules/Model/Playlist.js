@@ -1,35 +1,35 @@
 /**
- * PlaylistModel
+ * ModelPlaylist
  * @description contains the playlist data and performs Api interactions.
  */
 define(['util','Model/UndoManager'],function(util,UndoManager){
 
 	// constructor.
-	var PlaylistModel = function(options) {
+	var ModelPlaylist = function(options) {
 	
 		if ( typeof options !== 'object' )
 		{
-			throw util.error("PlaylistModel was called without an options parameter.");
+			throw util.error("ModelPlaylist was called without an options parameter.");
 			
 			return;
 		}
 		
 		if ( typeof options.withApi == 'undefined' )
 		{
-			throw util.error("PlaylistModel was called without an Api instance.");
+			throw util.error("ModelPlaylist was called without an Api instance.");
 			
 			return;
 		}
 	
 		if ( typeof options.withUI == 'undefined' )
 		{
-			throw util.error("PlaylistModel was called without a UI instance.");
+			throw util.error("ModelPlaylist was called without a UI instance.");
 			
 			return;
 		}
 	
 		// model stores the complete playlist items that construct a PlaylistItem.
-		var model = this.model = new UndoManager('PlaylistModel');
+		var model = this.model = new UndoManager('ModelPlaylist');
 	
 		// set the Api instance.
 		var api = this.api = options.withApi;
@@ -38,7 +38,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		var ui = this.ui = options.withUI;
 
 		// redraw the UI with the persistent storage.
-		ui.redraw(model.value());
+		ui.redraw(model.value(), this.info);
 
 	}
 	
@@ -47,8 +47,9 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * @description add an item to the Playlist model.
 	 * @param type (string) - the type of item to be added. (e.g. genre, artist, album, etc.)
 	 * @param id (string) - the unique identifier for the item. (Usually an MD5 hash.)
+	 * @param callback (function) - call the function when done.
 	 */
-	PlaylistModel.prototype.add = function(type, id) {
+	ModelPlaylist.prototype.add = function(type, id, callback) {
 	
 		var self = this;
 	
@@ -58,6 +59,8 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 			
 			self.ui.redraw(self.model.value());
 			
+			callback();
+			
 		});
 	
 	}
@@ -66,7 +69,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * undo
 	 * @description reverse the last addition to the playlist.
 	 */
-	PlaylistModel.prototype.undo = function(n) {
+	ModelPlaylist.prototype.undo = function(n) {
 	
 		this.model.undo(n);
 		
@@ -78,7 +81,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * redo
 	 * @description redo an undone change to the playlist.
 	 */
-	PlaylistModel.prototype.redo = function(n) {
+	ModelPlaylist.prototype.redo = function(n) {
 	
 		this.model.redo(n);
 		
@@ -91,7 +94,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * @description removes an item from the playlist.
 	 * @param n - item to remove. (from 0.)
 	 */
-	PlaylistModel.prototype.removeItem = function(n) {
+	ModelPlaylist.prototype.removeItem = function(n) {
 	
 		this.model.removeItemAtIndex(n);
 		
@@ -103,7 +106,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * removeLastItem
 	 * @description removes the last item from the playlist.
 	 */
-	PlaylistModel.prototype.removeLastItem = function() {
+	ModelPlaylist.prototype.removeLastItem = function() {
 		
 		this.model.pop();
 		
@@ -115,7 +118,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * removeFirstItem
 	 * @description removes the first item from the playlist.
 	 */
-	PlaylistModel.prototype.removeFirstItem = function() {
+	ModelPlaylist.prototype.removeFirstItem = function() {
 	
 		this.model.shift();
 		
@@ -127,11 +130,11 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * clear
 	 * @description flushes the model, localStorage and clears the UI.
 	 */
-	PlaylistModel.prototype.clear = function() {
+	ModelPlaylist.prototype.clear = function() {
 	
 		this.model.clear();
 		
-		this.ui.node.removeChildren();
+		this.ui.list.removeChildren();
 	
 	}
 	
@@ -140,7 +143,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * @description returns a playlist item object.
 	 * @param n (int) - the playlist item index.
 	 */
-	PlaylistModel.prototype.getItem = function(n) {
+	ModelPlaylist.prototype.getItem = function(n) {
 	
 		return this.model.getItemAtIndex(n);
 	
@@ -187,6 +190,6 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		}
 	}
 	
-	return PlaylistModel;
+	return ModelPlaylist;
 
 });
