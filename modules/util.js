@@ -49,9 +49,12 @@ define(function(){
 	}
 	
 	// removeNode. (Overwrite existing prototypes. IE8 is gay.)
-	Element.prototype.removeNode = function()
+	if ( typeof  Element.prototype.removeNode == 'undefined')
 	{
-		this.parentNode.removeChild(this);
+		Element.prototype.removeNode = function()
+		{
+			this.parentNode.removeChild(this);
+		}
 	}
 	
 	// removeChildren.
@@ -183,12 +186,6 @@ define(function(){
 		if ( ! console.error ) window.console.error = function(){} 
 	}
 
-	// prevent settings exception.
-	if ( typeof settings == 'undefined' )
-	{
-		settings = {get : function(){return false}};
-	}
-
 	/**
 	 * Util Object.
 	 */
@@ -260,6 +257,11 @@ define(function(){
 				return /(iPhone|Android|Mobile)/i.test(navigator.userAgent);
 			
 			},
+			isIE : function() {
+			
+				return /MSIE/i.test(navigator.userAgent);
+			
+			},
 			HasSupport : {
 				dragAndDrop : function() {
 				
@@ -299,7 +301,7 @@ define(function(){
 		// to be used for a single click and a double click. Standard timeout 
 		// is 170ms, otherwise the timeout can be set in settings using the 
 		// 'clickTimeout' key.
-		doubleClick : function(element,click,doubleClick){
+		doubleClick : function(element,click,doubleClick, clickTimeoutDuration){
 		
 			this.addListener(element,'click',function(e){
 			
@@ -313,7 +315,7 @@ define(function(){
 						
 						click(target);
 					
-					},settings.get('clickTimeout') || 170);
+					}, clickTimeoutDuration || 170);
 				}
 				else
 				{
@@ -406,6 +408,18 @@ define(function(){
 			error.type = type;
 		
 			return error;
+		
+		},
+		getMetaContent : function(name) {
+		
+			var metaTags = document.getElementsByTagName('meta');
+		
+			for ( var i = 0; i < metaTags.length; i++ )
+			{
+				if ( metaTags[i].getAttribute('name') == name ) return metaTags[i].getAttribute('content');
+			}
+			
+			return false;
 		
 		}
 	}

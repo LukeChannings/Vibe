@@ -1,7 +1,7 @@
 {
-  "name": "MusicMe",
-  "description": "Your music. Anywhere.",
-  "version": "0.1",
+  "name": "Vibe",
+  "description": "Get the vibe.",
+  "version": "0.0.1",
   "app": {
     "launch": {
       "local_path": "app.html"

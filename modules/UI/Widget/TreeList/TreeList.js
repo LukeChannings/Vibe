@@ -12,7 +12,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 	 * @param list (array) - List of objects that will specify an item.
 	 * @param options (object) - options for generating the list.
 	 */
-	var UITreeListWidget = function(list,options){
+	var UITreeListWidget = function(list, options, clickTimeout){
 	
 		// make sure there is a list to work with.
 		if ( ! list || ! ( list instanceof Array ) )
@@ -20,13 +20,15 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			console.error("TreeList was instantiated without a list array. This obviously won't work.");
 			
 			return false;
-		} 
-	
+		}
+		
 		// usual lark.
 		var self = this;
 	
 		// make sure options exists to prevent an exception.
 		var options = options || {};
+	
+		options.clickTimeout = clickTimeout;
 	
 		// specify a node to append the list to.
 		var appendTo = options.appendTo || document.body;
@@ -147,7 +149,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			
 				self.emit('itemDoubleClicked',target);
 			
-			});
+			}, options.clickTimeout);
 		}
 	
 		if ( ! options.isRootNode )

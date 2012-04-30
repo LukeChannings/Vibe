@@ -23,6 +23,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		}
 		
 		var self = this;
+		this.options = options;
 		
 		// check for a node to append the UICollection to.
 		var appendTo = this.parentNode = ( options.appendTo instanceof Element ) ? options.appendTo : document.body;
@@ -36,17 +37,20 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		// create a collection node.
 		var node = this.node = util.createElement({tag : 'div', id : 'UICollection'});
 
+		// default the TreeList click timeout to 270ms.
+		if ( ! options.clickTimeout ) options.clickTimeout = 270;
+
 		// check for an Api instance.
 		if ( api )
 		{
 			// check for the search bar option.
-			if ( options.usingSearch ) initSearchBar.call(this);
+			if ( options.useSearch ) initSearchBar.call(this);
 			
 			// create the collection tree list.
 			initList.call(this,type);
 			
 			// check for the info bar option.
-			if ( options.usingInfoBar ) initInfoBar.call(this);
+			if ( options.useInfoBar ) initInfoBar.call(this);
 			
 			// append the UICollection to the set parent node.
 			appendTo.appendChild(node);
@@ -95,7 +99,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			var target = e.target || e.srcElement;
 		
 			// get the collection type.
-			var type = target.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0];
+			var type = target.parentNode.className.match(/(genre|artist|album|track)/)[0];
 			
 			// get the id of the collection type.
 			var id = target.getAttribute('data-id');
@@ -236,17 +240,19 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		var element = this.searchBar = util.createElement({tag : 'div', customClass : 'search',appendTo : this.node});
 	
 		// set search lass on UICollection node.
-		this.node.addClass('usingSearch');
+		this.node.addClass('useSearch');
 	
 		// fetch textinput widget.
 		require(['UI/Widget/TextInput/TextInput'],function(TextInput){
 		
+			// create a UITextInputWidget.
 			var input = new TextInput({
 				appendTo : element,
 				placeholder : 'Search the collection.',
 				customClass : 'UIWidgetSearchInput search'
 			});
 		
+			// listen for key input.
 			input.on('input',function(query,key){
 				
 				if ( typeof window.timeout !== 'undefined' )
@@ -259,70 +265,66 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 					
 					window.timeout = undefined;
 					
-					if ( key !== ' ' )
-					{
-						// query the api.
-						self.api.search(query,function(results){
+					// query the api.
+					self.api.search(query,function(results){
 
-							// clear the current list.
-							self.listContainer.removeChildren();
-							
-							// if there are results.
-							if ( results.length > 0 )
-							{
+						// clear the current list.
+						self.listContainer.removeChildren();
+						
+						// if there are results.
+						if ( results.length > 0 )
+						{
 									
-								// remove the noResults class if it's set.
-								self.node.removeClass('noResults');
-								
-								var options = {
-									appendTo : self.listContainer,
-									isRootNode : true,
-									isRootListener : true,
-									customClass : 'artist',
-									setAttributes : []
-								}
-								
-								if ( self.dropTarget )
-								{
-									options.setAttributes.push(['draggable','true']);
-									options.dragStartMethod = self.dragStart;
-								}
-								
-								// create a new TreeList based on the search results.
-								var search = new TreeList(results,options);
-								
-								// itemClicked
-								// handles populating sub-items.
-								search.on('itemClicked',function(item, isPopulated){
-								
-									clickHandler.call(self,item,isPopulated);
-								
-								});
+							// remove the noResults class if it's set.
+							self.node.removeClass('noResults');
 							
-								// itemDoubleClicked
-								// handles a double click event on a treelist item.
-								search.on('itemDoubleClicked',function(item){
-								
-									clickHandler.call(self,item);
-								
-								});
-							
+							var options = {
+								appendTo : self.listContainer,
+								isRootNode : true,
+								isRootListener : true,
+								customClass : 'artist',
+								setAttributes : []
 							}
 							
-							// if there are no results.
-							else
+							if ( self.dropTarget )
 							{
-								self.node.addClass('noResults');
+								options.setAttributes.push(['draggable','true']);
+								options.dragStartMethod = self.dragStart;
 							}
 							
-						});
-					}
-				
-				},270);
+							// create a new TreeList based on the search results.
+							var search = new TreeList(results,options, self.options.clickTimeout);
+							
+							// itemClicked
+							// handles populating sub-items.
+							search.on('itemClicked',function(item, isPopulated){
+							
+								clickHandler.call(self,item,isPopulated);
+							
+							});
+						
+							// itemDoubleClicked
+							// handles a double click event on a treelist item.
+							search.on('itemDoubleClicked',function(item){
+							
+								clickHandler.call(self,item);
+							
+							});
+						
+						}
+						
+						// if there are no results.
+						else
+						{
+							self.node.addClass('noResults');
+						}
+						
+					});
+			},270);
 				
 			});
 		
-			// when the search input is cleared...
+			// listen for the input to be cleared.
 			input.on('clear',function(){
 			
 				self.node.removeClass('noResults');
@@ -346,7 +348,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 */
 	var initInfoBar = function(){
 	
-		this.node.addClass('usingInfo');
+		this.node.addClass('useInfo');
 	
 		var statusBar = this.statusBar = util.createElement({tag : 'div', children : [{tag : 'span'}],customClass : 'statusBar', appendTo : this.node});
 	
@@ -418,7 +420,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			}
 			
 			// create the tree list.
-			var list = new TreeList(data,options);
+			var list = new TreeList(data, options, self.options.clickTimeout);
 			
 			if ( self.updateStatusBar ) self.updateStatusBar(type,data.length);
 			
@@ -449,6 +451,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * @param isPopulated (bool) - boolean tells if data-populated is set on the item.
 	 */
 	var clickHandler = function(item,isPopulated){
+	
+		var self = this;
 	
 		if ( ! isPopulated )
 		{
@@ -494,7 +498,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 						});
 					}
 				
-					new TreeList(items,options);
+					new TreeList(items,options, self.options.clickTimeout);
 				
 				},true);
 			}

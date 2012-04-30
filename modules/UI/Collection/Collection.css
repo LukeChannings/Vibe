@@ -16,36 +16,36 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 
 /* @group Search */
 
-#UICollection.usingSearch{
+#UICollection.useSearch{
 	padding-top: 35px;
 	position: relative;
 }
 
-#UICollection.usingSearch > div.search{
+#UICollection.useSearch > div.search{
 	height: 35px;
 	width: 100%;
 	position: absolute;
 	top: 0;
 }
 
-#UICollection.usingSearch > div.search > *{
+#UICollection.useSearch > div.search > *{
 	width: 90%;
 	margin: 5px 10px;
 	border: 1px solid #eee;
 }
 
-#UICollection.usingSearch > div.search > .UIWidgetSearchInput{
+#UICollection.useSearch > div.search > .UIWidgetSearchInput{
 	background-color: #f9f9f9;
 	border: 1px solid #aaa;
 	border-radius: 100px;
 	box-shadow: 0px 0px 5px rgba(0,0,0,0.1) inset;
 }
 
-#UICollection.usingSearch > div.search > .UIWidgetSearchInput > button{
+#UICollection.useSearch > div.search > .UIWidgetSearchInput > button{
 	margin-right: 2px;
 }
 
-#UICollection.usingSearch > div.listContainer{
+#UICollection.useSearch > div.listContainer{
 	height: 100%;
 	width: 100%;
 	overflow: auto;
@@ -55,9 +55,9 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 
 /* @group Info Bar */
 
-#UICollection.usingInfo{padding-bottom: 20px}
+#UICollection.useInfo{padding-bottom: 20px}
 
-#UICollection.usingInfo .statusBar{
+#UICollection.useInfo .statusBar{
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -71,12 +71,12 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 	background: -o-linear-gradient(top,  #fff 0%,#ddd 100%);
 	background: -ms-linear-gradient(top,  #fff 0%,#ddd 100%);
 	background: linear-gradient(top,  #fff 0%,#ddd 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#ddd',GradientType=0 );
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 );
 	border-bottom-right-radius: 2px;
 	border-bottom-left-radius: 2px;
 }
 
-#UICollection.usingInfo .statusBar > span{
+#UICollection.useInfo .statusBar > span{
 	font-family: 'Lucida Grande', Lucida, Helvetica, Arial;
 	font-size: 12px;
 	font-weight: 100;
