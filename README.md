@@ -1,16 +1,43 @@
-#MusicMe Web App#
+#Vibe Player#
 
-This is the MusicMe web application. It depends on:
+[Logo](./images/logo.png)
 
-1. requirejs
-2. socket.io
-3. SoundManager2
-4. EventEmitter
+Vibe is a next-generation Web Application that will stream music from a Vibe Server
+and allow it to be played on the browser. Vibe aims to provide an intuitive and fast
+User Interface by using the latest Web Technologies available.
 
-and all of these dependencies are included within this work. The client is modular,
-and will load modules when they are needed. (It's also good for maintaining a large project.)
+Although Vibe uses the latest technologies, it will still work in legacy browsers, (see
+the support listing below.) Vibe uses a few select HTML5 additions, including WebSockets,
+localStorage and Drag And Drop. It also hopes to provide a scalable interface by using SVG
+graphics for its image resources, and media queries and elastic layout to ensure it can fit
+into any window comfortably.
 
-##Support##
+Vibe also has an alternative User Interface for Mobile devices like smartphones, providing a
+simplistic but easy to navigate interface.
 
-The client presently supports Chrome, FireFox and IE9. I will be testing support more extensively
-as the project developes, as well as adding support for mobile Webkit browsers.
+#How It Works#
+
+Vibe uses the Client-Server model, so it requires you to have a Vibe Server configured on your
+home computer that will scan and catalogue your music, and then enable the Vibe Player to interface
+with this server in order to understand which tracks are available to play. When you select a track
+to play, Vibe will create a stream to that track and play it for you.
+
+#Support#
+
+Vibe uses a few HTML5 technologies, so legacy browsers like IE7 and below are not supported, it does
+have some compatibility mechanisms to ensure that the application will still run in IE8, but it is 
+unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
+
+List:
+
+- IE8+
+- Chrome
+- Safari
+- Firefox 3.6+
+- Opera (Drag and Drop not supported)
+
+
+#Current State#
+
+Presently, Vibe is under heavy development but as of now is nowhere near ready. There are still lots
+of bugs to iron out and large modules to either implement from scratch or finish implementing.

@@ -155,11 +155,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 	
 	UIPlaylist.prototype.updateInfo = function() {
 	
-		// get the current playlist.
-		var playlist = this.model.value();
-	
-		// get the duration of all the songs in the playlist combined.
-		
+		// broken.
 		
 	}
 	
