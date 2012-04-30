@@ -1,0 +1,55 @@
+html{height: 95%}
+
+body{
+	background: #f9f9f9;
+	font-family: 'Lucida Grande', Tahoma, Verdana, Arial, Sans-Serif;
+	font-size: 62.5%;
+	color: #333;
+}
+
+body.loading{
+	height: 100%;
+	background: #f9f9f9 url('modules/UI/Collection/CollectionLoadingThrobber.gif') no-repeat center center;
+}
+
+#Vibe{
+	background: url('images/logo.png') no-repeat center 15px;
+	background-size: auto 50px;
+	width: 95%;
+	min-width: 900px;
+	margin: auto;
+	padding-top: 100px;
+	/* keep the app layer above the overlay by default. */
+	position: relative;
+	z-index: 1;
+}
+
+body.svg #Vibe{background-image: url('images/logo.svg')}
+
+#Vibe #UICollection,#Vibe #UIPlaylist{
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+#Vibe #UICollection:hover,#Vibe #UIPlaylist:hover{border-color: #ccd4ee}
+
+#Vibe #UIPlaylist.draghighlight{border-color: #4277ef}
+
+#Vibe #UICollection{
+	float: left;
+	height: 400px;
+	width: 22%;
+}
+
+#Vibe #UIPlaylist{
+	float: right;
+	height: 380px;
+	width: 75%;
+}
+
+/* UIPlaylist column widths. */
+#Vibe #UIPlaylist li.trackno{width: 3%; text-align: center}
+#Vibe #UIPlaylist li.trackname{width: 25%}
+#Vibe #UIPlaylist li.albumname,#Vibe #UIPlaylist li.artistname{width: 22%}
+#Vibe #UIPlaylist li.tracklength{width: 8%}
