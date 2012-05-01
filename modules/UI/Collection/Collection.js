@@ -19,7 +19,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		// check for a valid options object.
 		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
 		{
-			this.emit('error',util.error('A valid options object was not passed to the UICollection constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection.','OPT_ERR'));
+			this.emit('error', util.error('A valid options object was not passed to the UICollection constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection.','OPT_ERR'));
 		}
 		
 		var self = this;

@@ -43,8 +43,7 @@ define(['require','util'],function(require,util){
 	 * isValidMDD
 	 * @description Check that the Modal Dialogue Definition is valid.
 	 */
-	function isValidMDD(MDD)
-	{
+	function isValidMDD(MDD) {
 		// make sure the MDD is actually an object.
 		if ( typeof MDD == 'object' && !( MDD instanceof Array) )
 		{
@@ -74,311 +73,237 @@ define(['require','util'],function(require,util){
 	}
 
 	/**
-	 * constructDialogueFromMDD
+	 * dialogueFromMDD
 	 * @description Creates a fully populated dialogue element from an MDD.
+	 * @param MDD - Modal Dialogue definition object.
 	 */
-	function constructDialogueFromMDD(MDD)
-	{
-		// usual lark.
-		var self = this;
+	function dialogueFromMDD( MDD ) {
 	
-		// check for a dialogue specification.
+		// alias this.
+		var self = this;
+		
+		// check that the MDD is valid.
 		if ( isValidMDD(MDD) )
 		{
-		
-			// check for an overlay element.
-			if ( overlay ) overlay = overlay;
-		
 			// create the dialogue element.
-			var dialogue = document.createElement('div');
+			var dialogue = this.dialogue = util.createElement({'tag' : 'div', 'id' : MDD.customId || 'ModalDialogue', 'customClass' : 'visible'});
 			
-			// set the id.
-			dialogue.setAttribute('id', MDD.customId || 'ModalDialogue');
-		
-			// keep dialogue classes here.
-			var classes = ['visible'];
-		
 			// check if this is an error dialogue
-			if ( MDD.errorDialogue == true ) classes.push('error');
+			if ( MDD.errorDialogue == true ) dialogue.addClass('error');
 		
 			// check for custom alignment specification.
-			if ( MDD.alignment && /^(center|right|justify)$/.test(MDD.alignment) )
-			{
-				// set centre or right alignment.
-				classes.push(MDD.alignment);
-			}
-		
-			/* DIALOGUE HEADER */
-			var title = document.createElement('h1');
-				
-			// put the MDD title into the header.
-			title.innerHTML = MDD.title;
-				
-			// append the header to the dialogue.
-			dialogue.appendChild(title);
-		
-			/* DIALOGUE BODY */
-			if ( !( MDD.body instanceof Array ) )
-			{
-				// if not, just put the element into an array to keep compatibility.
-				MDD.body = [MDD.body];
-			}
+			if ( MDD.alignment && /^(center|right|justify)$/.test(MDD.alignment) ) dialogue.addClass(MDD.alignment);
 			
-			MDD.body.forEach(function(item){
-				
-				// check if the item is an HTMLElement.
-				if ( typeof item == 'object' && item instanceof Element )
-				{
-					// if it is, append the element to the dialogue.
-					dialogue.appendChild(item);
-				}
-					
-				// otherwise check if the element is a string.
-				else if ( typeof item == 'string' )
-				{
-					// if the text does not have tags then wrap it in a <p>.
-					if ( !( /\<.+\>.*\<.+\>/.test(item) ) ) item = '<p>' + item + '</p>';
-				
-					// if the element is a string then add it directly.
-					dialogue.innerHTML += item;
-				}
-				
-			});
+			// create the title.
+			var title = util.createElement({'tag' : 'h1', 'inner' : MDD.title, 'appendTo' : dialogue});
 			
-			/* DIALOGUE FORM */
-			if ( MDD.form )
-			{
-				// add form to the classes.
-				classes.push('form');
-				
-				// make a new form.
-				var form = document.createElement('form');
-				
-				// set the form name.
-				form.setAttribute('name', MDD.form.name);
-				
-				// set a default method. (For semantics.)
-				form.setAttribute('method','post');
-				
-				// for each input.
-				MDD.form.inputs.forEach(function(input,index){
-				
-					// check if the input has a title.
-					if ( input.title )
-					{
-						// make a new label.
-						var label = document.createElement('label');
-						
-						// give the label some text.
-						label.innerHTML = input.title;
-					}
-				
-					// check if the input is <select>
-					if ( input.type && input.type == 'select' )
-					{
-						var element = document.createElement('select');
-						
-						input.options.forEach(function(option){
-							
-							var option = document.createElement('option');
-							
-							option.setAttribute('value', option);
-							
-							option.innerHTML = option;
-							
-							element.appendChild(option);
-							
-						});
-						
-					}
-				
-					// otherwise it's just a regular <input/>
-					else
-					{
-						var element = document.createElement('input');
-						
-						element.setAttribute('name', input.name || MDD.form.name + '-' + index);
-						
-						element.setAttribute('type', input.type || 'text');
-						
-					}
-				
-					// check for a placeholder.
-					if ( input.placeholder )
-					{
-					
-						// check for native placeholder support.
-						if ( 'placeholder' in element )
-						{
-							element.setAttribute('placeholder',input.placeholder);
-						}
-						
-						// if there is no native support then shim it.
-						else
-						{
-							require(['UI/Widget/Placeholder/Placeholder'],function(Placeholder) {
-							
-								new Placeholder(element,input.placeholder);
-							
-							});
-						}
-					}
-				
-					// if the MDD specified an input title..
-					if ( label )
-					{
-						// append the input to the label
-						label.appendChild(element);
-						
-						// and then the label to the form.
-						form.appendChild(label);
-						
-					}
-					
-					// if the MDD specified no title for the input, append the input to the form.
-					else form.appendChild(element);
-				
-				});
-				
-				// append the form.
-				dialogue.appendChild(form);
-				
-			}
-		
-			/* DIALOGUE BUTTONS */
-			if ( MDD.buttons )
-			{
-				// create the button container.
-				var buttonContainer = document.createElement('div');
+			// create the body.
+			this.createBody(MDD.body);
 			
-				// set the class.
-				buttonContainer.setAttribute('class','buttons');
+			// create a form in the dialogue if there is one specified.
+			if ( MDD.form ) this.createForm(MDD.form);
 			
-				// loop through the buttons.
-				for ( var i in MDD.buttons )
-				{
-					// make a button.
-					var button = document.createElement('button');
-					
-					// if a close button is specified, create a close button.
-					if ( /close/i.test(i) && ! ( typeof MDD.buttons[i] == 'function') )
-					{
-						// give it a title.
-						button.innerHTML = 'Close';
-						
-						// close the dialogue when it's pressed.
-						util.addListener(button,'click',function(){
-							
-							ModalDialogue.close();
-							
-						});
-					}
-					else if ( typeof MDD.buttons[i] == 'object' )
-					{
-					
-						button.innerHTML = MDD.buttons[i].title || i;
-					
-						if ( typeof MDD.buttons[i].callback == 'function' )
-						{
-						
-							if ( MDD.isWizardDialogue )
-							{
-								var index = parseInt(MDD.customId.match(/\d/)[0]);
-								
-								if ( i == 'next' )
-								{
-									util.addListener(button,'click',function(e){
-									
-										MDD.buttons.next.callback.call(MDD.buttons.next.callbackContext,e,index);
-									
-									});
-								}
-								if ( i == 'prev' ) {
-								
-								util.addListener(button,'click',function(e){
-								
-									MDD.buttons.prev.callback.call(MDD.buttons.prev.callbackContext,e,index);
-								
-								});
-								
-								}
-								
-							}
-							else
-							{
-								util.addListener(button,'click',MDD.buttons[i].callback);
-							}
-						}
-					
-					}
-					// check if it has a callback.
-					else if ( typeof MDD.buttons[i] == 'function' )
-					{
-					
-						// if there's a generic button, let it title itself.
-						button.innerHTML = i;
-					
-						// if it does then listen for a click.
-						util.addListener(button,'click',function(){
-						
-							MDD.buttons[i].call(ModalDialogue);
-						
-						});
-						
-					}
-					
-					// if it doesn't.. screw it.
-					else continue;
-					
-					// add the button to the dialogue.
-					buttonContainer.appendChild(button);
-				}
-				
-				// if there are actually buttons...
-				if ( buttonContainer.children.length != 0 )
-				{
-					// append the container.
-					dialogue.appendChild(buttonContainer);
-				}
-				
-				// if there are no buttons, close the container.
-				else buttonContainer = null;
-			}
-		
-			/* DIALOGUE CLASSES */
-			if ( MDD.customClass )
-			{
-				// check for an array of classes.
-				if ( MDD.customClass instanceof Array )
-				{
-					classes = MDD.customClass.concat(classes);
-				}
-				
-				else if ( typeof MDD.customClass == 'string' )
-				{
-					classes.push(MDD.customClass);
-				}
-				
-			}
+			// create buttons if there are any specified.
+			if ( MDD.buttons ) this.createButtons(MDD.buttons, MDD);
 			
-			// set the dialogue classes.
-			dialogue.setAttribute('class', classes.join(' '));
-		
-			// return the constructed dialogue.
+			// append any custom classes.
+			if ( MDD.customClass ) dialogue.addClass(MDD.customClass);
+			
+			// return the constructed element.
 			return dialogue;
-		}
-		else
-		{
-			throw {
-				'message' : 'The specified MDD is invalid.',
-				'name' : 'MDD_FAULT'
-			};
+			
 		}
 		
-		// if there is no dialogue specification return nothing.
-		return null;
+		// handle invalid MDD.
+		else throw util.error('Invalid Modal Dialogue Definiion.','MDD_ERR');
+	
 	}
 	
+	/**
+	 * createBody
+	 * @description constructs the body for the modal dialogue.
+	 * @param body - definition object for the body.
+	 */
+	dialogueFromMDD.prototype.createBody = function( body ) {
+	
+		var self = this;
+	
+		// if the parameter is not an array then convert it.
+		if ( !( body instanceof Array ) ) body = [body];
+		
+		// iterate the body.
+		body.forEach(function(bodyPart){
+		
+			// check if the item is an HTMLElement.
+			if ( typeof bodyPart == 'object' && bodyPart instanceof Element )
+			{
+				// if it is, append the element to the dialogue.
+				self.dialogue.appendChild(item);
+			}
+				
+			// otherwise check if the element is a string.
+			else if ( typeof bodyPart == 'string' )
+			{
+				// if the text does not have tags then wrap it in a <p>.
+				if ( !( /\<.+\>.*\<.+\>/.test(bodyPart) ) ) bodyPart = '<p>' + bodyPart + '</p>';
+			
+				// if the element is a string then add it directly.
+				self.dialogue.innerHTML += bodyPart;
+			}
+		
+		});
+	
+	}
+
+	/**
+	 * createForm
+	 * @description constructs the form for the modal dialogue.
+	 * @param form - definition object for a form.
+	 */
+	dialogueFromMDD.prototype.createForm = function( form ) {
+	
+		// construct the form.
+		var formElement = util.createElement({
+			'tag' : 'form',
+			'appendTo' : this.dialogue,
+			'setAttributes' : {
+				'name' : form.name,
+				'method' : 'post'
+			}
+		});
+	
+		// iterate the inputs.
+		form.inputs.forEach(function(input, index) {
+		
+			// check if the input has a title.
+			if ( input.title ) var label = util.createElement({'tag' : 'label', 'inner' : input.title});
+		
+			// check if the input is <select>
+			if ( input.type && input.type == 'select' ) {
+			
+				// create a select input.
+				var element = document.createElement('select');
+				
+				// iterate the options.
+				input.options.forEach(function(option) {
+					
+					// create an option element.
+					util.createElement({
+						'tag' : 'option',
+						'inner' : option,
+						'appendTo' : element,
+						'setAttributes' : {
+							'value' : option
+						}
+					});
+					
+				});
+				
+			}
+			
+			// if it's not a select element it's an input.
+			else {
+				
+				var element = util.createElement({
+					'tag' : 'input',
+					'setAttributes' : {
+						'name' : input.name || form.name + '-' + index,
+						'type' : input.type || 'text'
+					}
+				});
+				
+			}
+			
+			// check for a placeholder.
+			if ( input.placeholder )
+			{
+			
+				// check for native placeholder support.
+				if ( 'placeholder' in element ) {
+					element.setAttribute('placeholder', input.placeholder);
+				}
+				
+				// if there is no native support then shim it.
+				else {
+					require(['UI/Widget/Placeholder/Placeholder'],function(Placeholder) {
+					
+						new Placeholder(element, input.placeholder);
+					
+					});
+				}
+			}
+			
+			// if the MDD specified an input title..
+			if ( label )
+			{
+				// append the input to the label
+				label.appendChild(element);
+				
+				// and then the label to the form.
+				formElement.appendChild(label);
+				
+			}
+			
+			// if the MDD specified no title for the input, append the input to the form.
+			else formElement.appendChild(element);
+		
+		});
+	
+		// append the form to the dialogue.
+		this.dialogue.appendChild(formElement);
+	
+	}
+
+	/**
+	 * createButtons
+	 * @description creates button elements for a dialogue.
+	 * @param buttons - object literal definition of the buttons.
+	 */
+	dialogueFromMDD.prototype.createButtons = function( buttons, MDD ) {
+	
+		// create a container for the buttons.
+		var buttonContainer = util.createElement({'tag' : 'div', 'customClass' : 'buttons', 'appendTo' : this.dialogue});
+	
+		// iterate the buttons object.
+		for ( var i in buttons )
+		{
+			// create te button.
+			var button = util.createElement({'tag' : 'button', 'appendTo' : buttonContainer });
+			
+			// check if the button is close and doesn't have a function associated.
+			if ( /close/i.test(i) && ! ( typeof buttons[i] == 'function') )
+			{
+				// set the text.
+				button.innerHTML = "Close";
+				
+				// add a listener for the click event.
+				util.addListener(button, 'click', function(){
+				
+					// close the dialogue on click.
+					ModalDialogue.close();
+				
+				});
+			}
+			
+			// if the button has a callback specified then use it.
+			else if ( typeof buttons[i] == 'function' )
+			{
+				// set the button text.
+				button.innerHTML = i;
+				
+				// if it does then listen for a click.
+				util.addListener(button,'click',function(){
+				
+					// callback in the context of the dialogue.
+					MDD.buttons[i].call(ModalDialogue);
+				
+				});
+			}
+			
+		}
+	
+	}
+
 	/**
 	 * ModalDialogue.
 	 */
@@ -391,21 +316,10 @@ define(['require','util'],function(require,util){
 	ModalDialogue.createSingle = function(MDD)
 	{
 	
-		var self = this;
-	
-		// check that there is actually an MDD.
-		if ( isValidMDD(MDD) )
-		{
-		
-			var dialogue = constructDialogueFromMDD(MDD);
+		var dialogue = new dialogueFromMDD(MDD);
 			
-			self.open(dialogue,MDD.animateIn || null);
-			
-		}
+		self.open( dialogue,MDD.animateIn || null );
 		
-		// if there's no MDD, log an error.
-		else console.error('ModalDialogue::createSingle - No MDD!');
-	
 	}
 
 	/**
@@ -413,27 +327,17 @@ define(['require','util'],function(require,util){
 	 * @description Creates a dialogue that allows switching between panes. (Next/Prev)
 	 * @param MDDArray (Array) - An array of MDDs, each MDD is a pane of its own.
 	 */
-	ModalDialogue.createWizard = function(dialogues,animateIn)
+	ModalDialogue.createWizard = function(dialogues, animateIn)
 	{
 		
 		// usual lark.
 		var self = this;
 		
-		// check for existing dialogues.
-		if ( overlay.children.length >= 1 )
-		{
-			// remove them.
-			util.removeNode(overlay.children[0]);
-		}
-		
 		// array to store the dialogue panes in.
 		var panes = [];
 			
 		// the parent dialogue element.
-		var wizard = document.createElement('div');
-			
-		// make the wizard the ModalDialogue.
-		wizard.setAttribute('id','ModalDialogue');
+		var wizard = util.createElement({'tag' : 'div', 'id' : 'ModalDialogue'});
 		
 		dialogues.forEach(function(dialogue,index){
 		
@@ -451,7 +355,7 @@ define(['require','util'],function(require,util){
 					// add template specification.
 					dialogue.buttons.next = {
 						"title" : "Next",
-						"callback" : function(e,i){
+						"callback" : function(e, index){
 							
 							// remove the current pane.
 							currentDialogue.removeChildren();
@@ -470,7 +374,7 @@ define(['require','util'],function(require,util){
 					// add template specification.
 					dialogue.buttons.prev = {
 						"title" : "Previous",
-						"callback" : function(e,i){
+						"callback" : function(e, index){
 						
 							// remove the current pane.
 							currentDialogue.removeChildren();
@@ -485,7 +389,7 @@ define(['require','util'],function(require,util){
 				}
 				
 				// create the dialogue.
-				panes.push(constructDialogueFromMDD(dialogue));
+				panes.push(new dialogueFromMDD(dialogue));
 				
 			}
 			else
@@ -654,7 +558,7 @@ define(['require','util'],function(require,util){
 						}
 						
 						// create the view.
-						var dialogue = constructDialogueFromMDD(view);
+						var dialogue = new dialogueFromMDD(view);
 						
 						// set view index.
 						dialogue.setAttribute('data-viewIndex', index);
@@ -721,7 +625,7 @@ define(['require','util'],function(require,util){
 	
 		if ( currentDialogue )
 		{
-			currentDialogue.removeNode();
+			currentDialogue.removeNode(true);
 		}
 	}
 
