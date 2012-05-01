@@ -24,8 +24,6 @@ body.loading{
 	z-index: 1;
 }
 
-body.svg #Vibe{background-image: url('images/logo.svg')}
-
 #Vibe #UICollection,#Vibe #UIPlaylist{
 	border: 1px solid #ddd;
 	border-radius: 2px;
