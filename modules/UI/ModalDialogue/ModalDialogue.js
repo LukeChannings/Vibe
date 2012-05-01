@@ -280,7 +280,7 @@ define(['require','util'],function(require,util){
 				util.addListener(button, 'click', function(){
 				
 					// close the dialogue on click.
-					ModalDialogue.close();
+					ModalDialogue.close(MDD.animateOut);
 				
 				});
 			}
@@ -472,7 +472,7 @@ define(['require','util'],function(require,util){
 						
 						util.addListener(button,'click',function(){
 						
-							self.close();
+							self.close(dialogueDefinition.animateOut);
 						
 						});
 						
@@ -619,22 +619,63 @@ define(['require','util'],function(require,util){
 	 */
 	ModalDialogue.close = function(animation){
 	
-		if ( animation ) {
+		var transition = util.Browser.HasSupport.cssTransitions();
+	
+		// handle slideTop and slideBottom
+		if ( /^slide(Top|Bottom)$/.test(animation) && transition )
+		{
+			// set the new margin for the dialogue.
+			currentDialogue.style.marginTop = ( /Top/.test(animation) ) ? "-500px" : "500px"
 			
-			// handle animation.
+			// fade out the overlay.
+			overlay.style.opacity = 0;
+			
+			// wait 300ms to do the cleanup.
+			setTimeout(function() {
+			
+				// remove the dialogue and overlay.
+				currentDialogue.removeNode(true);
+			
+				// layer the overlay underneath the app.
+				overlay.style.zIndex = 0;
+			
+			}, 300);
+		}
+		
+		// handle fadeout effect.
+		else if ( animation == 'fade' && transition ) {
+			
+			overlay.style[transition] = 'opacity 0.4s linear';
+			
+			currentDialogue.style[transition] = 'opacity 0.3s linear';
+
+			setTimeout(function(){
+			
+				currentDialogue.style.opacity = 0;
+				
+				overlay.style.opacity = 0;
+			
+				setTimeout(function() {
+				
+					// remove the dialogue.
+					currentDialogue.removeNode(true);
+				
+					overlay.style.zIndex = 0;
+				
+				
+				}, 300);
+				
+			}, 10);
 			
 		}
-	
-		else {
-			
+		
+		// fall back to no animation.
+		else
+		{
 			overlay.removeAttribute('class');
 			overlay.removeAttribute('style');
-		
-			if ( currentDialogue )
-			{
-				currentDialogue.removeNode(true);
-			}
 			
+			if ( currentDialogue ) currentDialogue.removeNode(true);
 		}
 	
 	}
@@ -665,6 +706,8 @@ define(['require','util'],function(require,util){
 		
 			// fade overlay in.
 			overlay.style.opacity = 0;
+		
+			overlay.style.zIndex = 1000;
 		
 			overlay.style[transition] = 'opacity 0.2s linear';
 		

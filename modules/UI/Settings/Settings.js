@@ -60,7 +60,8 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 				'Apply' : commitSettings,
 				'Close' : true
 			},
-			'animateIn' : 'slideTop'
+			'animateIn' : 'slideTop',
+			'animateOut' : 'slideBottom'
 		});
 	
 	}
