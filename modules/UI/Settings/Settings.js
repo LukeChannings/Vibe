@@ -12,13 +12,17 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 	
 		this.settings = settings;
 	
-		var UIView = {
+	}
+
+	Settings.prototype.show = function() {
+	
+		var UIOptions = {
 			'title' : 'User Interface Preferences',
 			'navTitle' : 'UI Preferences',
 			'body' : 'No n00bz aloud. Init.' 
 		};
 	
-		var ConnectionView = {
+		var ConnectionOptions = {
 			'title' : "Connection",
 			'body' : "Below are the details of the Vibe Server.",
 			'form' : {
@@ -42,23 +46,22 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'body' : '<img src="images/icon.png" style="float:left" alt /><p>Vibe is a Web Application for streaming music. Just enter the Url of your Vibe Server and you\'re ready to go.</p><p>Vibe is an open source project that is written entirely in Javascript, and can be found on GitHub <a href="https://github.com/TheFuzzball/MusicMe-WebApp">here</a>.</p><p>Vibe will run in most Web Browsers (IE8+, Chrome, FireFox 3.5+), but is best enjoyed in a modern W3C-standard browser.',
 			'alignment' : 'justify'
 		};
+		
+		var commitSettings = function() {
+		
+			console.log(document.forms['connection']);
+		
+		}
 	
-		// modal dialogue definition.
-		MDD = {
+		dialogue.createMultiView({
 			'title' : 'Settings',
-			'views' : [UIView, ConnectionView, About],
+			'views' : [UIOptions, ConnectionOptions, About],
 			'buttons' : {
 				'Apply' : commitSettings,
 				'Close' : true
 			},
 			'animateIn' : 'slideTop'
-		};
-	
-	}
-
-	Settings.prototype.show = function() {
-	
-		dialogue.createMultiView(MDD);
+		});
 	
 	}
 
