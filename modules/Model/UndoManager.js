@@ -2,7 +2,7 @@
  * UndoManager
  * @description acts like an Array but provides methods for undo / redo and has optional persistency.
  */
-define(['util','dependencies/md5'],function(util,MD5){
+define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persistence, MD5){
 
 	// constructor
 	var UndoManager = function(persistenceId) {
@@ -10,43 +10,17 @@ define(['util','dependencies/md5'],function(util,MD5){
 		var store = {}, // keeps raw values keyed by hashes.
 			branches = [[]], // each change to the array creates a new branch.
 			currentBranch = 0, // current branch pointer.
-			persistentStorageId; // identifier for persistent storage.
+			persistentStorageId, // identifier for persistent storage.
+			persistence = new Persistence('undoManagerStorage' + persistentStorageId); // persistence instance.
 
-		// persistence functions:
-		var load = function() {
-		
-			if ( localStorage['undoManagerStorage' + persistentStorageId] )
-			{
-				try
-				{
-					return JSON.parse(localStorage['undoManagerStorage' + persistentStorageId]);
-				}
-				catch(ex){
-				
-					console.warn("localStorage.musicmePlaylist is corrupt.");
-					
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		
-		}
-		
 		var save = function() {
 		
-			if ( persistentStorageId )
-			{
-				localStorage['undoManagerStorage' + persistentStorageId] = JSON.stringify({
-					store : store,
-					branches : branches,
-					currentBranch: currentBranch
-				});
-			}
-			
-			else return false;
+			persistence.save({
+				store : store,
+				branches : branches,
+				currentBranch: currentBranch
+			});
+		
 		}
 
 		// set up persistence.
@@ -59,14 +33,14 @@ define(['util','dependencies/md5'],function(util,MD5){
 			persistentStorageId = persistenceId;
 		
 			// load previous persistence.
-			var persistence = load();
+			var persistedInstance = persistence.load();
 			
 			// if there is a previous persistent session.
-			if ( persistence )
+			if ( persistedInstance )
 			{
-				store = persistence.store; // load the store.
-				branches = persistence.branches; // load the branches.
-				currentBranch = persistence.currentBranch; // load the current branch pointer.
+				store = persistedInstance.store; // load the store.
+				branches = persistedInstance.branches; // load the branches.
+				currentBranch = persistedInstance.currentBranch; // load the current branch pointer.
 			}
 			
 		}

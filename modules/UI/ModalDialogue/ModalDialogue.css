@@ -59,6 +59,15 @@
 
 body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 
+#ModalDialogue.sidebar a{
+	color: #000;
+	text-decoration: none;
+}
+
+#ModalDialogue.sidebar a:hover{
+	text-decoration: underline;
+}
+
 #ModalDialogue.error > h1{font-size: 3em}
 
 #ModalDialogue.error > p{font-size: 1.5em}
@@ -217,15 +226,6 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	font-size: 1.5em;
 	color: #333;
 	margin: 10px 0;
-}
-
-#ModalDialogue.sidebar > div.views > .view a{
-	color: #000;
-	text-decoration: none;
-}
-
-#ModalDialogue.sidebar > div.views > .view a:hover{
-	text-decoration: underline;
 }
 
 #ModalDialogue.sidebar > div.views > div.buttons{

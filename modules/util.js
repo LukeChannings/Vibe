@@ -288,6 +288,26 @@ define(function(){
 					
 					// if no possibilities match then transitions are unsupported, return false.
 					return false;
+				},
+				localStorage : function() {
+				
+					try {
+					
+						if ( window.localStorage )
+						{
+							return true;
+						}
+						else {
+							return false;
+						}
+						
+					}
+					catch (ex) {
+						
+						return ex;
+						
+					}
+				
 				}
 			}
 		},

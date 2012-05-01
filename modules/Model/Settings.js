@@ -1,15 +1,17 @@
-define(function(){
+define(['Model/Persistence'],function(Persistence){
 
 	/**
 	 * Settings
 	 * @description MusicMe settings object. (Keeps persistency.)
 	 */
-	function Settings(){
+	function Settings(done){
 	
 		var self = this;
 	
 		// settings object.
 		var settings = this.settings = {};
+	
+		var persistence = new Persistence('vibeSettings');
 	
 		/**
 		 * readSettings
@@ -17,11 +19,7 @@ define(function(){
 		 */
 		(function readSettings(){
 		
-			if ( localStorage.musicMeSettings )
-			{
-				settings = JSON.parse(localStorage.musicMeSettings);
-				
-			}
+			settings = persistence.load() || {};
 		
 		})();
 		
@@ -29,10 +27,10 @@ define(function(){
 		 * writeSettings
 		 * @description write the settings object back into settings.json.
 		 */
-		function writeSettings(key){
+		function writeSettings(){
 		
 			// convert the object into a string and overwrite the persistent storage.
-			localStorage.musicMeSettings = JSON.stringify(settings);
+			persistence.save(settings);
 		
 		}
 	
@@ -48,7 +46,7 @@ define(function(){
 			settings[key] = value;
 		
 			// commit the setting.
-			writeSettings(key);
+			writeSettings();
 		
 		}
 		
@@ -90,7 +88,8 @@ define(function(){
 		// alias.
 		this.clear = function(){
 			
-			localStorage.clear();
+			persistence.clear();
+			
 		}
 	}
 	

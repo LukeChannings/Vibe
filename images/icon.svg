@@ -14,11 +14,11 @@
    height="64"
    id="svg2983"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.0 r9654"
    sodipodi:docname="icon.svg"
-   inkscape:export-filename="/Users/Luke/Sites/MusicMe/app/images/icon_16.png"
-   inkscape:export-xdpi="22.5"
-   inkscape:export-ydpi="22.5">
+   inkscape:export-filename="/Users/Luke/Sites/MusicMe-WebApp/images/icon_57.png"
+   inkscape:export-xdpi="80.15625"
+   inkscape:export-ydpi="80.15625">
   <defs
      id="defs2985">
     <linearGradient
@@ -635,15 +635,6 @@
        y1="1039.3809"
        x2="20.437708"
        y2="1039.4463" />
-    <filter
-       inkscape:collect="always"
-       id="filter6780"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="2.8833098"
-         id="feGaussianBlur6782" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5414"
@@ -875,15 +866,6 @@
        y1="1039.3809"
        x2="20.437708"
        y2="1039.4463" />
-    <filter
-       inkscape:collect="always"
-       id="filter7865"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="2.8833098"
-         id="feGaussianBlur7867" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5430"
@@ -2585,10 +2567,10 @@
      inkscape:document-units="px"
      inkscape:current-layer="g3792"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="923"
+     inkscape:window-width="1680"
+     inkscape:window-height="1028"
      inkscape:window-x="0"
-     inkscape:window-y="22"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
