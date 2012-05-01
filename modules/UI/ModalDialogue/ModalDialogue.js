@@ -318,7 +318,7 @@ define(['require','util'],function(require,util){
 	
 		var dialogue = new dialogueFromMDD(MDD);
 			
-		self.open( dialogue,MDD.animateIn || null );
+		this.open( dialogue,MDD.animateIn || null );
 		
 	}
 
