@@ -617,16 +617,26 @@ define(['require','util'],function(require,util){
 	 * close
 	 * @description removes the currently visible modal dialogue.
 	 */
-	ModalDialogue.close = function(){
+	ModalDialogue.close = function(animation){
 	
-		overlay.removeAttribute('class');
-	
-		overlay.removeAttribute('style');
-	
-		if ( currentDialogue )
-		{
-			currentDialogue.removeNode(true);
+		if ( animation ) {
+			
+			// handle animation.
+			
 		}
+	
+		else {
+			
+			overlay.removeAttribute('class');
+			overlay.removeAttribute('style');
+		
+			if ( currentDialogue )
+			{
+				currentDialogue.removeNode(true);
+			}
+			
+		}
+	
 	}
 
 	/**
@@ -635,7 +645,7 @@ define(['require','util'],function(require,util){
 	 * @param dialogue (HTMLElement) - dialogue to add.
 	 * @param animation (string) - name of the animation. (slideTop, slideBottom, fade.)
 	 */
-	ModalDialogue.open = function(dialogue,animation)
+	ModalDialogue.open = function(dialogue, animation)
 	{
 	
 		// remove any dialogues that may already exist.
@@ -653,17 +663,17 @@ define(['require','util'],function(require,util){
 		
 			var transition = util.Browser.HasSupport.cssTransitions();
 		
-			// animate overlay appearance.
+			// fade overlay in.
 			overlay.style.opacity = 0;
 		
-			overlay.style[transition] = 'opacity 0.5s linear';
+			overlay.style[transition] = 'opacity 0.2s linear';
 		
 			// slideTop/Bottom.
 			if ( /slide/.test(animation) )
 			{
 				dialogue.style.marginTop = ( animation == 'slideTop' ) ? '-100%' : '100%';
 				
-				dialogue.style[transition] = 'margin-top 0.5s linear';
+				dialogue.style[transition] = 'margin-top 0.3s linear';
 				
 				overlay.setAttribute('class','visible');
 				
@@ -675,7 +685,7 @@ define(['require','util'],function(require,util){
 				
 					dialogue.style.marginTop = '10%';
 				
-				}, 1);
+				}, 50);
 				
 			}
 			
