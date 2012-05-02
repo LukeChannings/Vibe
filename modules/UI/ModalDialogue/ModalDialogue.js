@@ -318,7 +318,7 @@ define(['require','util'],function(require,util){
 	
 		var dialogue = new dialogueFromMDD(MDD);
 			
-		this.open( dialogue,MDD.animateIn || null );
+		this.open( dialogue, MDD.animateIn || null );
 		
 	}
 
@@ -598,7 +598,6 @@ define(['require','util'],function(require,util){
 			
 			// append the dialogue to the overlay.
 			overlay.appendChild(dialogue);
-			overlay.setAttribute('class','visible');
 			
 			// append the navItems.
 			nav.appendChild(navItems);
@@ -619,63 +618,36 @@ define(['require','util'],function(require,util){
 	 */
 	ModalDialogue.close = function(animation){
 	
-		var transition = util.Browser.HasSupport.cssTransitions();
-	
-		// handle slideTop and slideBottom
-		if ( /^slide(Top|Bottom)$/.test(animation) && transition )
-		{
-			// set the new margin for the dialogue.
-			currentDialogue.style.marginTop = ( /Top/.test(animation) ) ? "-500px" : "500px"
-			
-			// fade out the overlay.
-			overlay.style.opacity = 0;
-			
-			// wait 300ms to do the cleanup.
-			setTimeout(function() {
-			
-				// remove the dialogue and overlay.
-				currentDialogue.removeNode(true);
-			
-				// layer the overlay underneath the app.
-				overlay.style.zIndex = 0;
-			
-			}, 300);
-		}
+		// get the transition prefix.
+		var prefix = util.Browser.HasSupport.cssTransitions();
 		
-		// handle fadeout effect.
-		else if ( animation == 'fade' && transition ) {
+		if ( prefix ) {
+		
+			require(['UI/Animator/Animator'],function(Animator) {
 			
-			overlay.style[transition] = 'opacity 0.4s linear';
+				// default animation.
+				animation = animation || 'slideOutBottom';
 			
-			currentDialogue.style[transition] = 'opacity 0.3s linear';
-
-			setTimeout(function(){
+				new Animator(overlay, 'fadeOut', 0.5);
 			
-				currentDialogue.style.opacity = 0;
+				new Animator(currentDialogue, animation, 0.5, function() {
 				
-				overlay.style.opacity = 0;
-			
-				setTimeout(function() {
-				
-					// remove the dialogue.
 					currentDialogue.removeNode(true);
 				
-					overlay.style.zIndex = 0;
+					overlay.removeClass('visible');
 				
-				
-				}, 300);
-				
-			}, 10);
+				});
 			
+			});
+		
 		}
 		
-		// fall back to no animation.
-		else
-		{
-			overlay.removeAttribute('class');
-			overlay.removeAttribute('style');
+		else {
+		
+			currentDialogue.removeNode(true);
 			
-			if ( currentDialogue ) currentDialogue.removeNode(true);
+			overlay.removeClass('visible');
+		
 		}
 	
 	}
@@ -695,75 +667,38 @@ define(['require','util'],function(require,util){
 		// set the new currentDialogue.
 		currentDialogue = dialogue;
 		
-		// check for an animation setting.
-		if ( typeof animation == 'string' && 
-			/(slideTop|slideBottom|fade)/.test(animation) &&
-			util.Browser.HasSupport.cssTransitions() &&
-			! util.Browser.isMobile() )
-		{
+		// get the transition prefix.
+		var prefix = util.Browser.HasSupport.cssTransitions();
 		
-			var transition = util.Browser.HasSupport.cssTransitions();
+		// if there's a prefix then get the animation module.
+		if ( prefix ) {
 		
-			// fade overlay in.
-			overlay.style.opacity = 0;
-		
-			overlay.style.zIndex = 1000;
-		
-			overlay.style[transition] = 'opacity 0.2s linear';
-		
-			// slideTop/Bottom.
-			if ( /slide/.test(animation) )
-			{
-				dialogue.style.marginTop = ( animation == 'slideTop' ) ? '-100%' : '100%';
-				
-				dialogue.style[transition] = 'margin-top 0.3s linear';
-				
-				overlay.setAttribute('class','visible');
-				
-				overlay.appendChild(dialogue);
-				
-				setTimeout(function(){
-				
-					overlay.style.opacity = 1;
-				
-					dialogue.style.marginTop = '10%';
-				
-				}, 50);
-				
-			}
+			require(['UI/Animator/Animator'],function(Animator){
 			
-			// fade.
-			if ( animation == 'fade' )
-			{
-				
-				dialogue.style.opacity = 0;
-				
-				dialogue.style[transition] = 'opacity 0.2s linear';
-				
-				overlay.setAttribute('class','visible');
-				
-				overlay.appendChild(dialogue);
-				
-				setTimeout(function(){
-				
-					overlay.style.opacity = 1;
-				
-					dialogue.style.opacity = 1;
-				
-				},1);
-				
-			}
+				// default animation.
+				animation = animation || 'slideInTop';
 			
+				// add the dialogue to the overlay.
+				overlay.appendChild(dialogue);
+			
+				// make the overlay visible.
+				overlay.addClass('visible');
+			
+				// animate the overlay in.
+				new Animator(overlay, 'fadeIn', 0.5);
+			
+				// animate the dialogue in.
+				new Animator(dialogue, animation, 0.5);
+			
+			});
+		
 		}
-		else
-		{
-			
-			// append the new dialogue.
+		else {
+		
 			overlay.appendChild(dialogue);
-			
-			// show the dialogue.
-			overlay.setAttribute('class','visible');
-			
+		
+			overlay.addClass('visible');
+		
 		}
 		
 	}

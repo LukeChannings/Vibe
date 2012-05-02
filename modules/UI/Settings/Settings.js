@@ -16,12 +16,6 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 
 	Settings.prototype.show = function() {
 	
-		var UIOptions = {
-			'title' : 'User Interface Preferences',
-			'navTitle' : 'UI Preferences',
-			'body' : 'No n00bz aloud. Init.' 
-		};
-	
 		var ConnectionOptions = {
 			'title' : "Connection",
 			'body' : "Below are the details of the Vibe Server.",
@@ -47,23 +41,13 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'alignment' : 'justify'
 		};
 		
-		var commitSettings = function() {
-		
-			console.log(document.forms['connection']);
-		
-		}
-	
 		dialogue.createMultiView({
 			'title' : 'Settings',
-			'views' : [UIOptions, ConnectionOptions, About],
-			'buttons' : {
-				'Apply' : commitSettings,
-				'Close' : true
-			},
-			'animateIn' : 'slideTop',
-			'animateOut' : 'slideBottom'
+			'views' : [ConnectionOptions, About],
+			'buttons' : {'close' : true },
+			'animateIn' : 'slideInTop',
+			'animateOut' : 'slideOutTop'
 		});
-	
 	}
 
 	Settings.prototype.firstrun = function(callback, title, body) {

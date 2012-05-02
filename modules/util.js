@@ -282,7 +282,7 @@ define(function(){
 					for ( var i = 0; i < prefix.length; i++ )
 					{
 						// check if the possibility is present, if so, return the property that was found.
-						if ( prefix[i] in document.createElement('div').style ) return prefix[i];
+						if ( prefix[i] in document.createElement('div').style ) return prefix[i].replace('Transition','');
 					
 					}
 					
