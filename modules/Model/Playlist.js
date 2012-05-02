@@ -90,43 +90,6 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 	
 	/**
-	 * removeItem
-	 * @description removes an item from the playlist.
-	 * @param n - item to remove. (from 0.)
-	 */
-	ModelPlaylist.prototype.removeItem = function(n) {
-	
-		this.model.removeItemAtIndex(n);
-		
-		this.ui.redraw(this.model.value());
-	
-	}
-	
-	/**
-	 * removeLastItem
-	 * @description removes the last item from the playlist.
-	 */
-	ModelPlaylist.prototype.removeLastItem = function() {
-		
-		this.model.pop();
-		
-		this.ui.redraw(this.model.value());
-		
-	}
-	
-	/**
-	 * removeFirstItem
-	 * @description removes the first item from the playlist.
-	 */
-	ModelPlaylist.prototype.removeFirstItem = function() {
-	
-		this.model.shift();
-		
-		this.ui.redraw(this.model.value());
-	
-	}
-	
-	/**
 	 * clear
 	 * @description flushes the model, localStorage and clears the UI.
 	 */
@@ -156,38 +119,29 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * @param id (string) - The unique identifier for the type.
 	 */
 	var getItems = function(type,id,callback) {
-		if ( type == 'genre' )
-		{
-			this.api.getTracksInGenre(id,function(tracks){
-
-				callback(tracks);
-
-			});
+	
+		// map the type to the Api method.
+		var types = {
+			'genre' : 'getTracksInGenre',
+			'artist' : 'getTracksByArtist',
+			'album' : 'getTracksInAlbum',
+			'track' : 'getTrack'
 		}
-		else if ( type == 'artist' )
-		{
-			this.api.getTracksByArtist(id,function(tracks){
-
-				callback(tracks);
-
+	
+		// check that there is a corresponding method to the specified type.
+		if ( types[type] ) {
+		
+			// call the Api method.
+			this.api[types[type]](id,function(tracks){
+			
+				// return the results to the callback.
+				if ( typeof callback == 'function' ) callback(tracks);
+			
 			});
+		
 		}
-		else if ( type == 'album' )
-		{
-			this.api.getTracksInAlbum(id,function(tracks){
-
-				callback(tracks);
-
-			});
-		}
-		else if ( type == 'track' )
-		{
-			this.api.getTrack(id,function(tracks){
-
-				callback(tracks);
-
-			});
-		}
+		
+		else throw util.error("Invalid type used in getItems.","REF_ERR");
 	}
 	
 	return ModelPlaylist;
