@@ -67,6 +67,11 @@
 	left: 0;
 }
 
+
+#UIPlaylist > .listContainer  li.selected{background: #f9a}
+
+#UIPlaylist > .listContainer  li.playing{background: red}
+
 /* @end */
 
 /* @group Control Bar */

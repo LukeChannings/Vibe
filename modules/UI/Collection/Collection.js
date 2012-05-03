@@ -120,8 +120,6 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 						  ( target.parentNode.parentNode.getAttribute('data-albumart') ) ? target.parentNode.parentNode.getAttribute('data-albumart') :
 						  require.toUrl('./CollectionGenericAlbumArt.png');
 				
-				console.log(url);
-				
 				// Set a generic album art.
 				DragImage.src = url;
 				

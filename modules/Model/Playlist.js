@@ -107,9 +107,15 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * setIndex
 	 * @description sets the playlist index.
 	 */
-	ModelPlaylist.prototype.setIndex = function(n) {
+	ModelPlaylist.prototype.setIndex = function(n, node) {
 	
 		this.index = n;
+	
+		if ( this.ui.playingNode ) this.ui.playingNode.removeClass('playing');
+		
+		node.addClass('playing');
+		
+		this.ui.playingNode = node;
 	
 	}
 	

@@ -99,6 +99,9 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		// check for an options object.
 		var options = this.options = ( typeof options == 'object' ) ? options : {};
 
+		this.playingNode = undefined;
+		this.selectedNodes = [];
+
 		// set a default useColumns.
 		options.useColumns = ( options.useColumns instanceof Array ) ? options.useColumns : ['trackno','trackname','albumname','artistname','tracklength'];
 
@@ -147,10 +150,24 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 			var row = createPlaylistRow(item, self.options.useColumns);
 		
-			util.doubleClick(row, null,function() {
+			util.doubleClick(row, function() {
 			
-				self.emit('itemSelected', item.trackid, index);
+				node.addClass('selected');
 			
+				self.emit('itemSelected', item);
+			
+			},function() {
+			
+				self.emit('playItem', item.trackid, index, node);
+			
+			});
+			
+			util.addListener(row,'selectstart',function(e){
+			
+				if ( e.preventDefault ) e.preventDefault();
+				
+				return false;
+				
 			});
 		
 			node.appendChild(row);
@@ -164,6 +181,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		drawLegend.call(this);
 		
 	}
+	
 	
 	// use EventEmitter.
 	EventEmitter.augment(UIPlaylist.prototype);

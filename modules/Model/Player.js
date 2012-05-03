@@ -70,13 +70,13 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	
 	}
 	
-	Player.prototype.addSound = function(src, id, autoplay) {
+	Player.prototype.addSound = function(id, autoplay) {
 	
 		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct(); 
 	
 		currentSound = soundManager.createSound({
 			'id' : id,
-			'url' : src,
+			'url' : this.getStreamUrl(id),
 			'autoPlay' : autoplay || false,
 			'autoLoad' : true,
 			'stream' : true,

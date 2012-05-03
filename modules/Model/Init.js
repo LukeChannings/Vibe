@@ -52,11 +52,17 @@ define(['util'],function(){
 			// keep the model sane.
 			modelPlaylist.model.prune();
 			
-			playlist.on('itemSelected',function(id, index) {
+			playlist.on('playItem',function(id, index, node) {
 				
-				modelPlaylist.setIndex(index);
+				modelPlaylist.setIndex(index, node);
 				
-				player.addSound('http://' + self.settings.get('host') + ':' + self.settings.get('port') + '/stream/' + id, id , true);
+				player.addSound(id , true);
+			
+			});
+			
+			playlist.on('itemSelected',function(item) {
+			
+				console.log(item);
 			
 			});
 			
@@ -76,6 +82,7 @@ define(['util'],function(){
 				modelPlaylist.add(item.type, item.id);
 				
 			});
+			
 		
 		});
 	
