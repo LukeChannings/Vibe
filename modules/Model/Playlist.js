@@ -31,6 +31,8 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		// model stores the complete playlist items that construct a PlaylistItem.
 		var model = this.model = new UndoManager('ModelPlaylist');
 	
+		this.index = 0;
+	
 		// set the Api instance.
 		var api = this.api = options.withApi;
 	
@@ -59,7 +61,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 			
 			self.ui.redraw(self.model.value());
 			
-			callback();
+			if ( typeof callback == 'function' ) callback();
 			
 		});
 	
@@ -98,6 +100,29 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		this.model.clear();
 		
 		this.ui.list.removeChildren();
+	
+	}
+
+	/**
+	 * setIndex
+	 * @description sets the playlist index.
+	 */
+	ModelPlaylist.prototype.setIndex = function(n) {
+	
+		this.index = n;
+	
+	}
+	
+	/**
+	 * getItem
+	 * @description returns the current playlist object or the object at index n.
+	 * @param n - index for the object. (optional, defaults to the current index.)
+	 */
+	ModelPlaylist.prototype.getItem = function(n) {
+	
+		console.log(this.index);
+	
+		return this.model.getItemAtIndex(this.index);
 	
 	}
 

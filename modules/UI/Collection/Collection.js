@@ -115,22 +115,12 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				// Create a new ghost image.
 				var DragImage = new Image();
 				
-				if ( type == 'artist' || type == 'genre' )
-				{
-					var url = require.toUrl('./CollectionGenericArtistArt.png');
-				}
-				else if ( target.getAttribute('data-albumart') )
-				{
-					var url = target.getAttribute('data-albumart');
-				}
-				else if ( target.parentNode.parentNode.getAttribute('data-albumart') )
-				{
-					var url = target.parentNode.parentNode.getAttribute('data-albumart');
-				}
-				else
-				{
-					var url = require.toUrl('./CollectionGenericAlbumArt.png');
-				}
+				var url = ( type == 'artist' || type == 'genre' ) ?  require.toUrl('./CollectionGenericArtistArt.png') :
+						  ( target.getAttribute('data-albumart') ) ? target.getAttribute('data-albumart') : 
+						  ( target.parentNode.parentNode.getAttribute('data-albumart') ) ? target.parentNode.parentNode.getAttribute('data-albumart') :
+						  require.toUrl('./CollectionGenericAlbumArt.png');
+				
+				console.log(url);
 				
 				// Set a generic album art.
 				DragImage.src = url;

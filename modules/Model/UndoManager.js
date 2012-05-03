@@ -343,7 +343,7 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 		// accessor methods:
 		this.getItemAtIndex = function(n) {
 		
-			return branches[currentBranch][n];
+			return store[branches[currentBranch][n]];
 		
 		}
 		this.value = function() {

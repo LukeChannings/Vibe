@@ -6,7 +6,7 @@ define(['util'],function(util){
 
 	var UIPlaceholderWidget = function(node, placeholder) {
 	
-		if ( node instanceof Element && typeof placeholder == 'string' )
+		if ( node instanceof Element && placeholder )
 		{
 			
 			node.value = placeholder;
@@ -40,8 +40,9 @@ define(['util'],function(util){
 			});
 			
 		}
-		else throw util.error('Invalid parameters.');
-	
+		else {
+			throw util.error('Invalid Parameters.');
+		}
 	}
 	
 	return UIPlaceholderWidget;

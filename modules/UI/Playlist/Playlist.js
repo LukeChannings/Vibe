@@ -141,7 +141,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 		if ( redrawLegend ) this.redrawLegend();
 		
-		items.forEach(function(item){
+		items.forEach(function(item, index){
 		
 			var node = util.createElement({'tag' : 'li', appendTo : self.list});
 		
@@ -149,7 +149,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 			util.doubleClick(row, null,function() {
 			
-				self.emit('itemSelected',item.trackid);
+				self.emit('itemSelected', item.trackid, index);
 			
 			});
 		
@@ -157,12 +157,6 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 		});
 	
-	}
-	
-	UIPlaylist.prototype.updateInfo = function() {
-	
-		// broken.
-		
 	}
 	
 	UIPlaylist.prototype.redrawLegend = function() {

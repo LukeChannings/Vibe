@@ -13,8 +13,6 @@ define(['util'],function(){
 		// get the UI modules.
 		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player'],function(UICollection, UIPlaylist, ModelPlaylist, Player){
 		
-			var player = new Player();
-		
 			var playlist = new UIPlaylist({
 				appendTo : self.vibeRootElement,
 				useControlBar : true,
@@ -49,12 +47,16 @@ define(['util'],function(){
 			
 			var modelPlaylist = new ModelPlaylist({ withUI : playlist, withApi : self.api });
 			
+			player = new Player({ 'withSettings' : self.settings, 'withModelPlaylist' : modelPlaylist });
+			
 			// keep the model sane.
 			modelPlaylist.model.prune();
 			
-			playlist.on('itemSelected',function(id) {
-			
-				player.addSound('http://' + self.settings.get('host') + ':' + self.settings.get('port') + '/stream/' + id).play();
+			playlist.on('itemSelected',function(id, index) {
+				
+				modelPlaylist.setIndex(index);
+				
+				player.addSound('http://' + self.settings.get('host') + ':' + self.settings.get('port') + '/stream/' + id, id , true);
 			
 			});
 			
@@ -71,14 +73,7 @@ define(['util'],function(){
 		
 			collection.on('itemSelected',function(item){
 			
-				modelPlaylist.add(item.type, item.id,function(){
-				
-					playlist.updateInfo({
-						'count' : modelPlaylist.model.value().length,
-						'duration' : 100
-					});
-				
-				});
+				modelPlaylist.add(item.type, item.id);
 				
 			});
 		

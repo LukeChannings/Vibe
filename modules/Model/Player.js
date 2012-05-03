@@ -2,12 +2,13 @@
  * Player
  * @description 
  */
-define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],function(require, EventEmitter){
+define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager2'],function(require, EventEmitter, util){
 
 	// SM2 setup.
-	soundManager.url = '../modules/dependencies/';
-	soundManager.debugMode = true;
+	soundManager.url = 'modules/dependencies/';
+	soundManager.debugMode = false;
 	soundManager.allowScriptAccess = 'always';
+	soundManager.preferFlash = true;
 	
 	// control variables.
 	var currentSound = null,
@@ -22,8 +23,16 @@ define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],func
 	}
 	
 	// constructor.
-	var Player = function() {
+	var Player = function(options) {
 	
+		var options = options || {};
+	
+		if ( ! options.withSettings ) throw util.error('Missing settings instance.');
+		else this.settings = options.withSettings;
+		
+		if ( ! options.withModelPlaylist ) throw util.error('Missing model playlist instance.');
+		else this.modelPlaylist = options.withModelPlaylist;
+		
 		// properties.
 		this.isMuted = false;
 		this.isPlaying = false;
@@ -43,21 +52,44 @@ define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],func
 	// add events to Player.
 	EventEmitter.augment(Player.prototype);
 	
-	Player.prototype.addSound = function(src) {
+	/**
+	 * playNext
+	 * @description plays the next track in the playlist if one exists.
+	 */
+	var playNext = function() {
 	
-		console.log(src);
+		var self = this;
+		
+		this.modelPlaylist.index++;
+		
+		var id = this.modelPlaylist.getItem().trackid;
 	
-		// destroy preexisting SMSounds.
-		if ( soundManager.getSoundById('currentSound') ) soundManager.getSoundById('currentSound').destroy();
+		console.log(id);
 	
-		return soundManager.createSound({
-			'id' : "currentSound",
+		self.addSound(this.getStreamUrl(id), id, true);
+	
+	}
+	
+	Player.prototype.addSound = function(src, id, autoplay) {
+	
+		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct(); 
+	
+		currentSound = soundManager.createSound({
+			'id' : id,
 			'url' : src,
-			'volume' : this.volume,
-			'autoPlay' : false,
+			'autoPlay' : autoplay || false,
 			'autoLoad' : true,
-			'stream' : true
+			'stream' : true,
+			'onfinish' : playNext
 		});
+	
+		return currentSound;
+	
+	}
+	
+	Player.prototype.getCurrentSound = function() {
+	
+		return currentSound;
 	
 	}
 	
@@ -70,7 +102,15 @@ define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],func
 		this.isPlaying = true;
 		this.isPaused = false;
 	
-		currentSound.play();
+		if ( currentSound instanceof Object ) currentSound.play();
+		else {
+		
+			// get the current id.
+			var id = this.modelPlaylist.getItem().trackid;
+		
+			this.addSound(this.getStreamUrl(id), id, true);
+		
+		}
 	
 	}
 	
@@ -134,6 +174,14 @@ define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],func
 	Player.prototype.setVolume = function(n) {
 	
 		this.volume = n;
+	
+	}
+	
+	Player.prototype.getStreamUrl = function(id) {
+	
+		var settings = this.settings;
+	
+		return 'http://' + settings.get('host') + ':' + settings.get('port') + '/stream/' + id;
 	
 	}
 	

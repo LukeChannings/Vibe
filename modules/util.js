@@ -333,7 +333,7 @@ define(function(){
 					
 						clickTimeout = undefined;
 						
-						click(target);
+						if ( typeof click == 'function' ) click(target);
 					
 					}, clickTimeoutDuration || 170);
 				}
