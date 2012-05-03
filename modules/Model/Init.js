@@ -11,7 +11,9 @@ define(['util'],function(){
 		var self = this;
 	
 		// get the UI modules.
-		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist'],function(UICollection, UIPlaylist, ModelPlaylist){
+		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player'],function(UICollection, UIPlaylist, ModelPlaylist, Player){
+		
+			var player = new Player();
 		
 			var playlist = new UIPlaylist({
 				appendTo : self.vibeRootElement,
@@ -50,9 +52,10 @@ define(['util'],function(){
 			// keep the model sane.
 			modelPlaylist.model.prune();
 			
-			playlist.updateInfo({
-				'count' : modelPlaylist.model.value().length,
-				'duration' : 100
+			playlist.on('itemSelected',function(id) {
+			
+				player.addSound('http://' + self.settings.get('host') + ':' + self.settings.get('port') + '/stream/' + id).play();
+			
 			});
 			
 			window.model = modelPlaylist;

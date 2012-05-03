@@ -100,18 +100,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		this.ui.list.removeChildren();
 	
 	}
-	
-	/**
-	 * getItem
-	 * @description returns a playlist item object.
-	 * @param n (int) - the playlist item index.
-	 */
-	ModelPlaylist.prototype.getItem = function(n) {
-	
-		return this.model.getItemAtIndex(n);
-	
-	}
-	
+
 	/**
 	 * getItems
 	 * @description fetches the items for the corresponding type and id.

@@ -1,126 +1,141 @@
 /**
  * Player
- * @description Provides functionality for queuing a playlist of tracks, plus basic control functionality.
+ * @description 
  */
-define(['dep/EventEmitter','dep/soundmanager2'],function(EventEmitter){
+define(['require','dependencies/EventEmitter','dependencies/soundmanager2'],function(require, EventEmitter){
 
-	soundManager.url = 'modules/dependencies';
-
-	soundManager.debugMode = false;
-
-	var playlist = [];
+	// SM2 setup.
+	soundManager.url = '../modules/dependencies/';
+	soundManager.debugMode = true;
+	soundManager.allowScriptAccess = 'always';
 	
-	var playlistIndex = -1;
-
-	function Player()
-	{
+	// control variables.
+	var currentSound = null,
+		bufferedSound = null,
+		hasLoaded = false,
+		identifiers = [];
 	
-		var self = this;
+	soundManager.onready = function() {
+		
+		hasLoaded = true;
+		
+	}
 	
-		this.playlist = playlist;
+	// constructor.
+	var Player = function() {
 	
-		soundManager.onready(function(){
+		// properties.
+		this.isMuted = false;
+		this.isPlaying = false;
+		this.isPaused = false;
+		this.position = 0;
+		this.duration = 0;
+		this.volume = 70;
+		this.isBuffering = false;
+		this.hasLoaded = hasLoaded;
 		
-			self.emit('ready');
-		
-		});
-	}
-
-	Player.prototype.getPlaylist = function()
-	{
-		return [playlist,playlistIndex];
-	}
-
-	Player.prototype.add = function(id)
-	{
-		var track = soundManager.createSound({
-			'id' : 's' + id, // prefix 's' because ids should start with a letter.
-			'url' : 'http://' + settings.get('host') + ':' + ( settings.get('port') || 6232 ) + '/stream/' + id,
-			'type' : 'audio/mpeg',
-			'autoLoad' : true,
-			'stream' : true,
-			'bufferTime' : 3,
-			'volume' : settings.get('volume') || 100
-		});
-		
-		playlist.push(track);
-	}
-
-	Player.prototype.play = function(index)
-	{
-		var self = this;
-		
-		playlistIndex = ( index ) ? index : ( playlistIndex == -1 ) ? 0 : playlistIndex;
-		
-		if (playlist[playlistIndex]  )
-		{
-			(function readyStateChange(){
-			
-				if ( playlist[playlistIndex].readyState === 3 )
-				{
-					playlist[playlistIndex].play();
-				}
-				else if ( playlist[playlistIndex].readyState === 2 )
-				{
-					self.emit('error',"Cannot play index " + playlistIndex);
-				}
-				else
-				{
-					setTimeout(readyStateChange, 100);
-				}
-			
-			})();
-		}
-		else
-		{
-			console.error("No SMSound at current index.");
+		if ( hasLoaded ) {
+			self.emit('loaded');
 		}
 		
 	}
-
-	Player.prototype.pause = function()
-	{
-		if ( playlist[playlistIndex] )
-		{
-			playlist[playlistIndex].pause();
-		}
-		else
-		{
-			console.error("No SMSound at current index.");
-		}
-	}
-
-	Player.prototype.stop = function(){
 	
-		if ( playlist[playlistIndex] )
-		{
-			playlist[playlistIndex].stop();
-		}
-		else
-		{
-			console.error("No SMSound at current index.");
-		}
-	}
-
-	Player.prototype.next = function()
-	{
-		this.stop();
-		
-		playlistIndex++;
-		
-		this.play(playlistIndex);
-	}
-
-	Player.prototype.prev = function()
-	{
-		this.stop();
-		
-		playlistIndex - 2;
-		
-		this.play(playlistIndex);
-	}
-
+	// add events to Player.
 	EventEmitter.augment(Player.prototype);
+	
+	Player.prototype.addSound = function(src) {
+	
+		console.log(src);
+	
+		// destroy preexisting SMSounds.
+		if ( soundManager.getSoundById('currentSound') ) soundManager.getSoundById('currentSound').destroy();
+	
+		return soundManager.createSound({
+			'id' : "currentSound",
+			'url' : src,
+			'volume' : this.volume,
+			'autoPlay' : false,
+			'autoLoad' : true,
+			'stream' : true
+		});
+	
+	}
+	
+	/**
+	 * play
+	 * @description plays the current track.
+	 */
+	Player.prototype.play = function() {
+	
+		this.isPlaying = true;
+		this.isPaused = false;
+	
+		currentSound.play();
+	
+	}
+	
+	/**
+	 * pause
+	 * @description pauses the current track.
+	 */
+	Player.prototype.pause = function() {
+	
+		this.isPlaying = false;
+		this.isPaused = true;
+	
+		console.log(currentSound);
+	
+		currentSound.pause();
+	
+	}
+	
+	/**
+	 * stop
+	 * @description stops the current track. difference from pause is that stop resets position to zero.
+	 */
+	Player.prototype.stop = function() {
+	
+		this.isPlaying = false;
+		this.isPaused = false;
+	
+		currentSound.stop();
+	
+	}
+	
+	/**
+	 * mute
+	 * @description mutes the sound.
+	 */
+	Player.prototype.mute = function() {
+	
+		this.isMuted = true;
+	
+		currentSound.mute();
+	
+	}
+	
+	/**
+	 * unMute
+	 * @description unmutes the sound.
+	 */
+	Player.prototype.unMute = function() {
+	
+		this.isMuted = false;
+	
+		currentSound.unmute();
+	
+	}
+	
+	/**
+	 * setVolume
+	 * @description sets a new volume for the sound.
+	 * @param n - volume integer between 0 and 100.
+	 */
+	Player.prototype.setVolume = function(n) {
+	
+		this.volume = n;
+	
+	}
 	
 	return Player;
 

@@ -147,6 +147,12 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 			var row = createPlaylistRow(item, self.options.useColumns);
 		
+			util.doubleClick(row, null,function() {
+			
+				self.emit('itemSelected',item.trackid);
+			
+			});
+		
 			node.appendChild(row);
 		
 		});
