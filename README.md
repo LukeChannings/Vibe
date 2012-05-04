@@ -1,6 +1,6 @@
 #Vibe Player#
 
-[![Logo](./Vibe/raw/master/images/icon.png)]
+![Logo](./Vibe/raw/master/images/icon.png)
 
 Vibe is a next-generation Web Application that will stream music from a Vibe Server
 and allow it to be played on the browser. Vibe aims to provide an intuitive and fast
