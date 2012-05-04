@@ -131,6 +131,16 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		// create the playlist ordered-list.
 		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer});
 		
+		util.doubleClick(list, function(element) {
+		
+			console.log(element);
+		
+		},function(element) {
+		
+			console.log(element);
+		
+		});
+		
 		// include the info bar if the option is specified.
 		if ( options.useInfoBar ) initInfoBar.call(this);
 	
@@ -144,35 +154,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 		if ( redrawLegend ) this.redrawLegend();
 		
-		items.forEach(function(item, index){
-		
-			var node = util.createElement({'tag' : 'li', appendTo : self.list});
-		
-			var row = createPlaylistRow(item, self.options.useColumns);
-		
-			util.doubleClick(row, function() {
-			
-				node.addClass('selected');
-			
-				self.emit('itemSelected', item);
-			
-			},function() {
-			
-				self.emit('playItem', item.trackid, index, node);
-			
-			});
-			
-			util.addListener(row,'selectstart',function(e){
-			
-				if ( e.preventDefault ) e.preventDefault();
-				
-				return false;
-				
-			});
-		
-			node.appendChild(row);
-		
-		});
+		console.log(items);
 	
 	}
 	
