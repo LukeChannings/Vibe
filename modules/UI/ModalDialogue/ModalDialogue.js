@@ -6,7 +6,7 @@
  * @method createMultiView - Method for creating a view-based dialogue with sidebar navigation.
  * @dependencies - modules/util, modal.css, modal.mobile.css (For mobile.)
  */
-define(['require','util'],function(require,util){
+define(['require','util'],function(require, util){
 
 	/**
 	 * Stylesheet injection.
@@ -16,20 +16,13 @@ define(['require','util'],function(require,util){
 	// mobile stylesheet.
 	if ( util.Browser.isMobile() ) util.registerStylesheet(require.toUrl('./ModalDialogue.mobile.css'))
 
-	/**
-	 * overlay
-	 */
-	var overlay
-	
-	if ( document.getElementById('ModalDialogueOverlay') ) overlay = document.getElementById('ModalDialogueOverlay')
-	
-	else overlay = util.createElement({'tag' : 'div', 'id' : 'ModalDialogueOverlay', appendTo : document.body})
-	
-	/**
-	 * currentDialogue
-	 * @description The current visible dialogue.
-	 */
-	var currentDialogue = null
+	// the overlay upon which the dialogue is appended.
+	var overlay = ( document.getElementById('ModalDialogueOverlay') ) ? 
+		document.getElementById('ModalDialogueOverlay') :
+		util.createElement({'tag' : 'div', 'id' : 'ModalDialogueOverlay', appendTo : document.body}),
+		currentDialogue = null, // the current visible dialogue.
+		Animator, // animator class for animating the presentation and dismissal of elements.
+		AnimationPrefix = util.Browser.HasSupport.cssTransitions() // browser-specific prefix for animation directives.
 
 	/**
 	 * isValidMDD
@@ -568,28 +561,20 @@ define(['require','util'],function(require,util){
 	 */
 	ModalDialogue.close = function(animation){
 	
-		// get the transition prefix.
-		var prefix = util.Browser.HasSupport.cssTransitions()
+		if ( AnimationPrefix ) {
 		
-		if ( prefix ) {
-		
-			require(['UI/Animator/Animator'],function(Animator) {
+			// default animation.
+			animation = animation || 'slideOutBottom'
 			
-				// default animation.
-				animation = animation || 'slideOutBottom'
+			new Animator(overlay, 'fadeOut', 0.5)
 			
-				new Animator(overlay, 'fadeOut', 0.5)
-			
-				new Animator(currentDialogue, animation, 0.5, function() {
+			new Animator(currentDialogue, animation, 0.5, function() {
 				
-					currentDialogue.removeNode(true)
+				currentDialogue.removeNode(true)
 				
-					overlay.removeClass('visible')
+				overlay.removeClass('visible')
 				
-				})
-			
 			})
-		
 		}
 		
 		else {
@@ -617,28 +602,31 @@ define(['require','util'],function(require,util){
 		// set the new currentDialogue.
 		currentDialogue = dialogue
 		
-		// get the transition prefix.
-		var prefix = util.Browser.HasSupport.cssTransitions()
-		
 		// if there's a prefix then get the animation module.
-		if ( prefix && animation ) {
+		if ( AnimationPrefix ) {
 		
-			require(['UI/Animator/Animator'],function(Animator){
+			var open = function(UIAnimator) {
+			
+				if ( UIAnimator ) Animator = UIAnimator
 			
 				// add the dialogue to the overlay.
 				overlay.appendChild(dialogue)
-			
+				
 				// make the overlay visible.
 				overlay.addClass('visible')
-			
+				
 				// animate the overlay in.
 				new Animator(overlay, 'fadeIn', 0.5)
-			
+				
 				// animate the dialogue in.
 				new Animator(dialogue, animation, 0.5)
-			
-			})
+				
+			}
 		
+			if ( ! Animator ) require(['UI/Animator/Animator'], open)
+			
+			else open()
+						
 		}
 		else {
 		
