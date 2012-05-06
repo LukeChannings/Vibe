@@ -17,9 +17,7 @@ define(['require','util'],function(require, util){
 	if ( util.Browser.isMobile() ) util.registerStylesheet(require.toUrl('./ModalDialogue.mobile.css'))
 
 	// the overlay upon which the dialogue is appended.
-	var overlay = ( document.getElementById('ModalDialogueOverlay') ) ? 
-		document.getElementById('ModalDialogueOverlay') :
-		util.createElement({'tag' : 'div', 'id' : 'ModalDialogueOverlay', appendTo : document.body}),
+	var overlay = ( document.getElementById('ModalDialogueOverlay') ) ?  document.getElementById('ModalDialogueOverlay') : util.createElement({'tag' : 'div', 'id' : 'ModalDialogueOverlay', appendTo : document.body}),
 		currentDialogue = null, // the current visible dialogue.
 		Animator, // animator class for animating the presentation and dismissal of elements.
 		AnimationPrefix = util.Browser.HasSupport.cssTransitions() // browser-specific prefix for animation directives.
