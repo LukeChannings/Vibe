@@ -279,7 +279,7 @@ define(['require','util'],function(require,util){
 	dialogueFromMDD.prototype.createButtons = function( buttons, buttonContainer ) {
 	
 		// create a container for the buttons.
-		buttonContainer = buttonContainer || util.createElement({'tag' : 'div', 'customClass' : 'buttons', 'appendTo' : this.dialogue})
+		var buttonContainer = ( ( buttonContainer instanceof Element ) ) ? buttonContainer :  util.createElement({'tag' : 'div', 'customClass' : 'buttons', 'appendTo' : this.dialogue})
 	
 		// iterate the buttons.
 		for ( var i in buttons ) {
@@ -533,7 +533,7 @@ define(['require','util'],function(require,util){
 					// construct the dialogue.
 					views.push(new dialogueFromMDD(MDD))
 				
-					var navItem = NavigationItem(MVD.navTitle || MDD.title, i, switchView, ModalDialogue)
+					var navItem = NavigationItem(MDD.navTitle || MDD.title, i, switchView, ModalDialogue)
 				
 					navItems.push(navItem)
 				
