@@ -368,14 +368,11 @@ define(['require','util'],function(require, util){
 	ModalDialogue.createSingle = function(MDD)
 	{
 	
-		// check animate parameter.
-		MDD.animate = MDD.animate || {}
-		
 		// set the animate in property.
-		animateIn = MDD.animate.in || 'fadeIn'
+		animateIn = ( MDD.animate && typeof MDD.animate.in !== 'undefined' ) ? MDD.animate.in : 'fadeIn'
 		
 		// set the animate out property.
-		animateOut = MDD.animate.out || 'fadeOut'
+		animateOut = ( MDD.animate && typeof MDD.animate.out !== 'undefined' ) ? MDD.animate.out : 'fadeOut'
 	
 		var dialogue = new dialogueFromMDD(MDD)
 		
@@ -619,7 +616,7 @@ define(['require','util'],function(require, util){
 	 */
 	ModalDialogue.close = function(){
 	
-		if ( AnimationPrefix ) {
+		if ( AnimationPrefix && animateOut ) {
 		
 			new Animator(overlay, 'fadeOut', 0.5)
 			
@@ -657,7 +654,7 @@ define(['require','util'],function(require, util){
 		currentDialogue = dialogue
 		
 		// if there's a prefix then get the animation module.
-		if ( AnimationPrefix ) {
+		if ( AnimationPrefix && animateIn ) {
 		
 			var open = function(UIAnimator) {
 			

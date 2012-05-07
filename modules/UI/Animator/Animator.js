@@ -127,9 +127,11 @@ define(['util'],function(util) {
 	
 		setTimeout(function() {
 		
-			element.style.opacity = 1;
+			element.style.opacity = 1
 		
-			if ( typeof self.callback == 'function' ) self.callback();
+			element.style[prefix + 'Transition'] = element.style.opacity = null
+			
+			if ( typeof self.callback == 'function' ) self.callback()
 		
 		}, 100);
 	
