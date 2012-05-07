@@ -14,6 +14,28 @@ Each type of dialogue takes a Modal Dialouge Definition (MDD), or a series of MD
 
 ModalDialogue has been tested in IE8+, Chrome, FireFox 3.6+ and Opera.
 
+##Dependencies
+
+Because the ModalDialogue module was written to be a part of a larger application it depends on other common modules of that application. The ModalDialogue depends on the following modules:
+
+- __util.js__ - Provides utility methods for performing cross-browser operations on DOM nodes, arrays, etc.
+- __UIAnimator__ - Animation module, only required when an animation is used.
+- __require.js__ - An engine for fetching modules.
+- __ModalDialogue.css__ - the stylesheet for the dialogues.
+- __ModalDialogue.mobile.css__ - stylesheet for mobile devices.
+
+There is a minified standalone version of ModalDialogue that is available, and can be used like so:
+
+	<script type="text/javascript" src="ModalDialogue.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="ModalDialogue.css" />
+	<!-- Do your own check to insert ModalDialogue.mobile.css -->
+	
+	<script type="text/javascript">
+		ModalDialogue.createSingle(<< Insert MDD Here. >>)
+	</script>
+
+The stylesheet relies on a single image named ModalDialogueError.(png|svg) that is used when errorDialogue is true in the dialogue, so unless you know you're never going to use that property, please ensure the image(s) is in the path.
+
 ##Usage
 
 This section will document the three methods for creating dialogues and the Modal Dialouge Definition. It will also document the DOM structure of the dialogue so that it can be themed with custom CSS.
@@ -190,6 +212,8 @@ For example:
 			'out' : 'slideOutBottom'
 		}
 	}
+
+If the animate property is undefined then no animation will be used, and the animation module will not be required.
 
 __Note:__ Animation is only supported in CSS3-compliant browsers.
 
