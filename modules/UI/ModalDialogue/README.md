@@ -26,9 +26,9 @@ Because the ModalDialogue module was written to be a part of a larger applicatio
 
 There is a minified standalone version of ModalDialogue that is available, and can be used like so:
 
-	<script type="text/javascript" src="ModalDialogue.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="ModalDialogue.css" />
-	<!-- Do your own check to insert ModalDialogue.mobile.css -->
+	<script type="text/javascript" src="ModalDialogue.standalone.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="ModalDialogue.min.css" />
+	<!-- Do your own check to insert ModalDialogue.mobile.min.css -->
 	
 	<script type="text/javascript">
 		ModalDialogue.createSingle(<< Insert MDD Here. >>)
