@@ -118,7 +118,7 @@ The form property defines a form within the dialogue that will be displayed afte
 - __name__ - {string} the name of the form.
 - __inputs__ - {array} input objects. (defined below)
 - __callback__ - {function} function called when enter is pressed or the button is clicked.
-- __buttonTitle__ - {string} title of the form button. Optional, defaults to 'Apply'.
+- __buttonTitle__ - {string} title of the form button. Optional, defaults to 'Submit'.
 
 An input object has the following properties:
 
@@ -279,3 +279,27 @@ MDD changes:
 
 - Template functions for MDD.buttons.next and MDD.buttons.prev allowing automatic switching to the next and previous dialogues by specifying the property to be true.
 - animate property is ignored in individual MDDs, instead use the second parameter.
+- Each MDD can use a prev and next button template that will be replaced by createWizard to allow switching between dialogues.
+
+Below is an example of the prev and next button templates.
+
+
+	var MDD1 = {
+		'title' : 'Dialogue 1',
+		'body' : 'This is the first dialogue and has a next button.',
+		'buttons' : { next : true }
+	}
+	
+	var MDD2 = {
+		'title' : 'Dialogue 2',
+		'body' : 'This is the second dialogue and has next and previous buttons.',
+		'buttons' : { prev : true, next : true }
+	}
+	
+	var MDD3 = {
+		'title' : 'Dialogue 3',
+		'body' : 'This is the final dialogue and has a previous and close button.',
+		'buttons' : { prev : true, close : true }
+	}
+	
+	ModalDialogue.createWizard(MDD1, MDD2, MDD3)

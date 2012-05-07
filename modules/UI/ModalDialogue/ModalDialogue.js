@@ -258,7 +258,7 @@ define(['require','util'],function(require, util){
 		
 			this.MDD.buttons = this.MDD.buttons || {}
 		
-			this.MDD.buttons[form.buttonName || "Apply"] = function() {
+			this.MDD.buttons[form.buttonName || "Submit"] = function() {
 			
 				form.callback(inputs)
 			
