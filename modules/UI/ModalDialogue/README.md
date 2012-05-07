@@ -203,13 +203,13 @@ The dialogue constructor methods are used to create different kinds of dialogue.
 
 ###ModalDialogue.createSingle
 
-![image](./examples/createSingle.png)
+![image](/TheFuzzball/Vibe/raw/master/modules/UI/ModalDialogue/examples/createSingle.png)
 
 The createSingle method takes a single MDD as a parameter and will construct and display that dialogue. createSingle is the simples constructor method as it simply uses an MDD.
 
 ###ModalDialogue.createMultiView
 
-![image](./examples/createMultiView.png)
+![image](/TheFuzzball/Vibe/raw/master/modules/UI/ModalDialogue/examples/createMultiView.png)
 
 The createMultiView constructor method allows a complex view-based dialogue to be created that allows switching between views using a navigation panel.
 
@@ -242,7 +242,7 @@ Below is an example of an MVD:
 
 ###ModalDialogue.createWizard
 
-![image](./examples/createWizard.png)
+![image](/TheFuzzball/Vibe/raw/master/modules/UI/ModalDialogue/examples/createWizard.png)
 
 The createWizard constructor method creates a dialogue that allows switching between multiple dialogues using previous and next buttons.
 
