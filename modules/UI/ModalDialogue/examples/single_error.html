@@ -14,9 +14,12 @@
 					dialogue.createSingle({
 						"title" : "Oh no! Something went wrong!",
 						"alignment" : "center",
-						"errorDialogue" : "true",
+						"errorDialogue" : true,
 						"body" : "It appears that something has gone horribly wrong. :(",
-						"animateIn" : "slideTop"
+						"animate" : {
+							'in' : "slideInTop",
+							'out' : "slideOutBottom"
+						}
 					});
 					
 				});

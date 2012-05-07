@@ -133,7 +133,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 		util.doubleClick(list, function(element) {
 		
-			console.log(element);
+			element.parentNode.parentNode.addClass('selected');
 		
 		},function(element) {
 		
@@ -154,7 +154,15 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		
 		if ( redrawLegend ) this.redrawLegend();
 		
-		console.log(items);
+		items.forEach(function(item) {
+		
+			var node = util.createElement({'tag' : 'li', appendTo : self.list});
+			
+			var row = createPlaylistRow(item, self.options.useColumns);
+		
+			node.appendChild(row);
+		
+		});
 	
 	}
 	

@@ -31,28 +31,11 @@
 									"name" : "pet"
 								}]
 							},
-							"buttons" : {"Submit" : function(){
-							
-								var name = document.forms["details"]["name"].value;
-								
-								var age = parseInt(document.forms["details"]["age"].value);
-							
-								var pet = document.forms["details"]["pet"].value;
-							
-								if ( name && age && pet )
-								{
-									// close the dialogue.
-									this.close();
-									
-									alert("Hi " + name + "! You're " + age + " years old and you have a pet called " + pet + ", eh?");
-								}
-								else
-								{
-									alert("Oi! Fill everything in!");
-								}
-														
-							}},
-							"animateIn" : "slideTop"
+							'buttons' : {close : true},
+							"animate" : {
+								'in' : "slideInTop",
+								'out' : "slideOutBottom"
+							}
 						});
 					});
 					

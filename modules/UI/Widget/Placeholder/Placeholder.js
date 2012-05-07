@@ -9,42 +9,44 @@ define(['util'],function(util){
 		if ( node instanceof Element && placeholder )
 		{
 			
-			node.value = placeholder;
+			node.value = placeholder
 			
-			node.addClass('placeholder');
+			node.addClass('placeholder')
+			
+			node.setAttribute('placeholder', placeholder)
 			
 			util.addListener(node,'focus',function(e){
 			
-				var target = e.target || e.srcElement;
+				var target = e.target || e.srcElement
 				
 				if ( target.value == placeholder )
 				{
-					target.value = '';
+					target.value = ''
 					
-					target.removeClass('placeholder');
+					target.removeClass('placeholder')
 				}
 			
-			});
+			})
 			
 			util.addListener(node,'blur',function(e){
 			
-				var target = e.target || e.srcElement;
+				var target = e.target || e.srcElement
 			
 				if ( target.value == '' )
 				{
-					target.value = placeholder;
+					target.value = placeholder
 					
-					target.addClass('placeholder');
+					target.addClass('placeholder')
 				}
 			
-			});
+			})
 			
 		}
 		else {
-			throw util.error('Invalid Parameters.');
+			throw util.error('Invalid Parameters.')
 		}
 	}
 	
-	return UIPlaceholderWidget;
+	return UIPlaceholderWidget
 
-});
+})
