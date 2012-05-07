@@ -11,13 +11,13 @@ define(['util'],function(util) {
 	// constructor.
 	var UIAnimator = function(element, animation, duration, callback) {
 	
-		var animation = animation.match(/((slide(out|in))(top|bottom|left|right)|fade(in|out))/i);
+		var animation = animation.match(/((slide(out|in))(top|bottom|left|right)|fade(in|out))/i)
 	
-		this.callback = callback; // make the callback available throughout the object.
+		this.callback = callback // make the callback available throughout the object.
 	
 		if ( animation !== null ) {
 		
-			var prefix = util.Browser.HasSupport.cssTransitions();
+			var prefix = util.Browser.HasSupport.cssTransitions()
 		
 			this.directions = {
 				'top' : '0px, -1000px',
@@ -27,24 +27,24 @@ define(['util'],function(util) {
 			}
 		
 			// handle slideIn animations.
-			if ( /slidein/i.test(animation[2]) ) this.slideIn(element, prefix, animation[4], duration);
+			if ( /slidein/i.test(animation[2]) ) this.slideIn(element, prefix, animation[4], duration)
 			
 			// handle slideOut animations.
-			else if ( /slideout/i.test(animation[2]) ) this.slideOut(element, prefix, animation[4], duration);
+			else if ( /slideout/i.test(animation[2]) ) this.slideOut(element, prefix, animation[4], duration)
 
 			// handle fadeIn animation.
-			else if ( /fadein/i.test(animation[0]) ) this.fadeIn(element, prefix, duration);
+			else if ( /fadein/i.test(animation[0]) ) this.fadeIn(element, prefix, duration)
 
 			// handle fadeOut animation.
-			else if ( /fadeout/i.test(animation[0]) ) this.fadeOut(element, prefix, duration);
+			else if ( /fadeout/i.test(animation[0]) ) this.fadeOut(element, prefix, duration)
 			
 		}
 		
 		else {
 		
-			throw util.error("Invalid animation option.","ANIMATE_ERR");
+			throw util.error("Invalid animation option.","ANIMATE_ERR")
 		
-			if ( typeof callback == 'function' ) callback();
+			if ( typeof callback == 'function' ) callback()
 		
 		}
 	}
@@ -55,30 +55,30 @@ define(['util'],function(util) {
 	 */
 	UIAnimator.prototype.slideIn = function(element, prefix, direction, duration) {
 	
-		document.body.style.overflow = 'hidden';
+		document.body.style.overflow = 'hidden'
 	
-		var self = this;
+		var self = this
 	
 		// start the element off screen.
-		element.style[prefix + 'Transform'] = 'translate(' + this.directions[direction.toLowerCase()] + ')';
+		element.style[prefix + 'Transform'] = 'translate(' + this.directions[direction.toLowerCase()] + ')'
 		
 		// set the transition.
-		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear';
+		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
 	
 		setTimeout(function() {
 		
-			element.style[prefix + 'Transform'] = null;
+			element.style[prefix + 'Transform'] = null
 		
 			// cleanup injected attributes.
 			setTimeout(function() {
 			
-				if ( typeof self.callback == 'function' ) self.callback();
+				if ( typeof self.callback == 'function' ) self.callback()
 			
-				element.style[prefix + 'Transition'] = document.body.style.overflow = null;
+				element.style[prefix + 'Transition'] = document.body.style.overflow = null
 			
-			}, (duration * 1000) || 300 );
+			}, (duration * 1000) || 300 )
 		
-		}, 100);
+		}, 100)
 	
 	}
 	
@@ -88,28 +88,28 @@ define(['util'],function(util) {
 	 */
 	UIAnimator.prototype.slideOut = function(element, prefix, direction, duration) {
 	
-		var self = this;
+		var self = this
 	
-		document.body.style.overflow = 'hidden';
+		document.body.style.overflow = 'hidden'
 	
 		// set the transition.
-		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear';
+		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
 	
 		setTimeout(function() {
 		
-			element.style[prefix + 'Transform'] = 'translate(' + self. directions[direction.toLowerCase()] + ')';
+			element.style[prefix + 'Transform'] = 'translate(' + self. directions[direction.toLowerCase()] + ')'
 		
 			// clean up.
 			setTimeout(function() {
 			
-				if ( typeof self.callback == 'function' ) self.callback();
+				if ( typeof self.callback == 'function' ) self.callback()
 			
-				element.style[prefix + 'Transition'] = element.style[prefix + 'Transform'] = null;
+				element.style[prefix + 'Transition'] = element.style[prefix + 'Transform'] = null
 				
 			
-			}, (duration * 1000) || 300);
+			}, (duration * 1000) || 300)
 		
-		}, 100);
+		}, 100)
 	
 	}
 	
@@ -119,12 +119,13 @@ define(['util'],function(util) {
 	 */
 	UIAnimator.prototype.fadeIn = function(element, prefix, duration) {
 	
-		var self = this;
+		var self = this
 	
-		element.style.opacity = 0;
+		element.style.opacity = 0
 	
-		element.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear';
+		element.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear'
 	
+		// clean up.
 		setTimeout(function() {
 		
 			element.style.opacity = 1
@@ -133,7 +134,7 @@ define(['util'],function(util) {
 			
 			if ( typeof self.callback == 'function' ) self.callback()
 		
-		}, 100);
+		}, 100)
 	
 	}
 	
@@ -143,27 +144,27 @@ define(['util'],function(util) {
 	 */
 	UIAnimator.prototype.fadeOut = function(element, prefix, duration) {
 
-		var self = this;
+		var self = this
 	
-		element.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear';
+		element.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear'
 		
 		setTimeout(function() {
 		
-			element.style.opacity = 0;
+			element.style.opacity = 0
 		
 			setTimeout(function() {
 			
-				element.style[prefix + 'Transition'] = null;
-				element.style.opacity = null;
+				element.style[prefix + 'Transition'] = null
+				element.style.opacity = null
 			
-				if ( typeof self.callback == 'function' ) self.callback();
+				if ( typeof self.callback == 'function' ) self.callback()
 			
 			}, ( duration * 1000 ) || 300 )
 			
-		}, 100);
+		}, 100)
 	
 	}
 	
-	return UIAnimator;
+	return UIAnimator
 
-});
+})
