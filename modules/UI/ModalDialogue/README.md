@@ -58,7 +58,7 @@ The title property is a simple string that will be used as a title in the dialog
 
 __Note__: the above is not a valid MDD as it does not have a body property.
 
-####MDD.body {string|array}
+####MDD.body {string|array|Element}
 
 The body property specifies the main text used within the dialogue. The property can be an array of strings or a lone string, these strings can contain HTML.
 
@@ -67,6 +67,17 @@ If the string is not wrapped in an HTML tag it will be automatically wrapped in 
 	var MDD = {
 		'title' : 'Hello World',
 		'body' : ['<h2>This is a sub-title.</h2>','This will be wrapped in a paragraph.', '<img src="/path/to/darth-vader.png" alt />']
+	}
+
+It is also possible to create an HTML node and include it either on its own or in an Array. e.g.
+
+	var myNode = document.createElement("a")
+	
+	myNode.onclick = function() { console.log('Bob!')) }
+	
+	var MDD = {
+		'title' : 'Hello World',
+		'body' : ['This is some text.', myNode, '^ That is my node.']
 	}
 
 ####MDD.buttons {object}

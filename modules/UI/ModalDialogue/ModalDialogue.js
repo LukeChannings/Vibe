@@ -122,7 +122,7 @@ define(['require','util'],function(require, util){
 		body.forEach(function(bodyPart){
 		
 			// check if the item is an HTMLElement.
-			if ( typeof bodyPart == 'object' && bodyPart instanceof Element )
+			if ( bodyPart instanceof Element )
 			{
 				// if it is, append the element to the dialogue.
 				self.dialogue.appendChild(item)
