@@ -130,10 +130,15 @@ define(['util'],function(util) {
 		
 			element.style.opacity = 1
 		
-			element.style[prefix + 'Transition'] = element.style.opacity = null
+			setTimeout(function() {
 			
-			if ( typeof self.callback == 'function' ) self.callback()
-		
+				element.style[prefix + 'Transition'] = null
+				element.style.opacity = null
+			
+				if ( typeof self.callback == 'function' ) self.callback()
+			
+			}, ( duration * 1000 ) || 300 )
+			
 		}, 100)
 	
 	}

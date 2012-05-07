@@ -4,13 +4,9 @@
  */
 define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 
-	var commitSettings = function() {}
-
-	var MDD;
-
 	var Settings = function(settings) {
 	
-		this.settings = settings;
+		this.settings = settings
 	
 	}
 
@@ -39,20 +35,22 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'navTitle' : 'About Vibe',
 			'body' : '<img src="images/icon.png" style="float:left" alt /><p>Vibe is a Web Application for streaming music. Just enter the Url of your Vibe Server and you\'re ready to go.</p><p>Vibe is an open source project that is written entirely in Javascript, and can be found on GitHub <a href="https://github.com/TheFuzzball/MusicMe-WebApp">here</a>.</p><p>Vibe will run in most Web Browsers (IE8+, Chrome, FireFox 3.5+), but is best enjoyed in a modern W3C-standard browser.',
 			'alignment' : 'justify'
-		};
+		}
 		
 		dialogue.createMultiView({
 			'title' : 'Settings',
 			'views' : [ConnectionOptions, About],
 			'buttons' : {'close' : true },
-			'animateIn' : 'slideInTop',
-			'animateOut' : 'slideOutTop'
-		});
+			'animate' : {
+				'in' : 'slideInTop',
+				'out' : 'slideOutTop'
+			}
+		})
 	}
 
 	Settings.prototype.firstrun = function(callback, title, body) {
 	
-		var self = this;
+		var self = this
 	
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
@@ -60,14 +58,14 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'buttons' : { 'Go' : function(){
 				
 				var host = document.forms['firstrun']['host'].value || document.forms['firstrun']['host'].placeholder
-				var port = document.forms['firstrun']['port'].value || document.forms['firstrun']['port'].placeholder;
+				var port = document.forms['firstrun']['port'].value || document.forms['firstrun']['port'].placeholder
 				
-				self.settings.set('host',host);
-				self.settings.set('port',port);
+				self.settings.set('host',host)
+				self.settings.set('port',port)
 			
-				callback.call(this,host,port);
+				callback.call(this,host,port)
 			
-				this.close();
+				this.close()
 			
 			} },
 			'errorDialogue' : !! title,
@@ -86,10 +84,10 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			}
 		}
 	
-		dialogue.createSingle(MDD);
+		dialogue.createSingle(MDD)
 	
 	}
 
-	return Settings;
+	return Settings
 
-});
+})
