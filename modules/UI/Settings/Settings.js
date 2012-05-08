@@ -41,7 +41,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 				'name' : 'developer',
 				'inputs' : [{
 					'name' : 'debug',
-					'title' : 'Debug',
+					'title' : 'Debugging',
 					'type' : 'checkbox',
 					'checked' : settings.get('debug')
 				},{
@@ -97,10 +97,6 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					
 						location.reload()
 					
-					break
-					default:
-					
-					console.log('neither')
 				}
 		
 			}
@@ -112,8 +108,8 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'views' : [ConnectionOptions, Developer, About],
 			'buttons' : {'Apply' : apply, 'close' : true },
 			'animate' : {
-				'in' : 'slideInTop',
-				'out' : 'slideOutTop'
+				'animateIn' : 'slideInTop',
+				'animateOut' : 'slideOutTop'
 			}
 		})
 	}
@@ -156,7 +152,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 		}
 	
 		// set animation for error or first run.
-		MDD.animate = ( !! title ) ? { 'in' : 'slideInTop', 'out' : 'slideOutTop' } : { 'in' : 'fadeIn', 'out' : 'fadeOut' }
+		MDD.animate = ( !! title ) ? { 'animateIn' : 'slideInTop', 'animateOut' : 'slideOutTop' } : { 'animateIn' : 'fadeIn', 'animateOut' : 'fadeOut' }
 	
 		// create the dialogue.
 		dialogue.createSingle(MDD)

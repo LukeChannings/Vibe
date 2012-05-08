@@ -137,6 +137,8 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	padding: 0.2em 0.4em;
 }
 
+#ModalDialogue form > label > input[type='checkbox']{border: none}
+
 /* @end */
 
 /* @group ModalDialogueWithSidebar */

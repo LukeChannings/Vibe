@@ -119,18 +119,18 @@ define(['require','util'],function(require, util){
 		if ( !( body instanceof Array ) ) body = [body]
 		
 		// iterate the body.
-		body.forEach(function(bodyPart){
+		body.forEach(function(bodyPart) {
 		
 			// check if the item is an HTMLElement.
-			if ( bodyPart instanceof Element )
-			{
+			if ( typeof bodyPart == 'object' && bodyPart instanceof Element ) {
+			
 				// if it is, append the element to the dialogue.
 				self.dialogue.appendChild(bodyPart)
 			}
 				
 			// otherwise check if the element is a string.
-			else if ( typeof bodyPart == 'string' )
-			{
+			else if ( typeof bodyPart == 'string' ) {
+			
 				// if the text does not have tags then wrap it in a <p>.
 				if ( !( /\<.+\>.*\<.+\>/.test(bodyPart) ) ) bodyPart = '<p>' + bodyPart + '</p>'
 			
@@ -383,10 +383,10 @@ define(['require','util'],function(require, util){
 	{
 	
 		// set the animate in property.
-		animateIn = ( MDD.animate && typeof MDD.animate.in !== 'undefined' ) ? MDD.animate.in : null
+		animateIn = ( MDD.animate && typeof MDD.animate.animateIn !== 'undefined' ) ? MDD.animate.animateIn : null
 		
 		// set the animate out property.
-		animateOut = ( MDD.animate && typeof MDD.animate.out !== 'undefined' ) ? MDD.animate.out : null
+		animateOut = ( MDD.animate && typeof MDD.animate.animateOut !== 'undefined' ) ? MDD.animate.animateOut : null
 	
 		var dialogue = new dialogueFromMDD(MDD)
 		
@@ -405,10 +405,10 @@ define(['require','util'],function(require, util){
 		var index = 0
 		
 		// set the animate in property.
-		animateIn = ( animate && typeof animate.in !== 'undefined' ) ? animate.in : null
+		animateIn = ( animate && typeof animate.animateIn !== 'undefined' ) ? animate.animateIn : null
 		
 		// set the animate out property.
-		animateOut = ( animate && typeof animate.out !== 'undefined' ) ? animate.out : null
+		animateOut = ( animate && typeof animate.animateOut !== 'undefined' ) ? animate.animateOut : null
 
 		// iterate the dialogues.
 		dialogues.forEach(function(dialogue, i) {
@@ -473,10 +473,10 @@ define(['require','util'],function(require, util){
 		if ( typeof MVD !== 'object' ) return false
 	
 		// set the animate in property.
-		animateIn = ( MVD.animate && typeof MVD.animate.in !== 'undefined' ) ? MVD.animate.in : null
+		animateIn = ( MVD.animate && typeof MVD.animate.animateIn !== 'undefined' ) ? MVD.animate.animateIn : null
 		
 		// set the animate out property.
-		animateOut = ( MVD.animate && typeof MVD.animate.out !== 'undefined' ) ? MVD.animate.out : null
+		animateOut = ( MVD.animate && typeof MVD.animate.animateOut !== 'undefined' ) ? MVD.animate.animateOut : null
 	
 		/**
 		 * NavigationItem
@@ -618,7 +618,7 @@ define(['require','util'],function(require, util){
 		viewContainer.appendChild(currentView)
 
 		// open the view.
-		this.open(dialogue, MVD.animate && MVD.animate.in)
+		this.open(dialogue, MVD.animate && MVD.animate.animateIn)
 
 		return dialogue
 
