@@ -13,7 +13,7 @@ define(['util'],function(){
 		// get the UI modules.
 		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player'],function(UICollection, UIPlaylist, ModelPlaylist, Player){
 		
-			var playlist = new UIPlaylist({
+			var playlist = self.playlist = new UIPlaylist({
 				appendTo : self.rootNode,
 				useControlBar : true,
 				useInfoBar : true,
@@ -45,9 +45,9 @@ define(['util'],function(){
 				}]
 			});
 			
-			var modelPlaylist = new ModelPlaylist({ withUI : playlist, withApi : self.api });
+			var modelPlaylist = self.modelPlaylist = new ModelPlaylist({ withUI : playlist, withApi : self.api });
 			
-			player = new Player({ 'withSettings' : self.settings, 'withModelPlaylist' : modelPlaylist });
+			var player = self.player = new Player({ 'withSettings' : self.settings, 'withModelPlaylist' : modelPlaylist });
 			
 			// keep the model sane.
 			modelPlaylist.model.prune();
@@ -66,9 +66,7 @@ define(['util'],function(){
 			
 			});
 			
-			window.model = modelPlaylist;
-			
-			var collection = new UICollection({
+			var collection = self.collection = new UICollection({
 				withApi : self.api,
 				appendTo : self.rootNode,
 				useSearch : true,

@@ -51,7 +51,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					
 						settings.clear()
 						
-						location.reload()
+						location.reload(true)
 					
 					}
 				}]
@@ -86,7 +86,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 							settings.set('port', port)
 						
 							// reload Vibe.
-							location.reload()
+							location.reload(true)
 						
 						}
 					
@@ -95,7 +95,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					
 						settings.set('debug', form['debug'].checked)
 					
-						location.reload()
+						location.reload(true)
 					
 				}
 		
