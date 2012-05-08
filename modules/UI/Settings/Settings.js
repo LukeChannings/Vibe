@@ -84,6 +84,10 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			}
 		}
 	
+		// set animation for error or first run.
+		MDD.animate = ( !! title ) ? { 'in' : 'slideInTop', 'out' : 'slideOutTop' } : { 'in' : 'fadeIn', 'out' : 'fadeOut' }
+	
+		// create the dialogue.
 		dialogue.createSingle(MDD)
 	
 	}

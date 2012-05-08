@@ -12,5 +12,8 @@
     "32": "images/icon_32.png",
     "64": "images/icon_64.png",
     "128": "images/icon.png"
-  }
+  },
+  "permissions" : [
+  	"chrome-extension://pcmfikbnaffljhcegfjnkiiiijkiljjj/modules/dependencies/soundmanager2.swf"
+  ]
 }
