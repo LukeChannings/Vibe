@@ -96,7 +96,7 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	right: 1em;
 }
 
-#ModalDialogue div.buttons > button{
+#ModalDialogue button, #ModalDialogue div.buttons > button{
 	padding: 0.5em 1.4em;
 	margin: 0 0.5em;
 	border: 1px solid #aaa;
@@ -107,7 +107,7 @@ body.svg #ModalDialogue.error{background-image: url('ModalDialogueError.svg')}
 	border-radius: 0;
 }
 
-#ModalDialogue div.buttons > button:hover{
+#ModalDialogue button, #ModalDialogue div.buttons > button:hover{
 	background: #f9f9f9;
 	background: -moz-linear-gradient(bottom, #ddd 50%, #eee 79%);
 	background: -webkit-linear-gradient(#ddd,#eee);

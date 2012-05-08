@@ -125,7 +125,7 @@ define(['require','util'],function(require, util){
 			if ( bodyPart instanceof Element )
 			{
 				// if it is, append the element to the dialogue.
-				self.dialogue.appendChild(item)
+				self.dialogue.appendChild(bodyPart)
 			}
 				
 			// otherwise check if the element is a string.
@@ -191,6 +191,18 @@ define(['require','util'],function(require, util){
 				
 			}
 			
+			// button input.
+			else if ( input.type && input.type == 'button' && typeof input.callback == 'function' ) {
+			
+				var element = util.createElement({
+					'tag' : 'button',
+					'inner' : input.name
+				})
+			
+				util.addListener(element, 'click', input.callback)
+			
+			}
+			
 			// if it's not a select element it's an input.
 			else {
 				
@@ -201,6 +213,8 @@ define(['require','util'],function(require, util){
 						'type' : input.type || 'text'
 					}
 				})
+				
+				if ( input.type == 'checkbox' ) element.checked = input.checked || false
 				
 			}
 			
@@ -568,6 +582,9 @@ define(['require','util'],function(require, util){
 				
 					// remove and button specifications. (buttons should be specified in the MVD.)
 					MDD.buttons && delete MDD.buttons
+				
+					// delete form callback.
+					MDD.form && MDD.form.callback && delete MDD.form.callback
 				
 					// set the Id of the view.
 					MDD.customId = 'ModalView' + (i + 1)
