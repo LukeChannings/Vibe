@@ -12,6 +12,9 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 
 	Settings.prototype.show = function() {
 	
+		var self = this,
+			settings = this.settings
+	
 		var ConnectionOptions = {
 			'title' : "Connection",
 			'body' : "Below are the details of the Vibe Server.",
@@ -20,12 +23,37 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 				'inputs' : [{
 					'name' : 'host',
 					'title' : 'Host',
-					'placeholder' : this.settings.get('host') || 'localhost'
+					'placeholder' : settings.get('host') || 'localhost'
 				},{
 					'name' : 'port',
 					'type' : 'number',
 					'title' : 'Port',
-					'placeholder' : this.settings.get('port') || 6232
+					'placeholder' : settings.get('port') || 6232
+				}]
+			}
+		}
+
+		// developer pane.
+		var Developer = {
+			'title' : 'Developer',
+			'body' : 'Developer options for serious hardcore developers and what-not.',
+			'form' : {
+				'name' : 'developer',
+				'inputs' : [{
+					'name' : 'debug',
+					'title' : 'Debug',
+					'type' : 'checkbox',
+					'checked' : settings.get('debug')
+				},{
+					'name' : 'Clear Settings',
+					'type' : 'button',
+					'callback' : function() {
+					
+						settings.clear()
+						
+						location.reload()
+					
+					}
 				}]
 			}
 		}
@@ -37,10 +65,52 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 			'alignment' : 'justify'
 		}
 		
+		var apply = function() {
+		
+			var form = document.forms[0]
+		
+			if ( form ) {
+		
+				switch (form.name) {
+					case "connection":
+					
+						// get the new host and port from the form.
+						var host = form['host'].value || form['host'].placeholder || 'localhost'
+					
+						var port = form['port'].value || form['port'].placeholder || 6232
+					
+						if ( host !== settings.get('host') || port !== settings.get('port') ) {
+						
+							settings.set('host', host)
+						
+							settings.set('port', port)
+						
+							// reload Vibe.
+							location.reload()
+						
+						}
+					
+					break
+					case "developer":
+					
+						settings.set('debug', form['debug'].checked)
+					
+						location.reload()
+					
+					break
+					default:
+					
+					console.log('neither')
+				}
+		
+			}
+		
+		}
+		
 		dialogue.createMultiView({
 			'title' : 'Settings',
-			'views' : [ConnectionOptions, About],
-			'buttons' : {'close' : true },
+			'views' : [ConnectionOptions, Developer, About],
+			'buttons' : {'Apply' : apply, 'close' : true },
 			'animate' : {
 				'in' : 'slideInTop',
 				'out' : 'slideOutTop'

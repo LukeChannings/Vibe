@@ -14,7 +14,7 @@ define(['util'],function(){
 		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player'],function(UICollection, UIPlaylist, ModelPlaylist, Player){
 		
 			var playlist = new UIPlaylist({
-				appendTo : self.vibeRootElement,
+				appendTo : self.rootNode,
 				useControlBar : true,
 				useInfoBar : true,
 				useControlBar : [{
@@ -70,7 +70,7 @@ define(['util'],function(){
 			
 			var collection = new UICollection({
 				withApi : self.api,
-				appendTo : self.vibeRootElement,
+				appendTo : self.rootNode,
 				useSearch : true,
 				useInfoBar : true,
 				dragAndDropElement : playlist.node,
