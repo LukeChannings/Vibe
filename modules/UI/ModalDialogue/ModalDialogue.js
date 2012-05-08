@@ -245,7 +245,7 @@ define(['require','util'],function(require, util){
 				// bind the callback to enter.
 				util.addListener(element, 'keyup', function(e) {
 				
-					if ( e.keyCode === 13 ) form.callback(inputs)
+					if ( e.keyCode === 13 ) form.callback.call(ModalDialogue, inputs)
 				
 				})
 			
@@ -260,7 +260,7 @@ define(['require','util'],function(require, util){
 		
 			this.MDD.buttons[form.buttonName || "Submit"] = function() {
 			
-				form.callback(inputs)
+				form.callback.call(ModalDialogue, inputs)
 			
 			}
 		

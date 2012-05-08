@@ -55,19 +55,6 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
 			'body' : body || "<p>Before you can use Vibe, the address of your Vibe Server must be specified.</p><p>You can find the address of your Vibe Server by looking in its main window, where the address will be specified in the format of: hostname:portnumber.</p>",
-			'buttons' : { 'Go' : function(){
-				
-				var host = document.forms['firstrun']['host'].value || document.forms['firstrun']['host'].placeholder
-				var port = document.forms['firstrun']['port'].value || document.forms['firstrun']['port'].placeholder
-				
-				self.settings.set('host',host)
-				self.settings.set('port',port)
-			
-				callback.call(this,host,port)
-			
-				this.close()
-			
-			} },
 			'errorDialogue' : !! title,
 			'form' : {
 				'name' : 'firstrun',
@@ -80,7 +67,21 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					'type' : 'number',
 					'title' : 'Port',
 					'placeholder' : this.settings.get('port') || 6232
-				}]
+				}],
+				'callback' : function(inputs){
+					
+					var host = inputs[0].value || inputs[0].placeholder
+					var port = inputs[1].value || inputs[1].placeholder
+					
+					self.settings.set('host',host)
+					self.settings.set('port',port)
+				
+					callback.call(this,host,port)
+				
+					this.close()
+				
+				},
+				'buttonTitle' : 'Go'
 			}
 		}
 	
