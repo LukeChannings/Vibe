@@ -441,6 +441,24 @@ define(function(){
 			
 			return false;
 		
+		},
+		
+		disableUserSelect : function(node) {
+		
+			this.addListener(node, 'selectstart', function(e) {
+			
+				if ( e.cancelBubble ) e.cancelBubble()
+			
+				e.returnValue = false
+			
+				if ( e.preventDefault ) e.preventDefault()
+			
+				if ( e.stopPropogation ) e.stopPropogation()
+			
+				return false
+			
+			})
+		
 		}
 	}
 

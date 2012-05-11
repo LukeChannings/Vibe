@@ -29,6 +29,8 @@
 			// instantiate settings user interface.
 			var uiSettings = self.uiSettings = new UISettings(settings)
 		
+			self.init = Init
+		
 			// instantiate the Vibe Api.
 			var api = self.api = new Api(settings)
 		
@@ -47,7 +49,7 @@
 				settings.set('version', util.getMetaContent('vibe-version'))
 			
 				// listen for a connection event.
-				api.once('connected',function(){
+				api.once('connected', function() {
 				
 					// initialise the mobile interface if the device is mobile.
 					if ( util.Browser.isMobile() ) Init.mobile.call(self)

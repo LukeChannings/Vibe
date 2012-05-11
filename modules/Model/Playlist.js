@@ -9,38 +9,38 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	
 		if ( typeof options !== 'object' )
 		{
-			throw util.error("ModelPlaylist was called without an options parameter.");
+			throw util.error("ModelPlaylist was called without an options parameter.")
 			
-			return;
+			return
 		}
 		
 		if ( typeof options.withApi == 'undefined' )
 		{
-			throw util.error("ModelPlaylist was called without an Api instance.");
+			throw util.error("ModelPlaylist was called without an Api instance.")
 			
-			return;
+			return
 		}
 	
 		if ( typeof options.withUI == 'undefined' )
 		{
-			throw util.error("ModelPlaylist was called without a UI instance.");
+			throw util.error("ModelPlaylist was called without a UI instance.")
 			
-			return;
+			return
 		}
 	
 		// model stores the complete playlist items that construct a PlaylistItem.
-		var model = this.model = new UndoManager('ModelPlaylist');
+		var model = this.model = new UndoManager('ModelPlaylist')
 	
-		this.index = 0;
+		this.index = 0
 	
 		// set the Api instance.
-		var api = this.api = options.withApi;
+		var api = this.api = options.withApi
 	
 		// set the UI instance.
-		var ui = this.ui = options.withUI;
+		var ui = this.ui = options.withUI
 
 		// redraw the UI with the persistent storage.
-		ui.redraw(model.value(), this.info);
+		ui.redraw(model.value(), this.info)
 
 	}
 	
@@ -53,17 +53,17 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.add = function(type, id, callback) {
 	
-		var self = this;
+		var self = this
 	
-		getItems.call(this,type,id,function(items){
+		getItems.call(this, type, id, function(items) {
 		
-			self.model.push.apply(this,items);
+			self.model.push.apply(this, items)
 			
-			self.ui.redraw(self.model.value());
+			self.ui.addRows(items)
 			
-			if ( typeof callback == 'function' ) callback();
+			if ( typeof callback == 'function' ) callback()
 			
-		});
+		})
 	
 	}
 	
@@ -73,9 +73,9 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.undo = function(n) {
 	
-		this.model.undo(n);
+		this.model.undo(n)
 		
-		this.ui.redraw(this.model.value());
+		this.ui.redraw(this.model.value())
 	
 	}
 	
@@ -85,9 +85,9 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.redo = function(n) {
 	
-		this.model.redo(n);
+		this.model.redo(n)
 		
-		this.ui.redraw(this.model.value());
+		this.ui.redraw(this.model.value())
 	
 	}
 	
@@ -97,9 +97,9 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.clear = function() {
 	
-		this.model.clear();
+		this.model.clear()
 		
-		this.ui.list.removeChildren();
+		this.ui.list.removeChildren()
 	
 	}
 
@@ -109,13 +109,13 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.setIndex = function(n, node) {
 	
-		this.index = n;
+		this.index = n
 	
-		if ( this.ui.playingNode ) this.ui.playingNode.removeClass('playing');
+		if ( this.ui.playingNode ) this.ui.playingNode.removeClass('playing')
 		
-		node.addClass('playing');
+		node.addClass('playing')
 		
-		this.ui.playingNode = node;
+		this.ui.playingNode = node
 	
 	}
 	
@@ -126,9 +126,9 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
 	
-		console.log(this.index);
+		console.log(this.index)
 	
-		return this.model.getItemAtIndex(this.index);
+		return this.model.getItemAtIndex(this.index)
 	
 	}
 
@@ -155,15 +155,15 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 			this.api[types[type]](id,function(tracks){
 			
 				// return the results to the callback.
-				if ( typeof callback == 'function' ) callback(tracks);
+				if ( typeof callback == 'function' ) callback(tracks)
 			
-			});
+			})
 		
 		}
 		
-		else throw util.error("Invalid type used in getItems.","REF_ERR");
+		else throw util.error("Invalid type used in getItems.","REF_ERR")
 	}
 	
-	return ModelPlaylist;
+	return ModelPlaylist
 
-});
+})
