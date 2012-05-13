@@ -79,7 +79,7 @@
 				api.once('firstrun', function() {
 				
 					// first run dialogue.
-					uiSettings.firstrun.call(self, function() {
+					uiSettings.firstrun(function() {
 					
 						// attempt to reconnect using the new settings.
 						api.connect()

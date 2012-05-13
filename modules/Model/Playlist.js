@@ -93,7 +93,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		// determine the presentation of seconds.
 		if ( seconds !== 0 ) {
 			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
-		} else seconds = 'No tracks.'
+		} else seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
 		
 		// concatenate the playlist durations.
 		var info = hours + minutes + seconds

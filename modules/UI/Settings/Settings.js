@@ -2,187 +2,246 @@
  * Settings
  * @description Provides a modal frontend with which to change application settings.
  */
-define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue) {
+define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 
+	/**
+	 * constructs an instance of the settings interface.
+	 * @param vibe {object} global vibe instance.
+	 */
 	var Settings = function(vibe) {
 	
-		this.vibe = vibe
+		var vibe = this.vibe = vibe
 	
-	}
-
-	Settings.prototype.show = function() {
+		var settings = vibe.settings
 	
-		var self = this,
-			settings = this.vibe.settings
+		// contains the pane MDD and apply method.
+		this.panes = {}
 	
-		var ConnectionOptions = {
-			'title' : "Connection",
-			'body' : "Below are the details of the Vibe Server.",
-			'form' : {
-				'name' : 'connection',
-				'inputs' : [{
-					'name' : 'host',
-					'title' : 'Host',
-					'placeholder' : settings.get('host') || 'localhost'
-				},{
-					'name' : 'port',
-					'type' : 'number',
-					'title' : 'Port',
-					'placeholder' : settings.get('port') || 6232
-				}]
-			}
-		}
-
-		// UI pane.
-		var UserInterface = {
-			'title' : 'User Interface',
-			'navTitle' : 'UI',
-			'body' : 'User Interface preferences.',
-			'form' : {
-				'name' : 'userinterface',
-				'inputs' : [{
-					'name' : 'collectionRootType',
-					'title' : 'Collection type: ',
-					'type' : 'select',
-					'options' : ['genre', 'artist', 'album', 'track'],
-					'placeholder' : settings.get('collectionRootType') || 'genre'
-				}]
-			}
-		}
-
-		// developer pane.
-		var Developer = {
-			'title' : 'Developer',
-			'body' : 'Developer options for serious hardcore developers and what-not.',
-			'form' : {
-				'name' : 'developer',
-				'inputs' : [{
-					'name' : 'debug',
-					'title' : 'Debugging',
-					'type' : 'checkbox',
-					'checked' : settings.get('debug')
-				},{
-					'name' : 'Clear Settings',
-					'type' : 'button',
-					'callback' : function() {
+		// get the default panes.
+		var Panes = this.defaultPanes = {
+			"connection" : {
+				'title' : "Connection",
+				'body' : "Below are the details of the Vibe Server.",
+				'form' : {
+					'name' : 'connection',
+					'inputs' : [{
+						'name' : 'host',
+						'title' : 'Host',
+						'placeholder' : settings.get('host') || 'localhost'
+					},{
+						'name' : 'port',
+						'type' : 'number',
+						'title' : 'Port',
+						'placeholder' : settings.get('port') || 6232
+					}],
+					'callback' : function(input, callback) {
 					
-						settings.clear()
-						
-						location.reload(true)
+						var host = input.host.value || input.host.placeholder
 					
-					}
-				}]
-			}
-		}
-	
-		var About = {
-			'title' : 'About Vibe (Version ' + settings.get('version') + ')',
-			'navTitle' : 'About Vibe',
-			'body' : '<img src="images/icon.png" style="float:left" alt /><p>Vibe is a Web Application for streaming music. Just enter the Url of your Vibe Server and you\'re ready to go.</p><p>Vibe is an open source project that is written entirely in Javascript, and can be found on GitHub <a href="https://github.com/TheFuzzball/MusicMe-WebApp">here</a>.</p><p>Vibe will run in most Web Browsers (IE8+, Chrome, FireFox 3.5+), but is best enjoyed in a modern W3C-standard browser.',
-			'alignment' : 'justify'
-		}
-		
-		var apply = function() {
-		
-			var form = document.forms[0]
-		
-			if ( form ) {
-		
-				switch (form.name) {
-					case "connection":
+						var port = input.port.value || input.port.placeholder
 					
-						// get the new host and port from the form.
-						var host = form['host'].value || form['host'].placeholder || 'localhost'
-					
-						var port = form['port'].value || form['port'].placeholder || 6232
-					
-						if ( host !== settings.get('host') || port !== settings.get('port') ) {
+						if ( host !== input.host.placeholder || port !== input.port.placeholder ) {
 						
 							settings.set('host', host)
-						
+							
 							settings.set('port', port)
 						
-							// reload Vibe.
+							dialogue.close()
+						
+							if ( typeof callback == 'function' ) {
+							
+								// execute the callback.
+								callback()
+							
+								// update the placeholders.
+								this.MDD.form.inputs[0].placeholder = host
+								this.MDD.form.inputs[1].placeholder = port
+							
+							}
+							
+							else location.reload() 
+						
+						}
+					}
+				}
+			},
+			"userinterface" : {
+				'title' : 'User Interface',
+				'body' : 'User Interface preferences.',
+				'form' : {
+					'name' : 'userinterface',
+					'inputs' : [{
+						'name' : 'collectionRootType',
+						'title' : 'Collection type: ',
+						'type' : 'select',
+						'options' : ['genre', 'artist', 'album', 'track'],
+						'placeholder' : settings.get('collectionRootType') || 'genre'
+					}],
+					'callback' : function(inputs) {
+				
+						if ( inputs.collectionRootType.value !== inputs.collectionRootType.placeholder ) {
+						
+							vibe.collection.populateWithType(inputs.collectionRootType.value)
+						
+							settings.set('collectionRootType', inputs.collectionRootType.value)
+						
+							this.MDD.form.inputs[0].placeholder = inputs.collectionRootType.value
+						
+						}
+				
+					}
+				}
+			},
+			"advanced" : {
+				'title' : 'Advanced',
+				'body' : 'Developer options for serious hardcore developers and what-not.',
+				'form' : {
+					'name' : 'developer',
+					'inputs' : [{
+						'name' : 'debug',
+						'title' : 'Debugging',
+						'type' : 'checkbox',
+						'checked' : settings.get('debug')
+					},{
+						'name' : 'Clear Settings',
+						'type' : 'button',
+						'callback' : function() {
+						
+							settings.clear()
+							
+							location.reload(true)
+						
+						}
+					}],
+					'callback' : function(input) {
+					
+						if ( input.debug.checked ) {
+						
+							settings.set('debug', true)
+						
 							location.reload(true)
 						
 						}
 					
-					break
-					case "developer":
-					
-						settings.set('debug', form['debug'].checked)
-					
-						location.reload(true)
-					
-					break
-					case "userinterface":
-					
-						var collectionRootType = settings.get('collectionRootType') || 'genre'
-					
-						if ( form.elements.collectionRootType.value !==  collectionRootType) {
-						
-							settings.set('collectionRootType', form.elements.collectionRootType.value)
-							
-							self.vibe.collection.populateWithType(form.elements.collectionRootType.value)
-							
-						}
+					}
 				}
-		
+			},
+			"about" : {
+				'title' : 'About Vibe (Version ' + settings.get('version') + ')',
+				'navTitle' : 'About Vibe',
+				'body' : '<img src="images/icon.png" style="float:left" alt /><p>Vibe is a Web Application for streaming music. Just enter the Url of your Vibe Server and you\'re ready to go.</p><p>Vibe is an open source project that is written entirely in Javascript, and can be found on GitHub <a href="https://github.com/TheFuzzball/MusicMe-WebApp">here</a>.</p><p>Vibe will run in most Web Browsers (IE8+, Chrome, FireFox 3.5+), but is best enjoyed in a modern W3C-standard browser.',
+				'alignment' : 'justify'
 			}
+		}
+	
+		// Connection pane.
+		this.addPane(Panes.connection)
+	
+		// User Interface pane.
+		this.addPane(Panes.userinterface)
+		
+		// Advanced settings pane.
+		this.addPane(Panes.advanced)
+		
+		// About vibe pane.
+		this.addPane(Panes.about)
+		
+	}
+
+	Settings.prototype.show = function() {
+	
+		var views = []
+		
+		for ( var i in this.panes ) {
+		
+			views.push(this.panes[i].MDD)
 		
 		}
 		
-		dialogue.createMultiView({
-			'title' : 'Settings',
-			'views' : [ConnectionOptions, UserInterface, Developer, About],
-			'buttons' : {'Apply' : apply, 'close' : true },
-			'animate' : {
-				'animateIn' : 'slideInTop',
-				'animateOut' : 'slideOutTop'
-			}
-		})
+		if ( views.length > 0 ) { 
+		
+			// create the form.
+			dialogue.createMultiView({
+				'title' : 'Settings',
+				'views' : views,
+				'buttons' : {'apply' : {'title' : 'Apply', 'callback' : this.apply, 'context' : this }, 'close' : true },
+				'animate' : {
+					'animateIn' : 'slideInTop',
+					'animateOut' : 'slideOutTop'
+				}
+			})
+		
+		}
 	}
 
+	/**
+	 * delegates to the apply method associated with the current pane.
+	 * @param form {string} name of the current form.
+	 * @param message any parameter that will be passed as the second variable to the callback.
+	 */
+	Settings.prototype.apply = function(form, message) {
+	
+		var form = document.forms[0]
+	
+		if ( form.name in this.panes ) {
+		
+			var inputs = document.forms[form.name].elements
+		
+			this.panes[form.name].applyMethod(inputs, message)
+		
+		}
+	
+		else throw util.error('There is no pane registered with that name.')
+	
+	}
+
+	/**
+	 * registers a settings pane.
+	 * @param MDD {object} Modal Dialogue definition for the pane.
+	 */
+	Settings.prototype.addPane = function(MDD) {
+	
+		// check for a form.
+		if ( MDD.form && MDD.form.name ) {
+	
+			this.panes[MDD.form.name] = {
+				'MDD' : MDD,
+				// map the form callback to the apply method.
+				'applyMethod' : (typeof MDD.form.callback == 'function') ? MDD.form.callback : function() {}
+			}
+	
+		}
+		
+	}
+	
 	Settings.prototype.firstrun = function(callback, title, body) {
 	
 		var self = this,
-			settings = this.vibe.settings
+			settings = this.settings
 	
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
 			'body' : body || "<p>Before you can use Vibe, the address of your Vibe Server must be specified.</p><p>You can find the address of your Vibe Server by looking in its main window, where the address will be specified in the format of: hostname:portnumber.</p>",
 			'errorDialogue' : !! title,
-			'form' : {
-				'name' : 'firstrun',
-				'inputs' : [{
-					'name' : 'host',
-					'title' : 'Host',
-					'placeholder' : settings.get('host') || 'localhost'
-				},{
-					'name' : 'port',
-					'type' : 'number',
-					'title' : 'Port',
-					'placeholder' : settings.get('port') || 6232
-				}],
-				'callback' : function(inputs){
-					
-					var host = inputs[0].value || inputs[0].placeholder
-					var port = inputs[1].value || inputs[1].placeholder
-					
-					settings.set('host',host)
-					settings.set('port',port)
-				
-					callback.call(this,host,port)
-				
-					this.close()
-				
-				},
-				'buttonTitle' : 'Go'
-			}
+			'form' : self.defaultPanes.connection.form
+		}
+		
+		// override the callback.
+		MDD.form.callback = function() {
+		
+			// route through the associated callback handler.
+			self.apply('connection', callback)
+		
 		}
 	
 		// set animation for error or first run.
-		MDD.animate = ( !! title ) ? { 'animateIn' : 'slideInTop', 'animateOut' : 'slideOutTop' } : { 'animateIn' : 'fadeIn', 'animateOut' : 'fadeOut' }
+		MDD.animate = ( !! title ) ? {
+			'animateIn' : 'slideInTop',
+			'animateOut' : 'slideOutTop'
+			} : {
+			'animateIn' : 'fadeIn',
+			'animateOut' : 'fadeOut'
+		}
 	
 		// create the dialogue.
 		dialogue.createSingle(MDD)
