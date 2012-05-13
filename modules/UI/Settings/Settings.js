@@ -107,7 +107,8 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 						'type' : 'button',
 						'callback' : function() {
 						
-							settings.clear()
+							// clear localstorage.
+							localStorage.clear()
 							
 							location.reload(true)
 						
@@ -134,18 +135,9 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 			}
 		}
 	
-		// Connection pane.
-		this.addPane(Panes.connection)
+		// register all panes in the Pane object.
+		for ( var pane in Panes ) this.addPane(Panes[pane])
 	
-		// User Interface pane.
-		this.addPane(Panes.userinterface)
-		
-		// Advanced settings pane.
-		this.addPane(Panes.advanced)
-		
-		// About vibe pane.
-		this.addPane(Panes.about)
-		
 	}
 
 	Settings.prototype.show = function() {

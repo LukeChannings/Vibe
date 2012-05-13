@@ -99,7 +99,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		var info = hours + minutes + seconds
 		
 		// update the info bar.
-		this.ui.emit('updateInfo', info)
+		this.ui.infoBar.update(info)
 	
 	}
 	

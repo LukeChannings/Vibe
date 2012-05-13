@@ -1,32 +1,42 @@
 define(['util'], function(util) {
 
-	var UIPlaylistInfoBar = function() {
+	/**
+	 * construct an info bar.
+	 * @param appendTo {object} element to append the info bar element to.
+	 */
+	var UIPlaylistInfoBar = function(appendTo) {
 	
-		var infoBar = this.infoBar = util.createElement({
+		// create the info bar.
+		var node = this.node = util.createElement({
 			'tag' : 'div',
 			'customClass' : 'infoBar',
-			'appendTo' : this.node
+			'appendTo' : appendTo
 		})
 		
-		util.disableUserSelect(infoBar)
-		
-		this.node.addClass('usingInfoBar')
+	}
 	
-		this.on('updateInfo', function(info) {
-		
-			if ( typeof info == 'string' ) {
-			
-				this.infoBar.removeChildren()
-			
-				var info = util.createElement({'tag' : 'span', 'inner' : info, 'appendTo' : infoBar})
-			
-				util.disableUserSelect(info)
-			
-			}
-		
-		})
+	/**
+	 * updates the info bar with new text.
+	 * @param info {string} the text to update the info bar with.
+	 */
+	UIPlaylistInfoBar.prototype.update = function(info) {
 	
-		this.emit('infoBarLoaded')
+		// alias the node.
+		var node = this.node
+	
+		// make sure that the info is a string.
+		if ( typeof info == 'string' ) {
+		
+			// remove the previous info.
+			node.removeChildren()
+		
+			// create a new info.
+			var info = util.createElement({'tag' : 'span', 'inner' : info, 'appendTo' : node})
+		
+			// disable selection of the text.
+			util.disableUserSelect(info)
+		
+		}
 	
 	}
 	

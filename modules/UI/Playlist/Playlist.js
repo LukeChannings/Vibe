@@ -64,11 +64,20 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			
 		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
 		
-		if ( typeof options.useInfoBar == 'boolean' ) {
+		// check if we're using the info bar.
+		if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
 		
+			// fetch the info bar module.
 			require(['UI/Playlist/PlaylistInfoBar'], function(UIPlaylistInfoBar) {
 			
-				UIPlaylistInfoBar.call(self)
+				// make an info bar instance.
+				self.infoBar = new UIPlaylistInfoBar(self.node)
+				
+				// set the class on #UIPlaylist.
+				self.node.addClass('usingInfoBar')
+			
+				// tell any listeners that the info bar module is loaded.
+				self.emit('infoBarLoaded')
 			
 			})
 		
