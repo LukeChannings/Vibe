@@ -2,18 +2,18 @@
  * Settings
  * @description Provides a modal frontend with which to change application settings.
  */
-define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
+define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue) {
 
-	var Settings = function(settings) {
+	var Settings = function(vibe) {
 	
-		this.settings = settings
+		this.vibe = vibe
 	
 	}
 
 	Settings.prototype.show = function() {
 	
 		var self = this,
-			settings = this.settings
+			settings = this.vibe.settings
 	
 		var ConnectionOptions = {
 			'title' : "Connection",
@@ -29,6 +29,23 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					'type' : 'number',
 					'title' : 'Port',
 					'placeholder' : settings.get('port') || 6232
+				}]
+			}
+		}
+
+		// UI pane.
+		var UserInterface = {
+			'title' : 'User Interface',
+			'navTitle' : 'UI',
+			'body' : 'User Interface preferences.',
+			'form' : {
+				'name' : 'userinterface',
+				'inputs' : [{
+					'name' : 'collectionRootType',
+					'title' : 'Collection type: ',
+					'type' : 'select',
+					'options' : ['genre', 'artist', 'album', 'track'],
+					'placeholder' : settings.get('collectionRootType') || 'genre'
 				}]
 			}
 		}
@@ -59,7 +76,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 		}
 	
 		var About = {
-			'title' : 'About Vibe (Version ' + this.settings.get('version') + ')',
+			'title' : 'About Vibe (Version ' + settings.get('version') + ')',
 			'navTitle' : 'About Vibe',
 			'body' : '<img src="images/icon.png" style="float:left" alt /><p>Vibe is a Web Application for streaming music. Just enter the Url of your Vibe Server and you\'re ready to go.</p><p>Vibe is an open source project that is written entirely in Javascript, and can be found on GitHub <a href="https://github.com/TheFuzzball/MusicMe-WebApp">here</a>.</p><p>Vibe will run in most Web Browsers (IE8+, Chrome, FireFox 3.5+), but is best enjoyed in a modern W3C-standard browser.',
 			'alignment' : 'justify'
@@ -97,6 +114,18 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 					
 						location.reload(true)
 					
+					break
+					case "userinterface":
+					
+						var collectionRootType = settings.get('collectionRootType') || 'genre'
+					
+						if ( form.elements.collectionRootType.value !==  collectionRootType) {
+						
+							settings.set('collectionRootType', form.elements.collectionRootType.value)
+							
+							self.vibe.collection.populateWithType(form.elements.collectionRootType.value)
+							
+						}
 				}
 		
 			}
@@ -105,7 +134,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 		
 		dialogue.createMultiView({
 			'title' : 'Settings',
-			'views' : [ConnectionOptions, Developer, About],
+			'views' : [ConnectionOptions, UserInterface, Developer, About],
 			'buttons' : {'Apply' : apply, 'close' : true },
 			'animate' : {
 				'animateIn' : 'slideInTop',
@@ -116,7 +145,8 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 
 	Settings.prototype.firstrun = function(callback, title, body) {
 	
-		var self = this
+		var self = this,
+			settings = this.vibe.settings
 	
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
@@ -127,20 +157,20 @@ define(['util','UI/ModalDialogue/ModalDialogue'],function(util, dialogue){
 				'inputs' : [{
 					'name' : 'host',
 					'title' : 'Host',
-					'placeholder' : this.settings.get('host') || 'localhost'
+					'placeholder' : settings.get('host') || 'localhost'
 				},{
 					'name' : 'port',
 					'type' : 'number',
 					'title' : 'Port',
-					'placeholder' : this.settings.get('port') || 6232
+					'placeholder' : settings.get('port') || 6232
 				}],
 				'callback' : function(inputs){
 					
 					var host = inputs[0].value || inputs[0].placeholder
 					var port = inputs[1].value || inputs[1].placeholder
 					
-					self.settings.set('host',host)
-					self.settings.set('port',port)
+					settings.set('host',host)
+					settings.set('port',port)
 				
 					callback.call(this,host,port)
 				

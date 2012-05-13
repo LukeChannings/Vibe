@@ -2,7 +2,9 @@
  * MusicMe Playlist
  * @description Provides the Playlist view and mutator methods.
  */
-define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], function(require, util, EventEmitter, ButtonBar) {
+define(['require','util','dependencies/EventEmitter', 'UI/Playlist/PlaylistRow', 'UI/Playlist/PlaylistLegend'],
+
+function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar) {
 
 	// register the view stylesheet.
 	util.registerStylesheet(require.toUrl('./Playlist.css'))
@@ -12,6 +14,8 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 	 * @param options {object} options with which to instantiate the playlist.
 	 */
 	var UIPlaylist = function(options) {
+
+		var self = this
 
 		// ensure options is an object.
 		var options = this.options = ( typeof options == 'object' ) ? options : {}
@@ -27,7 +31,28 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		})
 			
 		var header = this.header = util.createElement({'tag' : 'div', 'appendTo' : node})
+		
+		// we're using the control bar.
+		if ( typeof options.useControlBar !== 'undefined' && options.useControlBar instanceof Array ) {
+		
+			// fetch the control bar module.
+			require(['UI/Playlist/PlaylistControlBar'], function(UIPlaylistControlBar) {
 			
+				var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar)
+			
+				var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
+			
+				node.addClass('usingControlBar')
+			
+			})
+		
+		}
+		
+		else {
+		
+			var legend = new UIPlaylistLegend(header).withColumns(this.useColumns)
+		}
+		
 		// define an array to contain the rows.
 		var rows = this.rows = {}
 		
@@ -38,6 +63,16 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 		})
 			
 		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
+		
+		if ( typeof options.useInfoBar == 'boolean' ) {
+		
+			require(['UI/Playlist/PlaylistInfoBar'], function(UIPlaylistInfoBar) {
+			
+				UIPlaylistInfoBar.call(self)
+			
+			})
+		
+		}
 		
 	}
 	
@@ -51,7 +86,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 	
 		items.forEach(function(item, index) {
 		
-			if ( isValidRowDefinition(item) ) {
+			if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
 				if ( self.rows[item.trackid] instanceof UIPlaylistRow ) {
 				
@@ -61,8 +96,6 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 				else {
 				
 					var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
-					
-					console.log(playlistRow)
 					
 					self.rows[item.trackid] = playlistRow
 					
@@ -98,7 +131,7 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 			
 			}
 			
-			else if ( isValidRowDefinition(item) ) {
+			else if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
 				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
 			
@@ -111,117 +144,6 @@ define(['require','util','dependencies/EventEmitter','UI/Widget/ButtonBar/Button
 			else return false
 		
 		})
-	
-	}
-	
-	/**
-	 * represents a playlist row.
-	 * @param definition {object} defines a playlist row.
-	 */
-	var UIPlaylistRow = function(definition) {
-	
-		var self = this
-	
-		// define the playlist row.
-		var row = this.row = util.createElement({ 'tag' : 'li', 'appendTo' : definition.appendTo })
-	
-		// define a container for the columns.
-		var columnContainer = this.columnContainer = util.createElement({'tag' : 'ol', 'appendTo' : row})
-		
-		// create an array to contain the columns.
-		var columns = this.columns = {}
-	
-		this.id = definition.trackid
-		
-		// create columns.
-		for ( var i in definition ) {
-		
-			if ( definition.hasOwnProperty(i) ) {
-			
-				var column = document.createElement('li')
-				
-				util.disableUserSelect(column)
-				
-				column.innerHTML = definition[i]
-				
-				column.className = i
-				
-				columns[i] = column
-			
-			}
-		
-		}
-		
-		util.addListener(columnContainer, 'click', (function(instance) {
-	
-			return function(e) {
-			
-				self.click(e, instance)
-			
-			}
-		
-		})(this))
-	
-	}
-	
-	/**
-	 * uses the specified columns by order of name. clears the row before appending.
-	 * @param columns {array} list of column names.
-	 */
-	UIPlaylistRow.prototype.withColumns = function(columns) {
-	
-		var self = this
-	
-		if ( columns instanceof Array ) {
-		
-			self.columnContainer.removeChildren()
-		
-			columns.forEach(function(columnName) {
-			
-				if ( self.columns[columnName] instanceof Element ) {
-			
-					self.columnContainer.appendChild(self.columns[columnName])
-				}
-			
-			})
-		
-		}
-		
-		else return false
-	
-		return this
-	
-	}
-	
-	
-	/**
-	 * handles the click event on a playlist row.
-	 * @param e {object} the event object.
-	 * @param item {object} the UIPlaylistRow instance associated with this row.
-	 */
-	UIPlaylistRow.prototype.click = function(e, item) {
-	
-		item.row.addClass('selected')
-	
-	}
-	
-	/**
-	 * checks that the object defines a playlist row according to the Vibe Api.
-	 * @param definition {object} defines a playlist row.
-	 */
-	var isValidRowDefinition = function(definition) {
-	
-		if ( typeof definition == 'object' ) {
-		
-			if ( typeof definition.albumname != 'string' || typeof definition.artistname != 'string' ) return false;
-			
-			else if ( typeof definition.trackid !== 'string' || typeof definition.trackname !== 'string' ) return false;
-			
-		}
-		
-		else return false
-	
-		return true
 	
 	}
 	

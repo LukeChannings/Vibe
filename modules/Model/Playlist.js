@@ -28,8 +28,12 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 			return
 		}
 	
+		var self = this
+	
 		// model stores the complete playlist items that construct a PlaylistItem.
 		var model = this.model = new UndoManager('ModelPlaylist')
+	
+		this.playlistDuration = 0
 	
 		this.index = 0
 	
@@ -39,9 +43,64 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		// set the UI instance.
 		var ui = this.ui = options.withUI
 
-		// redraw the UI with the persistent storage.
-		ui.redraw(model.value(), this.info)
+		// redraw the UI from persistent storage.
+		ui.redraw(model.value())
 
+		ui.on('infoBarLoaded', function() {
+
+			self.updateInfo()
+		
+		})
+
+	}
+	
+	/**
+	 * updates the playlist duration in the playlist's info bar.
+	 */
+	ModelPlaylist.prototype.updateInfo = function() {
+	
+		var self = this
+	
+		// reset the playlist to zero seconds.
+		this.playlistDuration = 0
+	
+		// iterate the playlist items.
+		this.model.value().forEach(function(track) {
+		
+			// increment the playlist by the duration of the current playlist item.
+			self.playlistDuration += track.tracklength
+		
+		})
+	
+		// determine the units of time to describe the playlist duration.
+		var seconds = Math.ceil(this.playlistDuration) % 60,
+			minutes = Math.ceil(this.playlistDuration / 60),
+			hours = Math.floor(minutes / 60),
+			info = '' // string to contain the human-readable duration.
+		
+		if ( hours > 0 ) minutes = minutes % 60
+		
+		// determine the presentation of hours.
+		if ( hours !== 0 ) {
+			hours = ( hours == 1 ) ? hours + ' hour, ' : hours + ' hours, '
+		} else hours = ''
+		
+		// determine the presentation of minutes.
+		if ( minutes !== 0 ) {
+			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : minutes + ' minutes and '
+		} else minutes = ''
+		
+		// determine the presentation of seconds.
+		if ( seconds !== 0 ) {
+			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
+		} else seconds = 'No tracks.'
+		
+		// concatenate the playlist durations.
+		var info = hours + minutes + seconds
+		
+		// update the info bar.
+		this.ui.emit('updateInfo', info)
+	
 	}
 	
 	/**
@@ -56,10 +115,12 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		var self = this
 	
 		getItems.call(this, type, id, function(items) {
-		
+
 			self.model.push.apply(this, items)
 			
 			self.ui.addRows(items)
+			
+			self.updateInfo()
 			
 			if ( typeof callback == 'function' ) callback()
 			
@@ -75,6 +136,8 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	
 		this.model.undo(n)
 		
+		this.updateInfo()
+		
 		this.ui.redraw(this.model.value())
 	
 	}
@@ -87,6 +150,8 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	
 		this.model.redo(n)
 		
+		this.updateInfo()
+		
 		this.ui.redraw(this.model.value())
 	
 	}
@@ -98,6 +163,8 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	ModelPlaylist.prototype.clear = function() {
 	
 		this.model.clear()
+		
+		this.updateInfo()
 		
 		this.ui.list.removeChildren()
 	
@@ -125,8 +192,6 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	 * @param n - index for the object. (optional, defaults to the current index.)
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
-	
-		console.log(this.index)
 	
 		return this.model.getItemAtIndex(this.index)
 	

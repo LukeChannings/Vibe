@@ -165,6 +165,7 @@ body.svg #UIPlaylist .UIButtonBarWidget .icon.settings{background-image: url('Pl
 	margin: 2px 5px;
 	display: block;
 	text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+	cursor: default;
 }
 
 /* @end */

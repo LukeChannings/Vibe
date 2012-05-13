@@ -172,13 +172,13 @@ define(['require','util'],function(require, util){
 			if ( input.type && input.type == 'select' ) {
 			
 				// create a select input.
-				var element = document.createElement('select')
+				var element = util.createElement({'tag' : 'select', 'setAttributes' : {'name' : input.name}})
 				
 				// iterate the options.
 				input.options.forEach(function(option) {
 					
 					// create an option element.
-					var input = util.createElement({
+					var optionNode = util.createElement({
 						'tag' : 'option',
 						'inner' : option,
 						'appendTo' : element,
@@ -186,6 +186,8 @@ define(['require','util'],function(require, util){
 							'value' : option
 						}
 					})
+					
+					if ( input.placeholder && option == input.placeholder ) optionNode.setAttribute('selected', 'selected')
 					
 				})
 				
@@ -219,7 +221,7 @@ define(['require','util'],function(require, util){
 			}
 			
 			// check for a placeholder.
-			if ( input.placeholder )
+			if ( input.placeholder && input.type !== 'select' )
 			{
 			
 				// check for native placeholder support.

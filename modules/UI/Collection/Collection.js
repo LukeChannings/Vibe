@@ -118,7 +118,9 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				var url = ( type == 'artist' || type == 'genre' ) ?  require.toUrl('./CollectionGenericArtistArt.png') :
 						  ( target.getAttribute('data-albumart') ) ? target.getAttribute('data-albumart') : 
 						  ( target.parentNode.parentNode.getAttribute('data-albumart') ) ? target.parentNode.parentNode.getAttribute('data-albumart') :
-						  require.toUrl('./CollectionGenericAlbumArt.png');
+						  require.toUrl('./CollectionGenericAlbumArt.png')
+				
+				url = ( url == 'null' ) ? require.toUrl('./CollectionGenericAlbumArt.png') : url
 				
 				// Set a generic album art.
 				DragImage.src = url;

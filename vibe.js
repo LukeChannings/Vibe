@@ -27,7 +27,7 @@
 			var settings = self.settings = new ModelSettings()
 			
 			// instantiate settings user interface.
-			var uiSettings = self.uiSettings = new UISettings(settings)
+			var uiSettings = self.uiSettings = new UISettings(self)
 		
 			self.init = Init
 		
