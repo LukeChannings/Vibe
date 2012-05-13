@@ -45,9 +45,6 @@
 				// detect SVG support.
 				if ( util.Browser.HasSupport.svg() && ! util.Browser.isIE() ) document.body.addClass('svg')
 				
-				// set the vibe version.
-				settings.set('version', util.getMetaContent('vibe-version'))
-			
 				// listen for a connection event.
 				api.once('connected', function() {
 				
