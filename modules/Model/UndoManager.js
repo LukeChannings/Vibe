@@ -202,8 +202,8 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 		}
 		this.clear = function(purge) {
 		
-			if ( purge )
-			{
+			if ( purge ) {
+			
 				// set defaults.
 				branches = [[]];
 				currentBranch = 0;
@@ -214,8 +214,8 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 			
 			}
 			
-			else
-			{
+			else {
+			
 				fork();
 				
 				branches[currentBranch] = [];

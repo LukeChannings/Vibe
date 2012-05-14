@@ -176,10 +176,12 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			else
 			{
 			
-				var reader = new FileReader();
+				var data = []
 			
 				for ( var i = 0; i < e.dataTransfer.files.length; i++ )
 				{
+				
+					var reader = new FileReader()
 				
 					var type = e.dataTransfer.files[i].type;
 				
@@ -187,13 +189,16 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				
 					reader.onloadend = function(e){
 					
-						var data = e.currentTarget.result.replace('data:' + type + ';base64,','');
-					
-						self.emit('dataDrop',type,data);
+						data.push({
+							'type' : type,
+							'data' : e.currentTarget.result.replace('data:' + type + ';base64,','')
+						})
 					
 					}
 					
 				}
+				
+				self.emit('dataDrop', data)
 				
 			}
 			

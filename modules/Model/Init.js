@@ -2,7 +2,7 @@
  * ModelInit
  * @description Defines initialisation routines for the User Interface. A delegee for the controller.
  */
-define(['util'],function(){
+define(['util'],function(util){
 
 	var ModelInit = {}
 
@@ -78,6 +78,38 @@ define(['util'],function(){
 			collection.on('itemSelected',function(item){
 			
 				modelPlaylist.add(item.type, item.id)
+				
+			})
+			
+			collection.on('dataDrop', function(data) {
+			
+				require(['UI/ModalDialogue/ModalDialogue'], function(dialogue) {
+					
+					var elements = []
+					
+					data.forEach(function(image) {
+					
+						var image = document.createElement('img')
+							
+						image.src = 'data:' + image.type + ';base64,' + image.data
+					
+						console.log(image)
+					
+						elements.push(image)
+					
+					})
+					
+					console.log(elements)
+					
+					var MDD = {
+						'title' : 'Zar\'s Image!',
+						'body' : elements,
+						'buttons' : {'close' : true}
+					}
+				
+					dialogue.createSingle(MDD)
+				
+				})
 				
 			})
 			
