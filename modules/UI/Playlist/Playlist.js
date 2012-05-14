@@ -53,9 +53,6 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			var legend = new UIPlaylistLegend(header).withColumns(this.useColumns)
 		}
 		
-		// define an array to contain the rows.
-		var rows = this.rows = {}
-		
 		var listContainer = this.listContainer = util.createElement({
 			'tag' : 'div',
 			'customClass' : 'listContainer',
@@ -97,21 +94,10 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 		
 			if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
-				if ( self.rows[item.trackid] instanceof UIPlaylistRow ) {
+				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
 				
-					self.list.appendChild(self.rows[item.trackid].row)
+				self.list.appendChild(playlistRow.row)
 				
-				}
-				else {
-				
-					var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
-					
-					self.rows[item.trackid] = playlistRow
-					
-					self.list.appendChild(playlistRow.row)
-				
-				}
-			
 			}
 			
 			else { console.warn('Cannot add item ' + index + ' to the playlist. It is not a valid playlist row.')
@@ -134,17 +120,9 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 	
 		items.forEach(function(item) {
 		
-			if ( self.rows[item.trackid] instanceof UIPlaylistRow ) {
-			
-				self.list.appendChild(self.rows[item.trackid].row)
-			
-			}
-			
-			else if ( UIPlaylistRow.isValidDefinition(item) ) {
+			if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
 				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
-			
-				self.rows[item.trackid] = playlistRow
 			
 				self.list.appendChild(playlistRow.row)
 			
