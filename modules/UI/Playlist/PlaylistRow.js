@@ -1,12 +1,16 @@
-define(['util'], function(util) {
+define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 
 	/**
 	 * represents a playlist row.
 	 * @param definition {object} defines a playlist row.
+	 * @param id {string} MD5 hash for the definition.
 	 */
-	var UIPlaylistRow = function(definition) {
+	var UIPlaylistRow = function(definition, id) {
 	
 		var self = this
+	
+		// set the identifier.
+		this.id = id
 	
 		// define the playlist row.
 		var row = this.row = util.createElement({ 'tag' : 'li', 'appendTo' : definition.appendTo })
@@ -17,8 +21,6 @@ define(['util'], function(util) {
 		// create an array to contain the columns.
 		var columns = this.columns = {}
 	
-		this.id = definition.trackid
-		
 		// create columns.
 		for ( var i in definition ) {
 		
@@ -88,6 +90,8 @@ define(['util'], function(util) {
 	
 		item.row.addClass('selected')
 	
+		this.emit('itemSelected', item)
+	
 	}
 	
 	/**
@@ -109,6 +113,8 @@ define(['util'], function(util) {
 		return true
 	
 	}
+	
+	EventEmitter.augment(UIPlaylistRow.prototype)
 	
 	return UIPlaylistRow
 

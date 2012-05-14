@@ -41,3 +41,8 @@ List:
 
 Presently, Vibe is under heavy development but as of now is nowhere near ready. There are still lots
 of bugs to iron out and large modules to either implement from scratch or finish implementing.
+
+#Copyright#
+
+All images and stylesheets are copyright Luke Channings 2012 all rights reserved.
+The source code released under the LGPL license - http://www.gnu.org/copyleft/lesser.html

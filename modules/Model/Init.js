@@ -56,13 +56,15 @@ define(['util'],function(util){
 				
 				modelPlaylist.setIndex(index, node)
 				
-				player.addSound(id , true)
+				player.addSound(id, true)
 			
 			})
 			
 			playlist.on('itemSelected',function(item) {
 			
-				console.log(item)
+				console.log(item.id)
+			
+				console.log(modelPlaylist.model.getStore())
 			
 			})
 			
@@ -80,39 +82,6 @@ define(['util'],function(util){
 				modelPlaylist.add(item.type, item.id)
 				
 			})
-			
-			collection.on('dataDrop', function(data) {
-			
-				require(['UI/ModalDialogue/ModalDialogue'], function(dialogue) {
-					
-					var elements = []
-					
-					data.forEach(function(image) {
-					
-						var image = document.createElement('img')
-							
-						image.src = 'data:' + image.type + ';base64,' + image.data
-					
-						console.log(image)
-					
-						elements.push(image)
-					
-					})
-					
-					console.log(elements)
-					
-					var MDD = {
-						'title' : 'Zar\'s Image!',
-						'body' : elements,
-						'buttons' : {'close' : true}
-					}
-				
-					dialogue.createSingle(MDD)
-				
-				})
-				
-			})
-			
 		
 		})
 	

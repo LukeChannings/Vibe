@@ -56,7 +56,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			
 				var target = e.target || e.srcElement;
 			
-				self.emit('enter',target.value);
+				self.emit('enter', target.value);
 				
 				if ( e.preventDefault ) e.preventDefault();
 				else if ( e.stopPropogation ) e.stopPropogation();

@@ -94,7 +94,15 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 		
 			if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
-				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
+				var playlistRow = new UIPlaylistRow(item, 'bob').withColumns(self.useColumns)
+				
+				playlistRow.on('itemSelected', function(item) {
+					
+					console.log('My oh my.')
+					
+					self.emit('itemSelected', item)
+					
+				})
 				
 				self.list.appendChild(playlistRow.row)
 				
@@ -109,28 +117,16 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 	}
 	
 	/**
-	 * redraws the entire playlist from an array of UIPlaylistRow objects.
+	 * adds the rows but also clears the playlist.
+	 * @param items {array} list of playlist items.
 	 */
 	UIPlaylist.prototype.redraw = function(items) {
 	
 		// empty playlist UI.
 		this.list.removeChildren()
-	
-		var self = this
-	
-		items.forEach(function(item) {
 		
-			if ( UIPlaylistRow.isValidDefinition(item) ) {
-			
-				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
-			
-				self.list.appendChild(playlistRow.row)
-			
-			}
-			
-			else return false
-		
-		})
+		// add the items.
+		this.addRows(items)
 	
 	}
 	

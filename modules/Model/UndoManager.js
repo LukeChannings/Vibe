@@ -10,8 +10,7 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 		var store = {}, // keeps raw values keyed by hashes.
 			branches = [[]], // each change to the array creates a new branch.
 			currentBranch = 0, // current branch pointer.
-			persistentStorageId, // identifier for persistent storage.
-			persistence = new Persistence('undoManagerStorage' + persistentStorageId); // persistence instance.
+			persistence = new Persistence('undoManagerStorage' + persistenceId) // persistence instance.
 
 		var save = function() {
 		
@@ -19,28 +18,24 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 				store : store,
 				branches : branches,
 				currentBranch: currentBranch
-			});
+			})
 		
 		}
 
 		// set up persistence.
 		if ( persistenceId )
 		{
-		
-			var self = this;
-		
-			// if persistence is specified, set the Id.
-			persistentStorageId = persistenceId;
+			var self = this
 		
 			// load previous persistence.
-			var persistedInstance = persistence.load();
+			var persistedInstance = persistence.load()
 			
 			// if there is a previous persistent session.
 			if ( persistedInstance )
 			{
-				store = persistedInstance.store; // load the store.
-				branches = persistedInstance.branches; // load the branches.
-				currentBranch = persistedInstance.currentBranch; // load the current branch pointer.
+				store = persistedInstance.store // load the store.
+				branches = persistedInstance.branches // load the branches.
+				currentBranch = persistedInstance.currentBranch // load the current branch pointer.
 			}
 			
 		}
@@ -48,7 +43,7 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 		// utility methods.
 		var objectToString = function(object) {
 			
-			var string;
+			var string
 			
 			if ( typeof object == 'object' )
 			{
@@ -59,11 +54,11 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 					{
 						if ( typeof object[i] == 'string' )
 						{
-							string += object[i];
+							string += object[i]
 						}
 						else if ( object[i] == 'object' )
 						{
-							string += objectToString(object[i]);
+							string += objectToString(object[i])
 						}
 					}
 				}
@@ -71,27 +66,28 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 			}
 			else if ( typeof object == 'string' || typeof object == 'number')
 			{
-				string = object;
+				string = object
 			}
 			
-			else return undefined;
+			else return undefined
 			
-			return string;
+			return string
 			
 		}
+		
 		var getHash = function(item) {
 			
 			if (typeof item == 'string')
 			{
-				return MD5(item);
+				return MD5(item)
 			}
 			else if ( typeof item == 'number' )
 			{
-				return item;
+				return item
 			}
 			else if ( typeof item == 'array' )
 			{
-				var uniqueName;
+				var uniqueName
 				
 				for ( var i = 0; i < item.length; i++ )
 				{
@@ -101,14 +97,14 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 						{
 							if ( item[i].hasOwnProperty(j) && typeof item[i][j] == 'string' )
 							{
-								uniqueName += item[i][j];
+								uniqueName += item[i][j]
 							}
 						}
 					} 
-					else if ( typeof item[i] == 'string' ) uniqueName += item[i];
+					else if ( typeof item[i] == 'string' ) uniqueName += item[i]
 				}
 				
-				return MD5(uniqueName);
+				return MD5(uniqueName)
 			}
 			
 		}
@@ -118,23 +114,23 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 		
 			var branch = (function(branch){
 				
-				var arr = [];
+				var arr = []
 				
 				for ( var i in branch )
 				{
 					if ( branch.hasOwnProperty(i) )
 					{
-						arr.push(branch[i]);
+						arr.push(branch[i])
 					}
 				}
 				
-				return arr;
+				return arr
 				
-			})(branches[currentBranch]);
+			})(branches[currentBranch])
 		
-			branches.push(branch);
+			branches.push(branch)
 		
-			currentBranch++;
+			currentBranch++
 		}
 		
 		// undo and redo methods.
@@ -144,83 +140,85 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 			{
 				if ( typeof branches[currentBranch - n] !== 'undefined')
 				{
-					currentBranch = currentBranch - n;
+					currentBranch = currentBranch - n
 					
 				}
 				
 			}
 			
-			else if ( typeof branches[currentBranch - 1] !== 'undefined' ) currentBranch--;
+			else if ( typeof branches[currentBranch - 1] !== 'undefined' ) currentBranch--
 		
-			save();
+			save()
 		
-			return branches[currentBranch].length;
+			return branches[currentBranch].length
 		
 		}
+		
 		this.redo = function(n) {
 		
 			if ( typeof n == 'number' )
 			{
 				if ( typeof branches[currentBranch + n] !== 'undefined')
 				{
-					currentBranch = currentBranch + n;
+					currentBranch = currentBranch + n
 					
 				}
 			}
 			
-			else if ( typeof branches[currentBranch + 1] !== 'undefined' ) currentBranch++;
+			else if ( typeof branches[currentBranch + 1] !== 'undefined' ) currentBranch++
 			
-			save();
+			save()
 			
-			return branches[currentBranch].length;
+			return branches[currentBranch].length
 			
 		}
 		
 		// custom mutator methods.
 		this.removeItemsAtIndexes = function() {
 		
-			fork();
+			fork()
 		
-			var toRemove = [];
+			var toRemove = []
 		
 			for ( var i = 0; i < arguments.length; i++ )
 			{
 				if ( typeof arguments[i] == 'number' )
 				{
-					toRemove.push(arguments[i]);
+					toRemove.push(arguments[i])
 				}
 			}
 			
-			toRemove.sort();
+			toRemove.sort()
 			
 			for ( var i = toRemove.length; i > 0; i-- )
 			{
-				branches[currentBranch].splice(toRemove[i], 1);
+				branches[currentBranch].splice(toRemove[i], 1)
 			}
 			
-			save();
+			save()
 		}
+		
 		this.clear = function(purge) {
 		
 			if ( purge ) {
 			
 				// set defaults.
-				branches = [[]];
-				currentBranch = 0;
-				store = {};
+				branches = [[]]
+				currentBranch = 0
+				store = {}
 			
 				// clear the localStorage.
-				delete localStorage['undoManagerStorage' + persistentStorageId];
+				delete localStorage['undoManagerStorage' + persistenceId]
 			
 			}
 			
 			else {
 			
-				fork();
+				fork()
 				
-				branches[currentBranch] = [];
+				branches[currentBranch] = []
 				
-				save();
+				save()
 			}
 		
 		}
@@ -234,179 +232,191 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 			
 				if ( ( branches.length ) > currentBranch )
 				{
-					branches.splice(currentBranch + 1);
+					branches.splice(currentBranch + 1)
 				}
 			
 				if ( branches.length == 0 )
 				{
-					fork();
-					currentBranch = 0;
+					fork()
+					currentBranch = 0
 				}
 				else
 				{
-					fork();
+					fork()
 				}
 			
 				for ( var i = 0; i < arguments.length; i++ )
 				{
-					var id = getHash(objectToString(arguments[i]));
+					var id = getHash(objectToString(arguments[i]))
 					
-					store[id] = arguments[i];
+					store[id] = arguments[i]
 					
-					branches[currentBranch].push(id);
+					branches[currentBranch].push(id)
 				}
 				
 			}
 		
-			save();
+			save()
 		
-			return branches[currentBranch].length;
+			return branches[currentBranch].length
 		
 		}
+		
 		this.pop = function() {
 			
-			fork();
+			fork()
 			
-			var id = branches[currentBranch].pop();
+			var id = branches[currentBranch].pop()
 				
-			save();
+			save()
 			
-			return store[id];
+			return store[id]
 			
 		}
+		
 		this.shift = function() {
 		
-			fork();
+			fork()
 			
-			var id = branches[currentBranch].shift();
+			var id = branches[currentBranch].shift()
 		
-			save();
+			save()
 			
-			return store[id];
+			return store[id]
 		
 		}
+		
 		this.reverse = function() {
 			
-			fork();
+			fork()
 			
-			branches[currentBranch].reverse();
+			branches[currentBranch].reverse()
 			
-			var result = [];
+			var result = []
 			
 			for ( var i in branches[currentBranch] )
 			{
-				result.push(store[branches[currentBranch][i]]);
+				result.push(store[branches[currentBranch][i]])
 			}
 			
-			return result;
+			return result
 			
-			save();
+			save()
 			
 		}
+		
 		this.splice = function() {
 		
-			fork();
+			fork()
 			
-			var removed = Array.prototype.splice.apply(branches[currentBranch],arguments);
+			var removed = Array.prototype.splice.apply(branches[currentBranch],arguments)
 		
 			for ( var i in removed ) {
 				if ( removed.hasOwnProperty(i) )
 				{
-					removed[i] = store[removed[i]];
+					removed[i] = store[removed[i]]
 				}
 			}
 			
-			save();
+			save()
 			
-			return removed;
+			return removed
 			
 		}
+		
 		this.unshift = function() {
 			
-			fork();
+			fork()
 			
 			for ( var i = 0; i < arguments.length; i++ )
 			{
-				var id = getHash(objectToString(arguments[i]));
+				var id = getHash(objectToString(arguments[i]))
 				
-				store[id] = arguments[i];
+				store[id] = arguments[i]
 				
-				branches[currentBranch].unshift(id);
+				branches[currentBranch].unshift(id)
 			}
 			
-			save();
+			save()
 			
-			return branches[currentBranch].length;
+			return branches[currentBranch].length
 			
 		}
 		
 		// accessor methods:
 		this.getItemAtIndex = function(n) {
 		
-			return store[branches[currentBranch][n]];
+			return store[branches[currentBranch][n]]
 		
 		}
-		this.value = function() {
+		
+		this.value = function(injectPropertyName) {
 			
-			var value = [];
+			var value = []
 			
 			for ( var i = 0; i < branches[currentBranch].length; i++ )
 			{
-				value.push(store[branches[currentBranch][i]]);
+			
+				var item = store[branches[currentBranch][i]]
+			
+				if ( injectPropertyName ) item.UMPropertyName = branches[currentBranch][i]
+			
+				value.push(item)
 			}
 			
-			return value;
+			return value
 			
 		}
+		
 		this.concat = function() {
 			
 			// construct current array.
-			var currentArray = [];
+			var currentArray = []
 			
 			for ( var i in branches[currentBranch] )
 			{
-				currentArray.push(store(branches[currentBranch]));
+				currentArray.push(store(branches[currentBranch]))
 			}
 			
-			return currentArray.concat.apply(this,arguments);
+			return currentArray.concat.apply(this,arguments)
 			
 		}
 		this.join = function() {
 		
 			// construct current array.
-			var currentArray = [];
+			var currentArray = []
 			
 			for ( var i in branches[currentBranch] )
 			{
-				currentArray.push(store(branches[currentBranch]));
+				currentArray.push(store(branches[currentBranch]))
 			}
 			
-			return currentArray.concat.join(this,arguments);
+			return currentArray.concat.join(this,arguments)
 		
 		}
-		this.getBranches = function() { return branches;}
-		this.getStore = function() { return store; }
+		this.getBranches = function() { return branches}
+		this.getStore = function() { return store }
 		
 		
 		// method to remove unnecessary stored values and branches.
 		this.prune = function() {
 			
 			// prune branches.
-			branches.splice(currentBranch + 1);
+			branches.splice(currentBranch + 1)
 			
 			// get all ids used in all trees.
-			var allIds = {};
+			var allIds = {}
 			
 			// find unique ids used in branches.
 			branches.forEach(function(branch){
 			
 				branch.forEach(function(id){
 					
-					allIds[id] = true;
+					allIds[id] = true
 					
-				});
+				})
 			
-			});
+			})
 			
 			// walk the store.
 			for ( var id in store )
@@ -415,16 +425,16 @@ define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persisten
 				if ( ! ( id in allIds ) )
 				{
 					// remove those ids.
-					delete store[id];
+					delete store[id]
 				}
 			}
 			
-			save();
+			save()
 			
 		}
 		
 	}
 	
-	return UndoManager;
+	return UndoManager
 
-});
+})

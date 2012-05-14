@@ -65,6 +65,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 					}
 				}
 			},
+			
 			"userinterface" : {
 				'title' : 'User Interface',
 				'body' : 'User Interface preferences.',
@@ -72,10 +73,10 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 					'name' : 'userinterface',
 					'inputs' : [{
 						'name' : 'collectionRootType',
-						'title' : 'Collection type: ',
+						'title' : 'Order Collection By ',
 						'type' : 'select',
-						'options' : ['genre', 'artist', 'album', 'track'],
-						'placeholder' : settings.get('collectionRootType') || 'genre'
+						'options' : ['Genre', 'Artist', 'Album', 'Track'],
+						'placeholder' : settings.get('collectionRootType') || 'Genre'
 					}],
 					'callback' : function(inputs) {
 				
@@ -92,6 +93,7 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 					}
 				}
 			},
+			
 			"advanced" : {
 				'title' : 'Advanced',
 				'body' : 'Developer options for serious hardcore developers and what-not.',
