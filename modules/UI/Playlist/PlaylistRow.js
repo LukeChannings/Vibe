@@ -5,12 +5,12 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 	 * @param definition {object} defines a playlist row.
 	 * @param id {string} MD5 hash for the definition.
 	 */
-	var UIPlaylistRow = function(definition, id) {
+	var UIPlaylistRow = function(definition) {
 	
 		var self = this
 	
 		// set the identifier.
-		this.id = id
+		this.id = definition.trackid
 	
 		// define the playlist row.
 		var row = this.row = util.createElement({ 'tag' : 'li', 'appendTo' : definition.appendTo })
@@ -48,6 +48,16 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 			
 			}
 		
+		})(this))
+		
+		util.addListener(columnContainer, 'dblclick', (function(instance) {
+		
+			return function(e) {
+				
+				self.doubleClick(e, instance)
+				
+			}
+			
 		})(this))
 	
 	}
@@ -88,9 +98,21 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 	 */
 	UIPlaylistRow.prototype.click = function(e, item) {
 	
-		item.row.addClass('selected')
+		if ( ! item.row.hasClass('selected') ) {
+
+			var isSelected = false
+			
+		}
+		
+		else var isSelected = true
 	
-		this.emit('itemSelected', item)
+		this.emit('itemSelected', e, item, isSelected)
+	
+	}
+	
+	UIPlaylistRow.prototype.doubleClick = function(e, item) {
+	
+		this.emit('playItem', e, item)
 	
 	}
 	

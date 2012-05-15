@@ -2,7 +2,7 @@
  * ModelPlaylist
  * @description contains the playlist data and performs Api interactions.
  */
-define(['util','Model/UndoManager'],function(util,UndoManager){
+define(['util','Model/UndoManager'], function(util,UndoManager){
 
 	// constructor.
 	var ModelPlaylist = function(options) {
@@ -104,8 +104,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 	
 	/**
-	 * add
-	 * @description add an item to the Playlist model.
+	 * add an item to the Playlist model.
 	 * @param type (string) - the type of item to be added. (e.g. genre, artist, album, etc.)
 	 * @param id (string) - the unique identifier for the item. (Usually an MD5 hash.)
 	 * @param callback (function) - call the function when done.
@@ -129,8 +128,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 	
 	/**
-	 * undo
-	 * @description reverse the last addition to the playlist.
+	 * reverse the last addition to the playlist.
 	 */
 	ModelPlaylist.prototype.undo = function(n) {
 	
@@ -143,8 +141,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 	
 	/**
-	 * redo
-	 * @description redo an undone change to the playlist.
+	 *  redo an undone change to the playlist.
 	 */
 	ModelPlaylist.prototype.redo = function(n) {
 	
@@ -168,11 +165,14 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		
 		this.ui.list.removeChildren()
 	
+		this.ui.selectedPlaylistItems = []
+	
+		this.index = 0
+	
 	}
 
 	/**
-	 * setIndex
-	 * @description sets the playlist index.
+	 * sets the playlist index.
 	 */
 	ModelPlaylist.prototype.setIndex = function(n, node) {
 	
@@ -187,8 +187,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 	
 	/**
-	 * getItem
-	 * @description returns the current playlist object or the object at index n.
+	 * return the current playlist object or the object at index n.
 	 * @param n - index for the object. (optional, defaults to the current index.)
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
@@ -198,8 +197,25 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	}
 
 	/**
-	 * getItems
-	 * @description fetches the items for the corresponding type and id.
+	 * return the index playlist index of the given track id.
+	 * @param trackid {string} MD5 hash to identify the track.
+	 */
+	ModelPlaylist.prototype.indexOfTrackId = function(trackid) {
+	
+		var tracks = this.model.value()
+	
+		for ( var i = 0; i < tracks.length; i++ ) {
+		
+			if ( tracks[i].trackid == trackid ) return i
+		
+		}
+	
+		return -1
+	
+	}
+
+	/**
+	 * fetche the items for the corresponding type and id.
 	 * @param type (string) - The type of items to get.
 	 * @param id (string) - The unique identifier for the type.
 	 */

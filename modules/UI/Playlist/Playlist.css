@@ -68,9 +68,9 @@
 }
 
 
-#UIPlaylist > .listContainer  li.selected{background: #f9a}
+#UIPlaylist > .listContainer  li.selected{background: #c2deff}
 
-#UIPlaylist > .listContainer  li.playing{background: red}
+#UIPlaylist > .listContainer  li.playing{background: #f9a}
 
 /* @end */
 

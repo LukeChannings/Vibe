@@ -5,74 +5,95 @@
 define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager2'],function(require, EventEmitter, util){
 
 	// SM2 setup.
-	soundManager.url = 'modules/dependencies/';
-	soundManager.debugMode = false;
-	soundManager.allowScriptAccess = 'always';
-	soundManager.preferFlash = true;
+	soundManager.url = 'modules/dependencies/'
+	soundManager.debugMode = false
+	soundManager.allowScriptAccess = 'always'
+	soundManager.preferFlash = true
 	
 	// control variables.
 	var currentSound = null,
 		bufferedSound = null,
 		hasLoaded = false,
-		identifiers = [];
+		identifiers = []
 	
 	soundManager.onready = function() {
 		
-		hasLoaded = true;
+		hasLoaded = true
 		
 	}
 	
 	// constructor.
 	var Player = function(options) {
 	
-		var options = options || {};
+		var options = options || {}
 	
-		if ( ! options.withSettings ) throw util.error('Missing settings instance.');
-		else this.settings = options.withSettings;
+		if ( ! options.withSettings ) throw util.error('Missing settings instance.')
+		else this.settings = options.withSettings
 		
-		if ( ! options.withModelPlaylist ) throw util.error('Missing model playlist instance.');
-		else this.modelPlaylist = options.withModelPlaylist;
+		if ( ! options.withModelPlaylist ) throw util.error('Missing model playlist instance.')
+		else this.modelPlaylist = options.withModelPlaylist
 		
 		// properties.
-		this.isMuted = false;
-		this.isPlaying = false;
-		this.isPaused = false;
-		this.position = 0;
-		this.duration = 0;
-		this.volume = 70;
-		this.isBuffering = false;
-		this.hasLoaded = hasLoaded;
+		this.isMuted = false
+		this.isPlaying = false
+		this.isPaused = false
+		this.position = 0
+		this.duration = 0
+		this.volume = 70
+		this.isBuffering = false
+		this.hasLoaded = hasLoaded
 		
-		if ( hasLoaded ) {
-			self.emit('loaded');
-		}
+		if ( hasLoaded )  self.emit('loaded')
 		
 	}
 	
 	// add events to Player.
-	EventEmitter.augment(Player.prototype);
+	EventEmitter.augment(Player.prototype)
 	
 	/**
-	 * playNext
-	 * @description plays the next track in the playlist if one exists.
+	 * plays the next track in the playlist if one exists.
 	 */
-	var playNext = function() {
+	Player.prototype.playNext = function() {
 	
-		var self = this;
+		var nextItem = this.modelPlaylist.model.value()[this.modelPlaylist.index + 1]
+	
+		// check that there is a playlist item after the current item.
+		if ( nextItem ) {
 		
-		this.modelPlaylist.index++;
+			// increment the playlist index.
+			this.modelPlaylist.index++
 		
-		var id = this.modelPlaylist.getItem().trackid;
-	
-		console.log(id);
-	
-		self.addSound(this.getStreamUrl(id), id, true);
+			this.addSound(nextItem.trackid, true)
+		
+			this.modelPlaylist.ui.playingNode.removeClass('playing')
+		
+			this.modelPlaylist.ui.playingNode = this.modelPlaylist.ui.playingNode.nextSibling
+		
+			this.modelPlaylist.ui.playingNode.addClass('playing')
+		
+			this.isPlaying = true
+		
+		}
+		
+		else {
+		
+			this.modelPlaylist.ui.playingNode.removeClass('playing')
+			
+			this.modelPlaylist.ui.playingNode = null
+		
+			if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct()
+		
+			this.isPlaying = false
+		
+		}
 	
 	}
 	
 	Player.prototype.addSound = function(id, autoplay) {
 	
-		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct(); 
+		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct() 
+	
+		var self = this
 	
 		currentSound = soundManager.createSound({
 			'id' : id,
@@ -80,16 +101,47 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 			'autoPlay' : autoplay || false,
 			'autoLoad' : true,
 			'stream' : true,
-			'onfinish' : playNext
-		});
+			'onpause' : function() {
+			
+				self.isPaused = true
+				
+				self.isPlaying = false
+			
+			},
+			'onplay' : function() {
+			
+				self.isPaused = false
+				
+				self.isPlaying = true
+			
+			},
+			'onstop' : function() {
+			
+				self.isPlaying = false
+				sel.isPaused = false
+			
+			},
+			'onfinish' : function() {
+				
+				self.playNext.call(self)
+				
+			},
+			'whileloading' : function() {
+			
+				console.log((this.bytesLoaded / this.bytesTotal) * 100)
+								
+			}
+		})
 	
-		return currentSound;
+		this.isPlaying = true
+	
+		return currentSound
 	
 	}
 	
 	Player.prototype.getCurrentSound = function() {
 	
-		return currentSound;
+		return currentSound
 	
 	}
 	
@@ -98,17 +150,14 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 * @description plays the current track.
 	 */
 	Player.prototype.play = function() {
-	
-		this.isPlaying = true;
-		this.isPaused = false;
-	
-		if ( currentSound instanceof Object ) currentSound.play();
+
+		if ( currentSound instanceof Object ) currentSound.play()
 		else {
 		
 			// get the current id.
-			var id = this.modelPlaylist.getItem().trackid;
+			var id = this.modelPlaylist.getItem().trackid
 		
-			this.addSound(this.getStreamUrl(id), id, true);
+			this.addSound(this.getStreamUrl(id), id, true)
 		
 		}
 	
@@ -119,13 +168,8 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 * @description pauses the current track.
 	 */
 	Player.prototype.pause = function() {
-	
-		this.isPlaying = false;
-		this.isPaused = true;
-	
-		console.log(currentSound);
-	
-		currentSound.pause();
+
+		currentSound.pause()
 	
 	}
 	
@@ -134,11 +178,8 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 * @description stops the current track. difference from pause is that stop resets position to zero.
 	 */
 	Player.prototype.stop = function() {
-	
-		this.isPlaying = false;
-		this.isPaused = false;
-	
-		currentSound.stop();
+
+		currentSound.stop()
 	
 	}
 	
@@ -148,9 +189,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	Player.prototype.mute = function() {
 	
-		this.isMuted = true;
+		this.isMuted = true
 	
-		currentSound.mute();
+		currentSound.mute()
 	
 	}
 	
@@ -160,9 +201,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	Player.prototype.unMute = function() {
 	
-		this.isMuted = false;
+		this.isMuted = false
 	
-		currentSound.unmute();
+		currentSound.unmute()
 	
 	}
 	
@@ -173,18 +214,20 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	Player.prototype.setVolume = function(n) {
 	
-		this.volume = n;
+		this.volume = n
+	
+		currentSound.setVolume(n)
 	
 	}
 	
 	Player.prototype.getStreamUrl = function(id) {
 	
-		var settings = this.settings;
+		var settings = this.settings
 	
-		return 'http://' + settings.get('host') + ':' + settings.get('port') + '/stream/' + id;
+		return 'http://' + settings.get('host') + ':' + settings.get('port') + '/stream/' + id
 	
 	}
 	
-	return Player;
+	return Player
 
-});
+})

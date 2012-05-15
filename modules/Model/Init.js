@@ -52,22 +52,20 @@ define(['util'],function(util){
 			// keep the model sane.
 			modelPlaylist.model.prune()
 			
-			playlist.on('playItem',function(id, index, node) {
+			playlist.on('playItem', function(id, node) {
 				
-				modelPlaylist.setIndex(index, node)
+				var currentSound = player.getCurrentSound()
+				
+				if ( currentSound && currentSound.sID == id ) return
+				
+				node.removeClass('selected')
+				
+				modelPlaylist.setIndex(modelPlaylist.indexOfTrackId(id), node)
 				
 				player.addSound(id, true)
 			
 			})
-			
-			playlist.on('itemSelected',function(item) {
-			
-				console.log(item.id)
-			
-				console.log(modelPlaylist.model.getStore())
-			
-			})
-			
+
 			var collection = self.collection = new UICollection({
 				withApi : self.api,
 				appendTo : self.rootNode,

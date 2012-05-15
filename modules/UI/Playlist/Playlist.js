@@ -58,8 +58,10 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			'customClass' : 'listContainer',
 			'appendTo' : node
 		})
-			
+		
 		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
+		
+		var selectedPlaylistItems = this.selectedPlaylistItems = []
 		
 		// check if we're using the info bar.
 		if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
@@ -94,15 +96,11 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 		
 			if ( UIPlaylistRow.isValidDefinition(item) ) {
 			
-				var playlistRow = new UIPlaylistRow(item, 'bob').withColumns(self.useColumns)
+				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
 				
-				playlistRow.on('itemSelected', function(item) {
-					
-					console.log('My oh my.')
-					
-					self.emit('itemSelected', item)
-					
-				})
+				playlistRow.on('itemSelected', function() { self.itemSelected.apply(self, arguments) })
+				
+				playlistRow.on('playItem', function() { self.playItem.apply(self, arguments) })
 				
 				self.list.appendChild(playlistRow.row)
 				
@@ -113,6 +111,42 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				console.log(item)
 			}
 		})
+	
+	}
+	
+	UIPlaylist.prototype.itemSelected = function(e, item, isSelected) {
+		
+		if ( ! isSelected && e.ctrlKey || e.metaKey ) {
+			
+			item.row.addClass('selected')
+		
+			this.selectedPlaylistItems.push(item)
+		
+		}
+		
+		else {
+		
+			this.selectedPlaylistItems.forEach(function(node, index) {
+			
+				node.row.removeClass('selected')
+			
+			})
+			
+			this.selectedPlaylistItems = []
+			
+			item.row.addClass('selected')
+		
+			this.selectedPlaylistItems.push(item)
+		
+		}
+		
+		this.emit('itemSelected', e, item, isSelected)
+		
+	}
+	
+	UIPlaylist.prototype.playItem = function(e, item) {
+	
+		this.emit('playItem', item.id, item.row)
 	
 	}
 	
