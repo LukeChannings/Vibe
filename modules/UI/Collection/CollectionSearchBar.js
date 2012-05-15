@@ -24,10 +24,18 @@ define(['util', 'UI/Widget/TextInput/TextInput', 'dependencies/EventEmitter'], f
 		})
 		
 		// listen for key input.
-		input.on('input', self.input.bind(this))
+		input.on('input', function() {
+		
+			self.input.call(this)
+		
+		})
 		
 		// listen for the input to be cleared.
-		input.on('clear', self.clear.bind(this))
+		input.on('clear', function() {
+		
+			self.clear.call(this)
+		
+		})
 		
 	}
 	
