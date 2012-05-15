@@ -100,7 +100,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 		
 		// update the info bar.
 		this.ui.infoBar.update(info)
-	
+
 	}
 	
 	/**
@@ -163,7 +163,7 @@ define(['util','Model/UndoManager'],function(util,UndoManager){
 	ModelPlaylist.prototype.clear = function() {
 	
 		this.model.clear()
-		
+	
 		this.updateInfo()
 		
 		this.ui.list.removeChildren()
