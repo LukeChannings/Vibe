@@ -237,8 +237,6 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 	
 		var self = this,
 		settings = this.settings
-	
-		console.log(self)
 
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
