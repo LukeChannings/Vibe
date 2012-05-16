@@ -65,7 +65,7 @@
 					message += "<p>If the address is incorrect, please change it in the form below. Otherwise, press 'Go'.</p>"
 				
 					// create an error dialogue.
-					uiSettings.firstrun.call(self,function() {
+					uiSettings.firstrun(function() {
 					
 						api.connect()
 					
