@@ -236,8 +236,10 @@ define(['util','UI/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 	Settings.prototype.firstrun = function(callback, title, body) {
 	
 		var self = this,
-			settings = this.settings
+		settings = this.settings
 	
+		console.log(self)
+
 		var MDD = {
 			'title' : title || "Welcome to Vibe!",
 			'body' : body || "<p>Before you can use Vibe, the address of your Vibe Server must be specified.</p><p>You can find the address of your Vibe Server by looking in its main window, where the address will be specified in the format of: hostname:portnumber.</p>",
