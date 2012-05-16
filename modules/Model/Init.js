@@ -11,7 +11,12 @@ define(['util'],function(util){
 		var self = this
 	
 		// get the UI modules.
-		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player'], function(UICollection, UIPlaylist, ModelPlaylist, Player) {
+		require(['UI/Collection/Collection','UI/Playlist/Playlist','Model/Playlist','Model/Player', 'UI/Player/Player'], function(UICollection, UIPlaylist, ModelPlaylist, Player, UIPlayer) {
+		
+			var player = self.player = new UIPlayer({
+				'appendTo' : self.rootNode,
+				'withControls' : []
+			})
 		
 			var playlist = self.playlist = new UIPlaylist({
 				appendTo : self.rootNode,
@@ -47,14 +52,14 @@ define(['util'],function(util){
 			
 			var modelPlaylist = self.modelPlaylist = new ModelPlaylist({ withUI : playlist, withApi : self.api })
 			
-			var player = self.player = new Player({ 'withSettings' : self.settings, 'withModelPlaylist' : modelPlaylist })
+			var modelPlayer = self.modelPlayer = new Player({ 'withSettings' : self.settings, 'withModelPlaylist' : modelPlaylist })
 			
 			// keep the model sane.
 			modelPlaylist.model.prune()
 			
 			playlist.on('playItem', function(id, node) {
 				
-				var currentSound = player.getCurrentSound()
+				var currentSound = modelPlayer.getCurrentSound()
 				
 				if ( currentSound && currentSound.sID == id ) return
 				
@@ -62,7 +67,7 @@ define(['util'],function(util){
 				
 				modelPlaylist.setIndex(modelPlaylist.indexOfTrackId(id), node)
 				
-				player.addSound(id, true)
+				modelPlayer.addSound(id, true)
 			
 			})
 

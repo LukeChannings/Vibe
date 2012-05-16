@@ -70,7 +70,7 @@
 
 #UIPlaylist > .listContainer  li.selected{background: #c2deff}
 
-#UIPlaylist > .listContainer  li.playing{background: #f9a}
+#UIPlaylist > .listContainer  li.playing{background: #4277E8; color: #fff}
 
 /* @end */
 

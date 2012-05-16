@@ -12,13 +12,14 @@ body.loading{
 	background: #f9f9f9 url('modules/UI/Collection/CollectionLoadingThrobber.gif') no-repeat center center;
 }
 
+body.loading #Vibe > *{display: none}
+
 #Vibe{
-	background: url('images/logo.png') no-repeat center 15px;
+	background: url('images/logo.png') no-repeat center 0px;
 	background-size: auto 50px;
 	width: 95%;
 	min-width: 900px;
 	margin: auto;
-	padding-top: 100px;
 	/* keep the app layer above the overlay by default. */
 	position: relative;
 	z-index: 1;
