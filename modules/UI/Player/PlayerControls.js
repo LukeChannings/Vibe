@@ -1,4 +1,4 @@
-define(['util','UI/Widget/ButtonBar'], function(util, UIButtonBarWidget) {
+define(['util','UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidget) {
 
 	var UIPlayerControls = function(options) {
 	
