@@ -1,5 +1,37 @@
 #UIPlayer{
 	width: 100%;
-	height: 50px;
-	margin: 15px 0;
+	height: 80px;
+	position: relative;
+}
+
+#UIPlayer #UIPlayerControls{
+	width: 22%;
+	height: 100%;
+	background: green;
+	float: left;
+}
+
+#UIPlayer #UIPlayerSlider{
+	background: red;
+	width: 60%;
+	height: 30px;
+	float: left;
+	margin-top: 50px;
+}
+
+#UIPlayer #UIPlayerSlider span.time{float: left}
+
+#UIPlayer #UIPlayerSlider span.duration{float: right}
+
+#UIPlayer #UIPlayerSlider .dragdealer{
+	width: 80%;
+	height: 100%;
+	float: left;
+	
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .handle{
+	height: 100%;
+	width: 15px;
+	background: #900;
 }

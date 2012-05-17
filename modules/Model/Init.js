@@ -15,7 +15,20 @@ define(['util'],function(util){
 		
 			var player = self.player = new UIPlayer({
 				'appendTo' : self.rootNode,
-				'withControls' : []
+				'withControls' : [],
+				'withSlider' : true
+			})
+		
+			player.on('pause', function() {
+			
+				modelPlayer.pause()
+			
+			})
+			
+			player.on('play', function() {
+			
+				modelPlayer.play()
+			
 			})
 		
 			var playlist = self.playlist = new UIPlaylist({

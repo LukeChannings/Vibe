@@ -1,4 +1,4 @@
-define(['util','require'],function(util, require){
+define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls', 'UI/Player/PlayerSlider'], function(util, require, EventEmitter, UIPlayerControls, UIPlayerSlider){
 
 	util.registerStylesheet(require.toUrl('./Player.css'))
 
@@ -8,26 +8,51 @@ define(['util','require'],function(util, require){
 	 */
 	function UIPlayer(options) {
 	
-		var options = typeof options == 'object' ? options : {}
+		var options = typeof options == 'object' ? options : {},
+		
+			controls = this.controls = null,
+			
+			self = this,
+			
+			slider = this.slider = null,
 	
-		var node = this.node = util.createElement({
-			'tag' : 'div',
-			'id' : 'UIPlayer',
-			'appendTo' : options.appendTo
-		})
+			node = this.node = util.createElement({
+				'tag' : 'div',
+				'id' : 'UIPlayer',
+				'appendTo' : options.appendTo
+			})
 	
 		if ( options.withControls instanceof Array ) {
 		
-			require(['UI/Player/PlayerControls'], function(UIPlayerControls) {
+			controls = new UIPlayerControls({
+				'appendTo' : node
+			})
+		
+			controls.on('play', function() {
 			
-				var controls = this.controls = new UIPlayerControls({'appendTo' : node})
+				self.emit('play')
 			
+			})
+		
+			controls.on('pause', function() {
+			
+				self.emit('pause')
+			
+			})
+		
+		}
+		
+		if ( options.withSlider ) {
+		
+			slider = new UIPlayerSlider({
+				'appendTo' : node
 			})
 		
 		}
 	
 	}
-	
+
+	EventEmitter.augment(UIPlayer.prototype)	
 	
 	return UIPlayer;
 

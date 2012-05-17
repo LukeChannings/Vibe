@@ -3,82 +3,29 @@
 	<head>
 		<title>HTMLRange</title>
 		<meta charset="utf-8" />
-		<style>
-#slider{
-	width: 130px;
-	height: 15px;
-	-webkit-appearance: slider-horizontal;
-	padding: initial;
-	border: initial;
-	margin: 2px;
-}
-
-#slider > .container{
-	-webkit-box-align: center;
-	-webkit-box-orient: horizontal;
-	box-sizing: border-box;
-	display: -webkit-box;
-	height: 100%;
-	width: 100%;
-}
-
-#slider > .container > div{
-	-webkit-appearance: sliderthumb-horizontal;
-	box-sizing: border-box;
-	display: block;
-	position: relative;
-}
-
-		</style>
 		<script src="../modules/dependencies/require.js" type="text/javascript"></script>
 		<script type="text/javascript">
 require.config({
 	'baseUrl' : '../modules'
 })
 
-require(['dependencies/domReady','util'], function(domReady, util) {
+require(['dependencies/domReady','util', 'UI/Widget/DragDealer/DragDealer'], function(domReady, util, UIDragDealerWidget) {
 
 	domReady(function() {
 	
 		var slider = util.createElement({
 			'tag' : 'div',
-			'id' : 'slider',
+			'customClass' : 'dragdealer',
+			'children' : [{
+				'tag' : 'div',
+				'customClass' : 'handle red-bar'
+			}],
 			'appendTo' : document.body
 		})
 	
-		var track = util.createElement({
-			'tag' : 'div',
-			'customClass' : 'container',
-			'appendTo' : slider
-		})
-	
-		var thumb = util.createElement({
-			'tag' : 'div',
-			'appendTo' : track
-		})
-		
-		var move = function(e) {
-		
-			console.log(e.x)
-		
-			console.log('moving...')
-		
-		}
-		
-		util.addListener(thumb, 'mousedown', function() {
-		
-			util.addListener(thumb, 'mousemove', move)
-			
-			console.log('down...')
-		
-		})
-		
-		util.addListener(thumb, 'mouseup', function() {
-		
-			util.removeListener(thumb, 'mousemove', move)
-		
-			console.log('up...')
-		
+		window.slider = new UIDragDealerWidget(slider,{
+			'speed' : 100,
+			'slide' : false
 		})
 	
 	})
@@ -86,5 +33,6 @@ require(['dependencies/domReady','util'], function(domReady, util) {
 })
 		</script>
 	</head>
-	<body></body>
+	<body>
+	</body>
 </html>
