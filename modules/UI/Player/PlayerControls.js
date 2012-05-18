@@ -14,7 +14,8 @@ define(['util','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], fun
 		var buttons = this.buttons = new UIButtonBarWidget({
 			'appendTo' : node,
 			'buttons' : [{
-				'title' : "Play",
+				'isIcon' : true,
+				'customClass' : 'play_pause',
 				'callback' : function(button) {
 				
 					self.emit('playtoggle', button)

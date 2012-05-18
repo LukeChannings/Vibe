@@ -34,6 +34,16 @@ define(['util'],function(util){
 				}
 			
 			})
+			
+			player.on('seek', function(position) {
+			
+				console.log(modelPlayer.duration)
+			
+				console.log(position)
+			
+				//modelPlayer.seek(position * modelPlayer.duration)
+			
+			})
 		
 			var playlist = self.playlist = new UIPlaylist({
 				appendTo : self.rootNode,
@@ -77,6 +87,20 @@ define(['util'],function(util){
 			modelPlayer.on('playstatechanged', function(state) {
 			
 				player.emit('playstatechanged', state)
+			
+			})
+			
+			modelPlayer.on('loading', function(progress) {
+			
+				player.emit('bufferupdate', progress)
+			
+			})
+			
+			modelPlayer.on('progress', function(progress, duration) {
+			
+				var position = progress / duration
+				
+				player.emit('trackupdate', position)
 			
 			})
 			

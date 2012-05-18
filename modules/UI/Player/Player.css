@@ -2,6 +2,38 @@
 	width: 100%;
 	height: 80px;
 	position: relative;
+	margin-bottom: 10px;
+}
+
+#UIPlayer #UIPlayerSlider{
+	width: 60%;
+	height: 15px;
+	float: left;
+	margin-top: 60px;
+	border: 1px solid #ddd;
+}
+
+#UIPlayer #UIPlayerSlider span.time{float: left}
+
+#UIPlayer #UIPlayerSlider span.duration{float: right}
+
+#UIPlayer #UIPlayerSlider .dragdealer{
+	width: 100%;
+	height: 100%;
+	float: left;
+	
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .handle{
+	height: 100%;
+	width: 5px;
+	background: #900;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .buffer{
+	height: 100%;
+	width: 0%;
+	background: #f9f9f9;
 }
 
 #UIPlayer #UIPlayerControls{
@@ -10,26 +42,14 @@
 	float: left;
 }
 
-#UIPlayer #UIPlayerSlider{
-	width: 60%;
-	height: 30px;
-	float: left;
-	margin-top: 50px;
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon{
+	height: 48px;
+	width: 48px;
+	background: url('./PlayerButtons.png') no-repeat;
 }
 
-#UIPlayer #UIPlayerSlider span.time{float: left}
-
-#UIPlayer #UIPlayerSlider span.duration{float: right}
-
-#UIPlayer #UIPlayerSlider .dragdealer{
-	width: 80%;
-	height: 100%;
-	float: left;
-	
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer .handle{
-	height: 100%;
-	width: 15px;
-	background: #900;
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-position: -192px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -240px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{
+	background-position: -288px 0
 }

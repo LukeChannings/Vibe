@@ -9,13 +9,9 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 	function UIPlayer(options) {
 	
 		var options = typeof options == 'object' ? options : {},
-		
-			controls = this.controls = null,
-			
+
 			self = this,
-			
-			slider = this.slider = null,
-	
+
 			node = this.node = util.createElement({
 				'tag' : 'div',
 				'id' : 'UIPlayer',
@@ -24,7 +20,7 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 	
 		if ( options.withControls instanceof Array ) {
 		
-			controls = new UIPlayerControls({
+			var controls = this.controls = new UIPlayerControls({
 				'appendTo' : node
 			})
 		
@@ -38,9 +34,19 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 		
 		if ( options.withSlider ) {
 		
-			slider = new UIPlayerSlider({
-				'appendTo' : node
-			})
+			setTimeout(function() {
+			
+				var slider = self.slider = new UIPlayerSlider({
+					'appendTo' : node
+				})
+			
+				slider.on('seek', function(position) {
+				
+					self.emit('seek', position)
+				
+				})
+			
+			}, 10)
 		
 		}
 	
@@ -48,15 +54,31 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 		
 			if ( state == 'play' ) {
 			
-				controls.buttons.buttons.Play.node.innerHTML = 'Pause'
+				controls.buttons.buttons.play_pause.node.addClass('pause')
 			
 			}
 			
 			else if ( state == 'pause' ) {
 			
-				controls.buttons.buttons.Play.node.innerHTML = 'Play'
+				controls.buttons.buttons.play_pause.node.removeClass('pause')
 			
 			}
+		
+		})
+		
+		this.on('bufferupdate', function(progress) {
+		
+			self.slider.update({
+				'bufferPosition' : progress
+			})
+		
+		})
+		
+		this.on('trackupdate', function(progress) {
+		
+			self.slider.update({
+				'trackPosition' : progress
+			})
 		
 		})
 	

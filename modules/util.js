@@ -154,7 +154,7 @@ define(function(){
 	{
 		Element.prototype.removeClass = function(className){
 		
-			this.className = this.className.replace(new RegExp(' ?' + className + ' ?'),'');
+			this.className = this.className.replace(new RegExp('( |^)' + className + '( |$)'),'');
 		
 			if ( this.className.length == 0 )
 			{

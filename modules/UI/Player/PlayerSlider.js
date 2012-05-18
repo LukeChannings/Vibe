@@ -5,7 +5,6 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 		var options = typeof options == 'object' ? options : {},
 			self = this,
 			node = this.node,
-			slider = this.slider,
 			trackTime = this.trackTime,
 			trackDuration = this.trackDuration
 
@@ -16,7 +15,7 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				'appendTo' : options.appendTo || document.body
 			})
 			
-			slider = util.createElement({
+			var slider = util.createElement({
 				'tag' : 'div',
 				'customClass' : 'dragdealer',
 				'appendTo' : node,
@@ -26,9 +25,20 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				}]
 			})
 			
+			var buffer = this.buffer = util.createElement({
+				'tag' : 'div',
+				'customClass' : 'buffer',
+				'appendTo' : slider
+			})
+			
 			window.slider = new DragDealer(slider, {
 				'slide' : false,
-				'speed' : 100
+				'speed' : 100,
+				'callback' : function(x, y, X, Y) {
+				
+					self.emit('seek', X)
+				
+				}
 			})
 
 	}
@@ -39,13 +49,13 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 		
 			if ( update.trackPosition ) {
 			
-				// update position.
+				window.slider.setValue(update.trackPosition)
 			
 			}
 		
 			if ( update.bufferPosition ) {
 			
-				// update the time.
+				this.buffer.style.width = update.bufferPosition + '%'
 			
 			}
 			

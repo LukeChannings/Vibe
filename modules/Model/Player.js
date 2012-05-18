@@ -146,18 +146,34 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 			'whileloading' : function() {
 			
 				self.emit('loading', (this.bytesLoaded / this.bytesTotal) * 100)
-					
+
 			},
 			'whileplaying' : function() {
 			
-				// something.
-			
+				self.emit('progress', this.position, self.duration)
+						
 			}
 		})
+	
+		this.duration = Math.floor(self.modelPlaylist.getItem().tracklength * 1000)
 	
 		this.isPlaying = true
 	
 		return currentSound
+	
+	}
+	
+	/**
+	 * seek to track position.
+	 * @param position {number} position in the track in milliseconds.
+	 */
+	Player.prototype.seek = function(position) {
+	
+		if ( position < this.duration && position > 0 ) {
+		
+			currentSound.setPosition(position)
+		
+		}
 	
 	}
 	

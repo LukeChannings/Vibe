@@ -45,7 +45,7 @@ define(['require','util'],function(require, util){
 				
 					if ( button.isIcon ) item.addClass('icon')
 				
-					buttons[button.text || button.title] = {
+					buttons[button.title || button.customClass] = {
 						'node' : item,
 						'item' : li
 					}
