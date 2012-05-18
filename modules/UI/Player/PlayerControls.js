@@ -11,21 +11,14 @@ define(['util','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], fun
 			'appendTo' : options.appendTo
 		})
 
-		new UIButtonBarWidget({
+		var buttons = this.buttons = new UIButtonBarWidget({
 			'appendTo' : node,
 			'buttons' : [{
 				'title' : "Play",
-				'callback' : function() {
+				'callback' : function(button) {
 				
-					self.emit('play')
+					self.emit('playtoggle', button)
 				
-				}
-			},{
-				'title' : "Pause",
-				'callback' : function() {
-					
-					self.emit('pause')
-					
 				}
 			}]
 		})

@@ -107,6 +107,17 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 				
 				self.isPlaying = false
 			
+				self.emit('playstatechanged','pause')
+			
+			},
+			'onresume' : function() {
+			
+				self.isPaused = false
+				
+				self.isPlaying = true
+				
+				self.emit('playstatechanged','play')
+			
 			},
 			'onplay' : function() {
 			
@@ -114,22 +125,33 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 				
 				self.isPlaying = true
 			
+				self.emit('playstatechanged','play')
+			
 			},
 			'onstop' : function() {
 			
 				self.isPlaying = false
 				sel.isPaused = false
 			
+				self.emit('playstatechanged','stop')
+			
 			},
 			'onfinish' : function() {
 				
 				self.playNext.call(self)
 				
+				self.emit('playstatechanged','end')
+				
 			},
 			'whileloading' : function() {
 			
-				console.log((this.bytesLoaded / this.bytesTotal) * 100)
-								
+				self.emit('loading', (this.bytesLoaded / this.bytesTotal) * 100)
+					
+			},
+			'whileplaying' : function() {
+			
+				// something.
+			
 			}
 		})
 	
@@ -152,6 +174,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	Player.prototype.play = function() {
 
 		if ( currentSound instanceof Object ) currentSound.play()
+
 		else {
 		
 			// get the current id.

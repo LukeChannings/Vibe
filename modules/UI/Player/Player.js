@@ -28,15 +28,9 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 				'appendTo' : node
 			})
 		
-			controls.on('play', function() {
+			controls.on('playtoggle', function(button) {
 			
-				self.emit('play')
-			
-			})
-		
-			controls.on('pause', function() {
-			
-				self.emit('pause')
+				self.emit('playtoggle', button)
 			
 			})
 		
@@ -49,6 +43,22 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			})
 		
 		}
+	
+		this.on('playstatechanged', function(state) {
+		
+			if ( state == 'play' ) {
+			
+				controls.buttons.buttons.Play.node.innerHTML = 'Pause'
+			
+			}
+			
+			else if ( state == 'pause' ) {
+			
+				controls.buttons.buttons.Play.node.innerHTML = 'Play'
+			
+			}
+		
+		})
 	
 	}
 

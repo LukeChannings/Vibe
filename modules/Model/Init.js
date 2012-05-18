@@ -19,15 +19,19 @@ define(['util'],function(util){
 				'withSlider' : true
 			})
 		
-			player.on('pause', function() {
+			player.on('playtoggle', function(button) {
 			
-				modelPlayer.pause()
+				if ( modelPlayer.isPlaying ) {
+				
+					modelPlayer.pause()
+				
+				}
 			
-			})
-			
-			player.on('play', function() {
-			
-				modelPlayer.play()
+				else if ( modelPlayer.isPaused ) {
+				
+					modelPlayer.play()
+				
+				}
 			
 			})
 		
@@ -69,6 +73,12 @@ define(['util'],function(util){
 			
 			// keep the model sane.
 			modelPlaylist.model.prune()
+			
+			modelPlayer.on('playstatechanged', function(state) {
+			
+				player.emit('playstatechanged', state)
+			
+			})
 			
 			playlist.on('playItem', function(id, node) {
 				
