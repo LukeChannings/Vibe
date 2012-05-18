@@ -26,7 +26,10 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				}]
 			})
 			
-			window.slider = new DragDealer(slider)
+			window.slider = new DragDealer(slider, {
+				'slide' : false,
+				'speed' : 100
+			})
 
 	}
 	
