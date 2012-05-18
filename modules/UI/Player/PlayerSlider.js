@@ -34,9 +34,9 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 			window.slider = new DragDealer(slider, {
 				'slide' : false,
 				'speed' : 100,
-				'callback' : function(x, y, X, Y) {
+				'callback' : function(x, y) {
 				
-					self.emit('seek', X)
+					self.emit('seek', x)
 				
 				}
 			})

@@ -18,11 +18,16 @@ define(['require','util'],function(require, util) {
 		x: 0, y: 0,
 		init: function()
 		{
+			
+			
 			this.setEvent('mouse');
 			this.setEvent('touch');
 		},
 		setEvent: function(type)
 		{
+		
+			
+		
 			var moveHandler = document['on' + type + 'move'] || function(){};
 			document['on' + type + 'move'] = function(e)
 			{
@@ -32,6 +37,7 @@ define(['require','util'],function(require, util) {
 		},
 		refresh: function(e)
 		{
+		
 			if(!e)
 			{
 				e = window.event;
@@ -47,6 +53,7 @@ define(['require','util'],function(require, util) {
 		},
 		set: function(e)
 		{
+		
 			if(e.pageX || e.pageY)
 			{
 				this.x = e.pageX;
@@ -67,6 +74,9 @@ define(['require','util'],function(require, util) {
 	var Position = {
 		get: function(obj)
 		{
+		
+			
+		
 			var curleft = curtop = 0;
 			if(obj.offsetParent)
 			{
@@ -84,6 +94,9 @@ define(['require','util'],function(require, util) {
 	/* Dragdealer */
 	
 	var Dragdealer = function(wrapper, options) {
+	
+		
+	
 		if(typeof(wrapper) == 'string')
 		{
 			wrapper = document.getElementById(wrapper);
@@ -104,6 +117,9 @@ define(['require','util'],function(require, util) {
 	Dragdealer.prototype = {
 		init: function(wrapper, handle, options)
 		{
+			
+			
+		
 			this.wrapper = wrapper;
 			this.handle = handle;
 			this.options = options;
@@ -118,6 +134,7 @@ define(['require','util'],function(require, util) {
 			this.speed = this.getOption('speed', 10) / 100;
 			this.xPrecision = this.getOption('xPrecision', 0);
 			this.yPrecision = this.getOption('yPrecision', 0);
+			this.locked = false; // lock for preventing issue with highly frequent setValue use and tapping.
 			
 			this.callback = options.callback || null;
 			this.animationCallback = options.animationCallback || null;
@@ -131,7 +148,8 @@ define(['require','util'],function(require, util) {
 			this.value = {
 				prev: [-1, -1],
 				current: [options.x || 0, options.y || 0],
-				target: [options.x || 0, options.y || 0]
+				target: [options.x || 0, options.y || 0],
+				tap : [options.x || 0, options.y || 0]
 			};
 			this.offset = {
 				wrapper: [0, 0],
@@ -148,10 +166,14 @@ define(['require','util'],function(require, util) {
 		},
 		getOption: function(name, defaultValue)
 		{
+		
 			return this.options[name] !== undefined ? this.options[name] : defaultValue;
 		},
 		setup: function()
 		{
+		
+			
+		
 			this.setWrapperOffset();
 			this.setBoundsPadding();
 			this.setBounds();
@@ -161,10 +183,16 @@ define(['require','util'],function(require, util) {
 		},
 		setWrapperOffset: function()
 		{
+		
+			
+		
 			this.offset.wrapper = Position.get(this.wrapper);
 		},
 		setBoundsPadding: function()
 		{
+		
+			
+		
 			if(!this.bounds.left && !this.bounds.right)
 			{
 				this.bounds.left = Position.get(this.handle)[0] - this.offset.wrapper[0];
@@ -178,6 +206,9 @@ define(['require','util'],function(require, util) {
 		},
 		setBounds: function()
 		{
+		
+			
+		
 			this.bounds.x0 = this.bounds.left;
 			this.bounds.x1 = this.wrapper.offsetWidth + this.bounds.right;
 			this.bounds.xRange = (this.bounds.x1 - this.bounds.x0) - this.handle.offsetWidth;
@@ -191,6 +222,9 @@ define(['require','util'],function(require, util) {
 		},
 		setSteps: function()
 		{
+			
+			
+		
 			if(this.steps > 1)
 			{
 				this.stepRatios = [];
@@ -202,6 +236,7 @@ define(['require','util'],function(require, util) {
 		},
 		addListeners: function()
 		{
+		
 			var self = this;
 			
 			this.wrapper.onselectstart = function()
@@ -210,36 +245,57 @@ define(['require','util'],function(require, util) {
 			}
 			this.handle.onmousedown = this.handle.ontouchstart = function(e)
 			{
+			
+				
+			
 				self.handleDownHandler(e);
 			};
 			this.wrapper.onmousedown = this.wrapper.ontouchstart = function(e)
 			{
+			
+				
+			
 				self.wrapperDownHandler(e);
 			};
 			var mouseUpHandler = document.onmouseup || function(){};
 			document.onmouseup = function(e)
 			{
+			
+				
+			
 				mouseUpHandler(e);
 				self.documentUpHandler(e);
 			};
 			var touchEndHandler = document.ontouchend || function(){};
 			document.ontouchend = function(e)
 			{
+			
+				
+				
 				touchEndHandler(e);
 				self.documentUpHandler(e);
 			};
 			var resizeHandler = window.onresize || function(){};
 			window.onresize = function(e)
 			{
+			
+				
+			
 				resizeHandler(e);
 				self.documentResizeHandler(e);
 			};
 			this.wrapper.onmousemove = function(e)
 			{
+			
+				
+			
 				self.activity = true;
 			}
 			this.wrapper.onclick = function(e)
 			{
+			
+				
+			
 				return !self.activity;
 			}
 			
@@ -248,6 +304,10 @@ define(['require','util'],function(require, util) {
 		},
 		handleDownHandler: function(e)
 		{
+		
+			// don't drag if the slider is locked.
+			if ( this.locked ) return;
+		
 			this.activity = false;
 			Cursor.refresh(e);
 			
@@ -257,6 +317,10 @@ define(['require','util'],function(require, util) {
 		},
 		wrapperDownHandler: function(e)
 		{
+		
+			// lock the slider when the wrapper is clicked.
+			this.locked = true
+		
 			Cursor.refresh(e);
 			
 			this.preventDefaults(e, true);
@@ -264,12 +328,14 @@ define(['require','util'],function(require, util) {
 		},
 		documentUpHandler: function(e)
 		{
+		
 			this.stopDrag();
 			this.stopTap();
 			//this.cancelEvent(e);
 		},
 		documentResizeHandler: function(e)
 		{
+		
 			this.setWrapperOffset();
 			this.setBounds();
 			
@@ -277,16 +343,25 @@ define(['require','util'],function(require, util) {
 		},
 		enable: function()
 		{
+		
+			
+		
 			this.disabled = false;
 			this.handle.className = this.handle.className.replace(/\s?disabled/g, '');
 		},
 		disable: function()
 		{
+		
+			
+		
 			this.disabled = true;
 			this.handle.className += ' disabled';
 		},
 		setStep: function(x, y, snap)
 		{
+		
+			
+		
 			this.setValue(
 				this.steps && x > 1 ? (x - 1) / (this.steps - 1) : 0,
 				this.steps && y > 1 ? (y - 1) / (this.steps - 1) : 0,
@@ -295,6 +370,9 @@ define(['require','util'],function(require, util) {
 		},
 		setValue: function(x, y, snap)
 		{
+			// ignore and setValue requests whilst the slider is locked.
+			if ( this.locked ) return;
+			
 			this.setTargetValue([x, y || 0]);
 			if(snap)
 			{
@@ -303,6 +381,9 @@ define(['require','util'],function(require, util) {
 		},
 		startTap: function(target)
 		{
+		
+			
+		
 			if(this.disabled)
 			{
 				return;
@@ -320,6 +401,9 @@ define(['require','util'],function(require, util) {
 		},
 		stopTap: function()
 		{
+		
+			
+		
 			if(this.disabled || !this.tapping)
 			{
 				return;
@@ -331,6 +415,9 @@ define(['require','util'],function(require, util) {
 		},
 		startDrag: function()
 		{
+		
+			
+		
 			if(this.disabled)
 			{
 				return;
@@ -344,6 +431,9 @@ define(['require','util'],function(require, util) {
 		},
 		stopDrag: function()
 		{
+		
+			
+		
 			if(this.disabled || !this.dragging)
 			{
 				return;
@@ -362,6 +452,9 @@ define(['require','util'],function(require, util) {
 		},
 		feedback: function()
 		{
+		
+			
+		
 			var value = this.value.current;
 			if(this.snap && this.steps > 1)
 			{
@@ -378,13 +471,19 @@ define(['require','util'],function(require, util) {
 		},
 		result: function()
 		{
+		
 			if(typeof(this.callback) == 'function')
 			{
 				this.callback(this.value.target[0], this.value.target[1]);
+				
+				// unlock the slider after the result is sent.
+				this.locked = false
+				
 			}
 		},
 		animate: function(direct, first)
 		{
+		
 			if(direct && !this.dragging)
 			{
 				return;
@@ -416,6 +515,8 @@ define(['require','util'],function(require, util) {
 		},
 		glide: function()
 		{
+		
+		
 			var diff = [
 				this.value.target[0] - this.value.current[0],
 				this.value.target[1] - this.value.current[1]
@@ -437,6 +538,9 @@ define(['require','util'],function(require, util) {
 		},
 		update: function()
 		{
+		
+			
+		
 			if(!this.snap)
 			{
 				this.offset.current = this.getOffsetsByRatios(this.value.current);
@@ -451,6 +555,9 @@ define(['require','util'],function(require, util) {
 		},
 		show: function()
 		{
+		
+			
+		
 			if(!this.groupCompare(this.offset.current, this.offset.prev))
 			{
 				if(this.horizontal)
@@ -466,6 +573,9 @@ define(['require','util'],function(require, util) {
 		},
 		setTargetValue: function(value, loose)
 		{
+			
+			
+		
 			var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 			
 			this.groupCopy(this.value.target, target);
@@ -473,6 +583,9 @@ define(['require','util'],function(require, util) {
 		},
 		setTargetOffset: function(offset, loose)
 		{
+		
+			
+		
 			var value = this.getRatiosByOffsets(offset);
 			var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 			
@@ -481,6 +594,9 @@ define(['require','util'],function(require, util) {
 		},
 		getLooseValue: function(value)
 		{
+		
+			
+		
 			var proper = this.getProperValue(value);
 			return [
 				proper[0] + ((value[0] - proper[0]) / 4),
@@ -489,6 +605,9 @@ define(['require','util'],function(require, util) {
 		},
 		getProperValue: function(value)
 		{
+		
+			
+		
 			var proper = this.groupClone(value);
 	
 			proper[0] = Math.max(proper[0], 0);
@@ -507,6 +626,9 @@ define(['require','util'],function(require, util) {
 		},
 		getRatiosByOffsets: function(group)
 		{
+		
+			
+		
 			return [
 				this.getRatioByOffset(group[0], this.bounds.xRange, this.bounds.x0),
 				this.getRatioByOffset(group[1], this.bounds.yRange, this.bounds.y0)
@@ -514,10 +636,16 @@ define(['require','util'],function(require, util) {
 		},
 		getRatioByOffset: function(offset, range, padding)
 		{
+		
+			
+		
 			return range ? (offset - padding) / range : 0;
 		},
 		getOffsetsByRatios: function(group)
 		{
+		
+			
+		
 			return [
 				this.getOffsetByRatio(group[0], this.bounds.xRange, this.bounds.x0),
 				this.getOffsetByRatio(group[1], this.bounds.yRange, this.bounds.y0)
@@ -525,10 +653,16 @@ define(['require','util'],function(require, util) {
 		},
 		getOffsetByRatio: function(ratio, range, padding)
 		{
+			
+			
+		
 			return Math.round(ratio * range) + padding;
 		},
 		getClosestSteps: function(group)
 		{
+		
+			
+		
 			return [
 				this.getClosestStep(group[0]),
 				this.getClosestStep(group[1])
@@ -536,6 +670,9 @@ define(['require','util'],function(require, util) {
 		},
 		getClosestStep: function(value)
 		{
+		
+			
+		
 			var k = 0;
 			var min = 1;
 			for(var i = 0; i <= this.steps - 1; i++)
@@ -550,19 +687,31 @@ define(['require','util'],function(require, util) {
 		},
 		groupCompare: function(a, b)
 		{
+		
+			
+		
 			return a[0] == b[0] && a[1] == b[1];
 		},
 		groupCopy: function(a, b)
 		{
+		
+			
+		
 			a[0] = b[0];
 			a[1] = b[1];
 		},
 		groupClone: function(a)
 		{
+		
+			
+		
 			return [a[0], a[1]];
 		},
 		preventDefaults: function(e, selection)
 		{
+		
+			
+		
 			if(!e)
 			{
 				e = window.event;
@@ -580,6 +729,9 @@ define(['require','util'],function(require, util) {
 		},
 		cancelEvent: function(e)
 		{
+		
+			
+		
 			if(!e)
 			{
 				e = window.event;
