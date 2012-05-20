@@ -1,7 +1,5 @@
 define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls', 'UI/Player/PlayerSlider'], function(util, require, EventEmitter, UIPlayerControls, UIPlayerSlider){
 
-	util.registerStylesheet(require.toUrl('./Player.css'))
-
 	/**
 	 * constructs a player interface instance.
 	 * @param options {object} configure the instance.
@@ -14,71 +12,91 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 
 			node = this.node = util.createElement({
 				'tag' : 'div',
-				'id' : 'UIPlayer',
-				'appendTo' : options.appendTo
+				'id' : 'UIPlayer'
 			})
 	
-		if ( options.withControls instanceof Array ) {
+		util.registerStylesheet(require.toUrl('./Player.css'), function() {
 		
-			var controls = this.controls = new UIPlayerControls({
-				'appendTo' : node
-			})
-		
-			controls.on('playtoggle', function(button) {
+			if ( options.withControls instanceof Array ) {
 			
-				self.emit('playtoggle', button)
-			
-			})
-		
-		}
-		
-		if ( options.withSlider ) {
-		
-			setTimeout(function() {
-			
-				var slider = self.slider = new UIPlayerSlider({
+				var controls = self.controls = new UIPlayerControls({
 					'appendTo' : node
 				})
 			
-				slider.on('seek', function(position) {
+				controls.on('playtoggle', function(button) {
 				
-					self.emit('seek', position)
+					self.emit('playtoggle', button)
 				
 				})
 			
-			}, 10)
-		
-		}
-	
-		this.on('playstatechanged', function(state) {
-		
-			if ( state == 'play' ) {
-			
-				controls.buttons.buttons.play_pause.node.addClass('pause')
+				controls.on('skip', function(direction) {
+				
+					self.emit('skip', direction)
+				
+				})
 			
 			}
 			
-			else if ( state == 'pause' ) {
+			if ( options.withSlider ) {
 			
-				controls.buttons.buttons.play_pause.node.removeClass('pause')
+				setTimeout(function() {
+				
+					var playerslider = self.playerslider = new UIPlayerSlider({
+						'appendTo' : node
+					})
+				
+					playerslider.on('seek', function(position) {
+					
+						self.emit('seek', position)
+					
+					})
+				
+				}, 50)
 			
 			}
 		
-		})
-		
-		this.on('bufferupdate', function(progress) {
-		
-			self.slider.update({
-				'bufferPosition' : progress
+			self.on('playstatechanged', function(state) {
+			
+				if ( state == 'play' ) {
+				
+					controls.buttons.buttons.play_pause.node.addClass('pause')
+				
+					self.playerslider.slider.enable()
+				
+				}
+				
+				else if ( state == 'pause' ) {
+				
+					controls.buttons.buttons.play_pause.node.removeClass('pause')
+				
+					self.playerslider.slider.disable()
+				
+				}
+			
+			})
+			
+			self.on('bufferupdate', function(progress) {
+			
+				self.playerslider.update({
+					'bufferPosition' : progress
+				})
+			
+			})
+			
+			self.on('trackupdate', function(progress) {
+			
+				self.playerslider.update({
+					'trackPosition' : progress
+				})
+			
 			})
 		
-		})
-		
-		this.on('trackupdate', function(progress) {
-		
-			self.slider.update({
-				'trackPosition' : progress
-			})
+			// work around IE bug.
+			setTimeout(function() {
+			
+				self.emit('loaded')
+			
+			}, 0)
 		
 		})
 	

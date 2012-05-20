@@ -6,84 +6,87 @@ define(['require','util','dependencies/EventEmitter', 'UI/Playlist/PlaylistRow',
 
 function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar) {
 
-	// register the view stylesheet.
-	util.registerStylesheet(require.toUrl('./Playlist.css'))
-	
 	/**
 	 * constructs a UIPlaylist instance.
 	 * @param options {object} options with which to instantiate the playlist.
 	 */
 	var UIPlaylist = function(options) {
 
-		var self = this
+		var self = this,
+			options = self.options = ( typeof options == 'object' ) ? options : {}
 
-		// ensure options is an object.
-		var options = this.options = ( typeof options == 'object' ) ? options : {}
-		
-		// define columns to use.
-		this.useColumns = options.hasOwnProperty('useColumns') ? options.useColumns : ['trackno','trackname','albumname','artistname','tracklength']
-		
-		// create the root playlist element node.
-		var node = this.node = util.createElement({
-			tag : 'div',
-			id : 'UIPlaylist',
-			appendTo : ( options.appendTo instanceof Element ) ? options.appendTo : document.body
-		})
+		util.registerStylesheet(require.toUrl('./Playlist.css'), function() {
+
+			// define columns to use.
+			self.useColumns = options.hasOwnProperty('useColumns') ? options.useColumns : ['trackno','trackname','albumname','artistname','tracklength']
 			
-		var header = this.header = util.createElement({'tag' : 'div', 'appendTo' : node})
-		
-		// we're using the control bar.
-		if ( typeof options.useControlBar !== 'undefined' && options.useControlBar instanceof Array ) {
-		
-			// fetch the control bar module.
-			require(['UI/Playlist/PlaylistControlBar'], function(UIPlaylistControlBar) {
-			
-				var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar)
-			
-				var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
-			
-				node.addClass('usingControlBar')
-			
+			// create the root playlist element node.
+			var node = self.node = util.createElement({
+				tag : 'div',
+				id : 'UIPlaylist'
 			})
-		
-		}
-		
-		else {
-		
-			var legend = new UIPlaylistLegend(header).withColumns(this.useColumns)
-		}
-		
-		var listContainer = this.listContainer = util.createElement({
-			'tag' : 'div',
-			'customClass' : 'listContainer',
-			'appendTo' : node
-		})
-		
-		var list = this.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
-		
-		var selectedPlaylistItems = this.selectedPlaylistItems = []
-		
-		// check if we're using the info bar.
-		if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
-		
-			// fetch the info bar module.
-			require(['UI/Playlist/PlaylistInfoBar'], function(UIPlaylistInfoBar) {
 			
-				// make an info bar instance.
-				self.infoBar = new UIPlaylistInfoBar(self.node)
+			var header = self.header = util.createElement({'tag' : 'div', 'appendTo' : node})
+			
+			// we're using the control bar.
+			if ( typeof options.useControlBar !== 'undefined' && options.useControlBar instanceof Array ) {
+			
+				// fetch the control bar module.
+				require(['UI/Playlist/PlaylistControlBar'], function(UIPlaylistControlBar) {
 				
-				// set the class on #UIPlaylist.
-				self.node.addClass('usingInfoBar')
+					var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar)
+				
+					var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
+				
+					node.addClass('usingControlBar')
+				
+				})
 			
-				// tell any listeners that the info bar module is loaded.
-				self.emit('infoBarLoaded')
+			}
 			
+			else  var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
+			
+			var listContainer = self.listContainer = util.createElement({
+				'tag' : 'div',
+				'customClass' : 'listContainer',
+				'appendTo' : node
 			})
-		
-		}
+			
+			var list = self.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
+			
+			var selectedPlaylistItems = self.selectedPlaylistItems = []
+			
+			// check if we're using the info bar.
+			if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
+			
+				// fetch the info bar module.
+				require(['UI/Playlist/PlaylistInfoBar'], function(UIPlaylistInfoBar) {
+				
+					// make an info bar instance.
+					self.infoBar = new UIPlaylistInfoBar(self.node)
+					
+					// set the class on #UIPlaylist.
+					self.node.addClass('usingInfoBar')
+				
+					// tell any listeners that the info bar module is loaded.
+					self.emit('infoBarLoaded')
+				
+				})
+			
+			}
+			
+			// work around IE bug.
+			setTimeout(function() {
+			
+				self.emit('loaded')
+			
+			}, 0)
+			
+			
+		})
 		
 	}
-	
+
 	/**
 	 * adds item rows to the playlist.
 	 * @param items {array} playlist items to be appended.

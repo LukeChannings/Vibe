@@ -57,7 +57,10 @@
 	cursor: default;
 	padding: 0 2%;
 	font-family: Helvetica, Arial, sans-serif;
-	line-height: 1.4em;
+}
+
+#UIPlaylist > .listContainer  ol > li > ol > li{
+	line-height: 25px;
 }
 
 #UIPlaylist > div:first-child{

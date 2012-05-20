@@ -344,23 +344,17 @@ define(['require','util'],function(require, util) {
 		enable: function()
 		{
 		
-			
-		
 			this.disabled = false;
 			this.handle.className = this.handle.className.replace(/\s?disabled/g, '');
 		},
 		disable: function()
 		{
 		
-			
-		
 			this.disabled = true;
 			this.handle.className += ' disabled';
 		},
 		setStep: function(x, y, snap)
 		{
-		
-			
 		
 			this.setValue(
 				this.steps && x > 1 ? (x - 1) / (this.steps - 1) : 0,
@@ -381,9 +375,7 @@ define(['require','util'],function(require, util) {
 		},
 		startTap: function(target)
 		{
-		
-			
-		
+	
 			if(this.disabled)
 			{
 				return;
@@ -402,8 +394,6 @@ define(['require','util'],function(require, util) {
 		stopTap: function()
 		{
 		
-			
-		
 			if(this.disabled || !this.tapping)
 			{
 				return;
@@ -415,8 +405,6 @@ define(['require','util'],function(require, util) {
 		},
 		startDrag: function()
 		{
-		
-			
 		
 			if(this.disabled)
 			{
@@ -431,9 +419,6 @@ define(['require','util'],function(require, util) {
 		},
 		stopDrag: function()
 		{
-		
-			
-		
 			if(this.disabled || !this.dragging)
 			{
 				return;
@@ -452,8 +437,6 @@ define(['require','util'],function(require, util) {
 		},
 		feedback: function()
 		{
-		
-			
 		
 			var value = this.value.current;
 			if(this.snap && this.steps > 1)
@@ -556,8 +539,6 @@ define(['require','util'],function(require, util) {
 		show: function()
 		{
 		
-			
-		
 			if(!this.groupCompare(this.offset.current, this.offset.prev))
 			{
 				if(this.horizontal)
@@ -574,8 +555,6 @@ define(['require','util'],function(require, util) {
 		setTargetValue: function(value, loose)
 		{
 			
-			
-		
 			var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 			
 			this.groupCopy(this.value.target, target);
@@ -583,9 +562,6 @@ define(['require','util'],function(require, util) {
 		},
 		setTargetOffset: function(offset, loose)
 		{
-		
-			
-		
 			var value = this.getRatiosByOffsets(offset);
 			var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 			
@@ -595,8 +571,6 @@ define(['require','util'],function(require, util) {
 		getLooseValue: function(value)
 		{
 		
-			
-		
 			var proper = this.getProperValue(value);
 			return [
 				proper[0] + ((value[0] - proper[0]) / 4),
@@ -605,8 +579,6 @@ define(['require','util'],function(require, util) {
 		},
 		getProperValue: function(value)
 		{
-		
-			
 		
 			var proper = this.groupClone(value);
 	
@@ -627,8 +599,6 @@ define(['require','util'],function(require, util) {
 		getRatiosByOffsets: function(group)
 		{
 		
-			
-		
 			return [
 				this.getRatioByOffset(group[0], this.bounds.xRange, this.bounds.x0),
 				this.getRatioByOffset(group[1], this.bounds.yRange, this.bounds.y0)
@@ -637,14 +607,10 @@ define(['require','util'],function(require, util) {
 		getRatioByOffset: function(offset, range, padding)
 		{
 		
-			
-		
 			return range ? (offset - padding) / range : 0;
 		},
 		getOffsetsByRatios: function(group)
 		{
-		
-			
 		
 			return [
 				this.getOffsetByRatio(group[0], this.bounds.xRange, this.bounds.x0),
@@ -654,14 +620,10 @@ define(['require','util'],function(require, util) {
 		getOffsetByRatio: function(ratio, range, padding)
 		{
 			
-			
-		
 			return Math.round(ratio * range) + padding;
 		},
 		getClosestSteps: function(group)
 		{
-		
-			
 		
 			return [
 				this.getClosestStep(group[0]),
@@ -670,9 +632,6 @@ define(['require','util'],function(require, util) {
 		},
 		getClosestStep: function(value)
 		{
-		
-			
-		
 			var k = 0;
 			var min = 1;
 			for(var i = 0; i <= this.steps - 1; i++)
@@ -687,31 +646,19 @@ define(['require','util'],function(require, util) {
 		},
 		groupCompare: function(a, b)
 		{
-		
-			
-		
 			return a[0] == b[0] && a[1] == b[1];
 		},
 		groupCopy: function(a, b)
 		{
-		
-			
-		
 			a[0] = b[0];
 			a[1] = b[1];
 		},
 		groupClone: function(a)
 		{
-		
-			
-		
 			return [a[0], a[1]];
 		},
 		preventDefaults: function(e, selection)
 		{
-		
-			
-		
 			if(!e)
 			{
 				e = window.event;
@@ -729,9 +676,6 @@ define(['require','util'],function(require, util) {
 		},
 		cancelEvent: function(e)
 		{
-		
-			
-		
 			if(!e)
 			{
 				e = window.event;

@@ -37,6 +37,8 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		this.index = 0
 	
+		this.playingNode = null
+	
 		// set the Api instance.
 		var api = this.api = options.withApi
 	

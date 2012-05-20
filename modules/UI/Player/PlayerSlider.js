@@ -15,23 +15,29 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				'appendTo' : options.appendTo || document.body
 			})
 			
-			var slider = util.createElement({
+			var sliderNode = this.sliderNode = util.createElement({
 				'tag' : 'div',
 				'customClass' : 'dragdealer',
 				'appendTo' : node,
 				'children' : [{
 					'tag' : 'div',
-					'customClass' : 'handle red-bar'
+					'customClass' : 'handle'
 				}]
+			})
+			
+			var progress = this.progress = util.createElement({
+				'tag' : 'div',
+				'customClass' : 'progress',
+				'appendTo' : sliderNode
 			})
 			
 			var buffer = this.buffer = util.createElement({
 				'tag' : 'div',
 				'customClass' : 'buffer',
-				'appendTo' : slider
+				'appendTo' : sliderNode
 			})
 			
-			window.slider = new DragDealer(slider, {
+			var slider = this.slider = new DragDealer(sliderNode, {
 				'slide' : false,
 				'speed' : 100,
 				'callback' : function(x, y) {
@@ -40,6 +46,8 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				
 				}
 			})
+			
+			slider.disable()
 
 	}
 	
@@ -49,7 +57,9 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 		
 			if ( update.trackPosition ) {
 			
-				window.slider.setValue(update.trackPosition)
+				this.slider.setValue(update.trackPosition)
+			
+				this.progress.style.width = parseInt(this.slider.handle.style.left.replace('px', '')) + 4 + 'px'
 			
 			}
 		

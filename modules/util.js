@@ -226,7 +226,7 @@ define(function(){
 			}
 		
 		})(),
-		registerStylesheet : function(url){
+		registerStylesheet : function(url, callback) {
 		
 			if ( ! window.registeredStylesheets ) window.registeredStylesheets = [];
 		
@@ -246,8 +246,32 @@ define(function(){
 				
 				}());
 				
+				if ( typeof callback == 'function' ) {
+				
+					(function checkLoaded() {
+					
+						for ( var i = 0; i < document.styleSheets.length; i++ ) {
+						
+							if ( new RegExp(url).test(document.styleSheets[i].href) ) {
+							
+								callback()
+								
+								return;
+							
+							}
+							
+						}
+					
+						setTimeout(checkLoaded, 1)
+					
+					})()
+				
+				}
+				
 				window.registeredStylesheets.push(url);
 			}
+			
+			else callback()
 		},
 		Browser : {
 			isMobile : function(){
@@ -459,9 +483,36 @@ define(function(){
 			
 			})
 		
+		},
+		
+		augment : function(receiving, sending, context) {
+		
+			for ( var i in sending ) {
+			
+				if ( sending.hasOwnProperty(i) ) {
+				
+					if ( context ) {
+					
+						receiving[i] = (function(method, context) {
+						
+							return function() {
+							
+								method.call(context)
+							
+							}
+						
+						})(sending[i], context)
+					
+					}
+					else receiving[i] = sending[i]
+				
+				}
+			
+			}
+		
 		}
 	}
 
 	return Util;
 
-});
+})

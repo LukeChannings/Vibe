@@ -15,10 +15,26 @@ define(['util','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], fun
 			'appendTo' : node,
 			'buttons' : [{
 				'isIcon' : true,
+				'customClass' : 'prev',
+				'callback' : function() {
+				
+					self.emit('skip', true)
+				
+				}
+			},{
+				'isIcon' : true,
 				'customClass' : 'play_pause',
 				'callback' : function(button) {
 				
 					self.emit('playtoggle', button)
+				
+				}
+			},{
+				'isIcon' : true,
+				'customClass' : 'next',
+				'callback' : function() {
+				
+					self.emit('skip', false)
 				
 				}
 			}]

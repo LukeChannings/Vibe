@@ -47,12 +47,8 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 		// connect to the Vibe server.
 		this.connection = io.connect( 'http://' + this.settings.get('host')  + ':' + this.settings.get('port'));
 
-		document.body.addClass('loading');
-
 		// create an error dialogue on error.
 		this.connection.on('error',function(){
-
-			document.body.removeClass('loading');
 
 			self.emit('error');
 
@@ -60,17 +56,13 @@ define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(Ev
 		
 		this.connection.on('reconnect_failed',function(){
 		
-			document.body.removeClass('loading');
-		
 			self.emit('error');
 		
 		});
 
 		// emit ready event on connection.
 		this.connection.on('connect',function(){
-		
-			document.body.removeClass('loading');
-		
+
 			self.ready = true;
 		
 			self.emit('connected');

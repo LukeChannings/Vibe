@@ -23,6 +23,9 @@
 			// get the root node.
 			var rootNode = self.rootNode = document.getElementById('Vibe')
 		
+			// set the loading indicator.
+			document.body.addClass('loading')
+		
 			// instantiate settings model.
 			var settings = self.settings = new ModelSettings()
 			
@@ -58,6 +61,8 @@
 				
 				// listen for an error.
 				api.once('error', function() {
+				
+					console.log('error.')
 				
 					// error message.
 					var message = "<p>Vibe was unable to connect to '" + settings.get('host') + ':' + settings.get('port') + "'.</p>"

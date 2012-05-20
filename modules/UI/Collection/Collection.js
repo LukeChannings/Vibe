@@ -4,10 +4,7 @@
  * @docs - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection
  * @dependencies - util, musicme/api, UI/Widget/TreeList, EventEmitter.
  */
-define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/TreeList'],function(require, util, EventEmitter, TreeList){
-
-	// load stylesheet.
-	util.registerStylesheet(require.toUrl('./Collection.css'))
+define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/TreeList'], function(require, util, EventEmitter, TreeList) {
 
 	/**
 	 * creates a new collection instance.
@@ -24,89 +21,95 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		var self = this
 		this.options = options
 		
-		// check for a node to append the UICollection to.
-		var appendTo = this.parentNode = ( options.appendTo instanceof Element ) ? options.appendTo : document.body
+		util.registerStylesheet(require.toUrl('./Collection.css'), function() {
 
-		// set the root type.
-		var type = this.type = options.withRootType || 'artist'
-		
-		// set api.
-		var api = this.api = options.withApi
-
-		// create a collection node.
-		var node = this.node = util.createElement({tag : 'div', id : 'UICollection'})
-
-		// default the TreeList click timeout to 270ms.
-		if ( ! options.clickTimeout ) options.clickTimeout = 270
-
-		// check for an Api instance.
-		if ( api )
-		{
-			// check for the search bar option.
-			if ( options.useSearch ) {
-				
-				require(['UI/Collection/CollectionSearchBar'], function(UICollectionSearchBar) {
-				
-					var searchBar = self.searchBar = new UICollectionSearchBar({
-						'appendTo' : node,
-						'apiInstance' : api
+			// set the root type.
+			var type = self.type = options.withRootType || 'artist'
+			
+			// set api.
+			var api = self.api = options.withApi
+	
+			// create a collection node.
+			var node = self.node = util.createElement({tag : 'div', id : 'UICollection'})
+	
+			// default the TreeList click timeout to 270ms.
+			if ( ! options.clickTimeout ) options.clickTimeout = 270
+	
+			// check for an Api instance.
+			if ( api )
+			{
+				// check for the search bar option.
+				if ( options.useSearch ) {
+					
+					require(['UI/Collection/CollectionSearchBar'], function(UICollectionSearchBar) {
+					
+						var searchBar = self.searchBar = new UICollectionSearchBar({
+							'appendTo' : node,
+							'apiInstance' : api
+						})
+					
+						node.addClass('useSearch')
+					
+						searchBar.on('clear', function() {
+						
+							self.node.removeClass('noResults')
+						
+							self.populateWithType(type)
+						
+						})
+					
+						searchBar.on('noresults', function() {
+						
+							self.listContainer.removeChildren()
+						
+							self.node.addClass('noResults')
+						
+						})
+					
+						searchBar.on('results', function(result) {
+						
+							console.log(result)
+						
+						})
+					
 					})
+					
+				}
 				
-					node.addClass('useSearch')
+				// create the collection tree list.
+				initList.call(self, type)
 				
-					searchBar.on('clear', function() {
-					
-						self.node.removeClass('noResults')
-					
-						self.populateWithType(type)
-					
-					})
-				
-					searchBar.on('noresults', function() {
-					
-						self.listContainer.removeChildren()
-					
-						self.node.addClass('noResults')
-					
-					})
-				
-					searchBar.on('results', function(result) {
-					
-						console.log(result)
-					
-					})
-				
-				})
+				// check for the info bar option.
+				if ( options.useInfoBar ) initInfoBar.call(self)
 				
 			}
 			
-			// create the collection tree list.
-			initList.call(this, type)
+			// if there is no Api instance emit an error.
+			else
+			{
+				self.emit('error', util.error('A valid Api instance was not passed to the UICollection constructor.','API_ERR'))
+				
+			}
+	
+			// check for a drag and drop element.
+			if ( options.dragAndDropElement instanceof Element )
+			{
 			
-			// check for the info bar option.
-			if ( options.useInfoBar ) initInfoBar.call(this)
+				// if there is a drag and drop element set it as a property,
+				self.dropTarget = options.dragAndDropElement
 			
-			// append the UICollection to the set parent node.
-			appendTo.appendChild(node)
-		}
+				// initialise DnD methods.
+				initDragAndDrop.call(self)
+			}
 		
-		// if there is no Api instance emit an error.
-		else
-		{
-			this.emit('error', util.error('A valid Api instance was not passed to the UICollection constructor.','API_ERR'))
+			// work around IE bug.
+			setTimeout(function() {
 			
-		}
-
-		// check for a drag and drop element.
-		if ( options.dragAndDropElement instanceof Element )
-		{
+				self.emit('loaded')
+			
+			}, 0)
 		
-			// if there is a drag and drop element set it as a property,
-			this.dropTarget = options.dragAndDropElement
-		
-			// initialise DnD methods.
-			initDragAndDrop.call(this)
-		}
+		})
 	}
 
 	/**

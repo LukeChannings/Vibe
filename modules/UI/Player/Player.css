@@ -6,11 +6,10 @@
 }
 
 #UIPlayer #UIPlayerSlider{
-	width: 60%;
-	height: 15px;
-	float: left;
-	margin-top: 60px;
-	border: 1px solid #ddd;
+	width: 50%;
+	height: 10px;
+	margin: auto;
+	padding-top: 60px;
 }
 
 #UIPlayer #UIPlayerSlider span.time{float: left}
@@ -18,22 +17,63 @@
 #UIPlayer #UIPlayerSlider span.duration{float: right}
 
 #UIPlayer #UIPlayerSlider .dragdealer{
-	width: 100%;
+	width: 80%;
 	height: 100%;
-	float: left;
-	
+	background: #ececec;
+	background: -moz-linear-gradient(top, #ececec 0%, #dadada 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ececec), color-stop(100%,#dadada));
+	background: -webkit-linear-gradient(top, #ececec 0%,#dadada 100%);
+	background: -o-linear-gradient(top, #ececec 0%,#dadada 100%);
+	background: -ms-linear-gradient(top, #ececec 0%,#dadada 100%);
+	background: linear-gradient(top,  #ececec 0%,#dadada 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ececec', endColorstr='#dadada',GradientType=0);
+	border: 1px solid #ddd;
+	margin: auto;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer, #UIPlayer #UIPlayerSlider .dragdealer .progress, #UIPlayer #UIPlayerSlider .dragdealer .buffer{
+	border-radius: 5px;
 }
 
 #UIPlayer #UIPlayerSlider .dragdealer .handle{
 	height: 100%;
 	width: 5px;
-	background: #900;
+	background: #ddd;
+	z-index: 2;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer.disabled *{background: #ddd}
+
+#UIPlayer #UIPlayerSlider .dragdealer .buffer, #UIPlayer #UIPlayerSlider .dragdealer .progress{
+	height: 100%;
+	width: 0%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 #UIPlayer #UIPlayerSlider .dragdealer .buffer{
-	height: 100%;
-	width: 0%;
-	background: #f9f9f9;
+	background: #e8f5fe;
+	background: -moz-linear-gradient(top, #e8f5fe 0%, #cfeafd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e8f5fe), color-stop(100%,#cfeafd));
+	background: -webkit-linear-gradient(top, #e8f5fe 0%,#cfeafd 100%);
+	background: -o-linear-gradient(top, #e8f5fe 0%,#cfeafd 100%);
+	background: -ms-linear-gradient(top, #e8f5fe 0%,#cfeafd 100%);
+	background: linear-gradient(top,  #e8f5fe 0%,#cfeafd 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8f5fe', endColorstr='#cfeafd',GradientType=0);
+	z-index: 0;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .progress{
+	background: #eee;
+	background: -moz-linear-gradient(top, #eee 0%, #d2d2d2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eee), color-stop(100%,#d2d2d2));
+	background: -webkit-linear-gradient(top, #eee 0%,#d2d2d2 100%);
+	background: -o-linear-gradient(top, #eee 0%,#d2d2d2 100%);
+	background: -ms-linear-gradient(top, #eee 0%,#d2d2d2 100%);
+	background: linear-gradient(top,  #eee 0%,#d2d2d2 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#d2d2d2',GradientType=0);
+	z-index: 1;
 }
 
 #UIPlayer #UIPlayerControls{
@@ -42,14 +82,33 @@
 	float: left;
 }
 
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon{
-	height: 48px;
-	width: 48px;
-	background: url('./PlayerButtons.png') no-repeat;
+#UIPlayer #UIPlayerControls .UIButtonBarWidget{
+	padding: 0;
+	margin: auto;
+	margin-top: 20px;
+	width: 170px;
 }
 
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-position: -192px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -240px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{
-	background-position: -288px 0
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon{
+	height: 54px;
+	width: 54px;
+	background: url('./PlayerButtons.png') no-repeat;
+	background-size: auto 54px;
 }
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-position: -216px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -270px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{background-position: -324px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause:hover{background-position: -378px 0}
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev, #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{
+	height: 32px;
+	width: 32px;
+	background-size: auto 32px
+}
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background-position: 0 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover{background-position: -32px 0}
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background-position: -64px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover{background-position: -96px 0}
