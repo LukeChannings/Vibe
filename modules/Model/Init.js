@@ -102,6 +102,11 @@ define(['util'],function(util){
 		
 			require(['Model/Player', 'UI/Player/Player'], function(ModelPlayer, UIPlayer) {
 			
+				var player = self.player = new UIPlayer({
+					'withControls' : [],
+					'withSlider' : true
+				})
+			
 				var modelPlayer = self.modelPlayer = new ModelPlayer({
 					'withSettings' : self.settings,
 					'withModelPlaylist' : self.modelPlaylist
@@ -115,15 +120,19 @@ define(['util'],function(util){
 				
 				modelPlayer.on('progress', function(progress, duration) {
 				
-					var position = progress / duration
-					
-					self.player.emit('trackupdate', position)
+					self.player.emit('trackupdate', progress / duration, progress / 1000)
 				
 				})
 			
 				modelPlayer.on('playstatechanged', function(state) {
 				
 					self.player.emit('playstatechanged', state)
+				
+				})
+			
+				modelPlayer.on('trackdurationchanged', function(duration) {
+				
+					self.player.emit('trackdurationchanged', duration)
 				
 				})
 			

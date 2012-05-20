@@ -37,31 +37,36 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	Player.prototype.skip = function(direction) {
 	
-		var direction = direction = direction === true ? -1 : 1,
-			index = this.modelPlaylist.index + direction,
-			modelPlaylist = this.modelPlaylist,
-			uiPlaylist = modelPlaylist.ui,
-			model = modelPlaylist.model,
-			index = modelPlaylist.index + direction,
-			node = null
+		var direction = direction = direction === true ? -1 : 1, // determine index operand.
+			modelPlaylist = this.modelPlaylist, // alias modelPlaylist.
+			uiPlaylist = modelPlaylist.ui, // alias uiPlaylist.
+			model = modelPlaylist.model, // alias the UndoManager instance.
+			index = modelPlaylist.index + direction, // get the index.
+			node = undefined // initialise node to undefined.
 	
+		// if there is no currently playing node, set it to the first item in the playlist.
 		if ( !uiPlaylist.playingNode ) node = uiPlaylist.list.firstChild
 	
+		// otherwise, use the direction to determine whether to use the next or previous item.
 		else node = direction === -1 ? uiPlaylist.playingNode.previousSibling : uiPlaylist.playingNode.nextSibling
-	
-		if ( index < 0 || index > model.value().length ) {
-		
-			currentSound && currentSound.destruct()
-
-			this.Events.onstop.call(this)
-
-		}
-
-		else this.addSound(model.value()[index].trackid, true)
 
 		// set the index.
 		modelPlaylist.setIndex(index, node)
 	
+		// if the index isn't in the playlist..
+		if ( index < 0 || index >= model.value().length ) {
+		
+			// destruct the current SMSound object.
+			currentSound && currentSound.destruct()
+
+			// call the stop event.
+			this.Events.onstop.call(this)
+
+		}
+
+		// otherwise add a new sound.
+		else this.addSound(model.value()[index].trackid, true)
+
 	}
 	
 	/**
@@ -90,8 +95,12 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		// create the SMSound object.
 		currentSound = this.currentSound = soundManager.createSound(sound)
 	
+		var duration = this.modelPlaylist.getItem().tracklength
+	
 		// set the duration for the item in milliseconds.
-		currentSound.realDuration = Math.floor(this.modelPlaylist.getItem().tracklength * 1000)
+		currentSound.realDuration = Math.floor(duration * 1000)
+
+		this.emit('trackdurationchanged', duration)
 
 		// return the newly created sound.
 		return currentSound
@@ -102,7 +111,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 * SMSound event handler methods.
 	 */
 	Player.prototype.Events = (function() {
-	
+
 		this.onplay = this.onresume = function() {
 			
 			this.isPaused = false
@@ -126,9 +135,14 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		this.onstop = function() {
 		
 			this.isPlaying = false
+			
 			this.isPaused = false
 		
 			this.emit('playstatechanged','stop')
+		
+			this.emit('trackdurationchanged', 0)
+		
+			this.emit('progress', 0, 0)
 		
 		}
 		
@@ -162,7 +176,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	Player.prototype.play = function() {
 
-		if ( currentSound !== null ) currentSound.play()
+		if ( currentSound ) currentSound.play()
 	
 		else {
 		

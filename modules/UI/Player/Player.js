@@ -65,7 +65,7 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 				
 				}
 				
-				else if ( /(pause|end)/i.test(state) ) {
+				else if ( state == 'pause' ) {
 				
 					controls.buttons.buttons.play_pause.node.removeClass('pause')
 				
@@ -95,11 +95,19 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			
 			})
 			
-			self.on('trackupdate', function(progress) {
+			self.on('trackupdate', function(progress, time) {
+			
+				self.playerslider.currentTime.innerHTML = util.formatTime(time)
 			
 				self.playerslider.update({
 					'trackPosition' : progress
 				})
+			
+			})
+			
+			self.on('trackdurationchanged', function(duration) {
+			
+				self.playerslider.totalTime.innerHTML = util.formatTime(duration)
 			
 			})
 		

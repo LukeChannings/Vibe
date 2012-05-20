@@ -32,11 +32,8 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 			duration = this.duration = 0,
 			
 			// index stores the index of the currently playing item.
-			index = this.index = 0,
+			index = this.index = 0
 			
-			// playingNode stores the HTMLLIElement associated with the index.
-			playingNode = this.playingNode = null
-
 		// redraw the UI from persistent storage.
 		ui.redraw(model.value())
 
@@ -184,12 +181,12 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		// set the index.
 		this.index = n
-	
+		
 		// remove the playing class on the current node.
-		if ( typeof this.ui.playingNode == 'object' ) this.ui.playingNode.removeClass('playing')
+		if ( this.ui.playingNode !== null && typeof this.ui.playingNode == 'object' ) this.ui.playingNode.removeClass('playing')
 		
 		// add the playing class on the new item.
-		if ( typeof node == 'object' ) node.addClass('playing')
+		if ( node && typeof node == 'object' ) node.addClass('playing')
 		
 		// set the new node.
 		this.ui.playingNode = node
@@ -225,7 +222,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
 	
-		return this.model.getItemAtIndex(typeof n == 'number' ? n : this.index)
+		return this.model.getItemAtIndex(this.index)
 	
 	}
 

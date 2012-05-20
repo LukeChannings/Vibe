@@ -384,7 +384,7 @@ define(function(){
 			seconds = Math.ceil(seconds);
 		
 			// minutes.
-			var minutes = Math.ceil(seconds / 60);
+			var minutes = Math.floor(seconds / 60);
 			
 			var seconds = seconds % 60;
 			

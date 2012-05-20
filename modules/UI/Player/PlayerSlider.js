@@ -4,21 +4,39 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 	
 		var options = typeof options == 'object' ? options : {},
 			self = this,
-			node = this.node,
-			trackTime = this.trackTime,
-			trackDuration = this.trackDuration
-
+			node = this.node
+			
 			// construct the UIPlayerSlider node.
 			node = util.createElement({
 				'tag' : 'div',
 				'id' : 'UIPlayerSlider',
-				'appendTo' : options.appendTo || document.body
+				'appendTo' : options.appendTo || document.body,
+				'children' : [{
+					'tag' : 'li',
+					'customClass' : 'current_time'},{
+					'tag' : 'li',
+					'customClass' : 'slider'},{
+					'tag' : 'li',
+					'customClass' : 'total_time'
+				}]
+			})
+			
+			var currentTime = this.currentTime = util.createElement({
+				'tag' : 'span',
+				'inner' : '00:00',
+				'appendTo' : node.getElementsByTagName('li')[0]
+			})
+			
+			var totalTime = this.totalTime = util.createElement({
+				'tag' : 'span',
+				'inner' : '00:00',
+				'appendTo' : node.getElementsByTagName('li')[2]
 			})
 			
 			var sliderNode = this.sliderNode = util.createElement({
 				'tag' : 'div',
 				'customClass' : 'dragdealer',
-				'appendTo' : node,
+				'appendTo' : node.getElementsByTagName('li')[1],
 				'children' : [{
 					'tag' : 'div',
 					'customClass' : 'handle'
