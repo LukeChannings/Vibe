@@ -2,7 +2,7 @@
  * UndoManager
  * @description acts like an Array but provides methods for undo / redo and has optional persistency.
  */
-define(['util','Model/Persistence' ,'dependencies/md5'],function(util, Persistence, MD5){
+define(['util','Model/Persistence' ,'dependencies/md5'], function(util, Persistence, MD5) {
 
 	// constructor
 	var UndoManager = function(persistenceId) {

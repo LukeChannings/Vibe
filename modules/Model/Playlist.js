@@ -4,52 +4,46 @@
  */
 define(['util','Model/UndoManager'], function(util,UndoManager){
 
-	// constructor.
+	/**
+	 * creates an instance of ModalPlaylist.
+	 * @param options {object} options to configure the instance with.
+	 */
 	var ModelPlaylist = function(options) {
 	
-		if ( typeof options !== 'object' )
+		if ( typeof options !== 'object' || typeof options.withApi == 'undefined' || typeof options.withUI == 'undefined' )
 		{
-			throw util.error("ModelPlaylist was called without an options parameter.")
+			throw util.error("ModelPlaylist was not properly configured.")
 			
 			return
 		}
+
+		var self = this, // alias this.
 		
-		if ( typeof options.withApi == 'undefined' )
-		{
-			throw util.error("ModelPlaylist was called without an Api instance.")
+			// model stores the complete playlist items that construct a PlaylistItem.
+			model = this.model = new UndoManager('ModelPlaylist'),
 			
-			return
-		}
-	
-		if ( typeof options.withUI == 'undefined' )
-		{
-			throw util.error("ModelPlaylist was called without a UI instance.")
+			// api property stores the Vibe Api instance.
+			api = this.api = options.withApi,
 			
-			return
-		}
-	
-		var self = this
-	
-		// model stores the complete playlist items that construct a PlaylistItem.
-		var model = this.model = new UndoManager('ModelPlaylist')
-	
-		this.playlistDuration = 0
-	
-		this.index = 0
-	
-		this.playingNode = null
-	
-		// set the Api instance.
-		var api = this.api = options.withApi
-	
-		// set the UI instance.
-		var ui = this.ui = options.withUI
+			// ui property stores the UIPlaylist instance.
+			ui = this.ui = options.withUI,
+			
+			// duration stores the duration of all items in the playlist in seconds.
+			duration = this.duration = 0,
+			
+			// index stores the index of the currently playing item.
+			index = this.index = 0,
+			
+			// playingNode stores the HTMLLIElement associated with the index.
+			playingNode = this.playingNode = null
 
 		// redraw the UI from persistent storage.
 		ui.redraw(model.value())
 
+		// wait for the playlist info bar to finish loading.
 		ui.on('infoBarLoaded', function() {
 
+			// set the playlist info when it has loaded.
 			self.updateInfo()
 		
 		})
@@ -64,19 +58,19 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		var self = this
 	
 		// reset the playlist to zero seconds.
-		this.playlistDuration = 0
+		this.duration = 0
 	
 		// iterate the playlist items.
 		this.model.value().forEach(function(track) {
 		
 			// increment the playlist by the duration of the current playlist item.
-			self.playlistDuration += track.tracklength
+			self.duration += track.tracklength
 		
 		})
 	
 		// determine the units of time to describe the playlist duration.
-		var seconds = Math.ceil(this.playlistDuration) % 60,
-			minutes = Math.ceil(this.playlistDuration / 60),
+		var seconds = Math.ceil(this.duration) % 60,
+			minutes = Math.ceil(this.duration / 60),
 			hours = Math.floor(minutes / 60),
 			info = '' // string to contain the human-readable duration.
 		
@@ -176,27 +170,29 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	}
 
 	/**
-	 * sets the playlist index.
+	 * sets a new item index. Configures a new playing node.
 	 */
 	ModelPlaylist.prototype.setIndex = function(n, node) {
 	
+		if ( n < 0 || n > this.model.value().length ) {
+		
+			n = 0
+			
+			node = null
+		
+		}
+	
+		// set the index.
 		this.index = n
 	
-		if ( this.ui.playingNode ) this.ui.playingNode.removeClass('playing')
+		// remove the playing class on the current node.
+		if ( typeof this.ui.playingNode == 'object' ) this.ui.playingNode.removeClass('playing')
 		
-		node.addClass('playing')
+		// add the playing class on the new item.
+		if ( typeof node == 'object' ) node.addClass('playing')
 		
+		// set the new node.
 		this.ui.playingNode = node
-	
-	}
-	
-	/**
-	 * return the current playlist object or the object at index n.
-	 * @param n - index for the object. (optional, defaults to the current index.)
-	 */
-	ModelPlaylist.prototype.getItem = function(n) {
-	
-		return this.model.getItemAtIndex(this.index)
 	
 	}
 
@@ -206,24 +202,39 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.indexOfTrackId = function(trackid) {
 	
+		// fetch an array of all tracks in the playlist.
 		var tracks = this.model.value()
 	
+		// iterate.
 		for ( var i = 0; i < tracks.length; i++ ) {
 		
+			// compare the current item's trackid with the trackid sent.
+			// if the trackids match, return the index at which they match.
 			if ( tracks[i].trackid == trackid ) return i
 		
 		}
 	
+		// if no trackids match, return -1 to signal the item is not in the playlist.
 		return -1
 	
 	}
 
 	/**
-	 * fetche the items for the corresponding type and id.
+	 * return the current playlist object or the object at index n.
+	 * @param n - index for the object. (optional, defaults to the current index.)
+	 */
+	ModelPlaylist.prototype.getItem = function(n) {
+	
+		return this.model.getItemAtIndex(typeof n == 'number' ? n : this.index)
+	
+	}
+
+	/**
+	 * fetches the items for the corresponding type and id.
 	 * @param type (string) - The type of items to get.
 	 * @param id (string) - The unique identifier for the type.
 	 */
-	var getItems = function(type,id,callback) {
+	var getItems = function(type, id, callback) {
 	
 		// map the type to the Api method.
 		var types = {
@@ -237,7 +248,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		if ( types[type] ) {
 		
 			// call the Api method.
-			this.api[types[type]](id,function(tracks){
+			this.api[types[type]](id,function(tracks) {
 			
 				// return the results to the callback.
 				if ( typeof callback == 'function' ) callback(tracks)

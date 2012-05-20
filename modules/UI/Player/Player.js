@@ -65,9 +65,21 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 				
 				}
 				
-				else if ( state == 'pause' ) {
+				else if ( /(pause|end)/i.test(state) ) {
 				
 					controls.buttons.buttons.play_pause.node.removeClass('pause')
+				
+					self.playerslider.slider.disable()
+				
+				}
+				
+				else if ( state == 'stop' ) {
+				
+					controls.buttons.buttons.play_pause.node.removeClass('pause')
+					
+					self.playerslider.progress.style.width = self.playerslider.buffer.style.width = 0 + '%'
+				
+					self.playerslider.slider.setValue(0)
 				
 					self.playerslider.slider.disable()
 				
