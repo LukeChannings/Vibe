@@ -171,6 +171,8 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		this.index = 0
 	
+		this.ui.playingNode = null
+	
 	}
 
 	/**
