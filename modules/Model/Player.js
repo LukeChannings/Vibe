@@ -40,6 +40,61 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		// convert the direction.
 		var direction = direction === true ? -1 : 1
 	
+		// set the new index.
+		this.modelPlaylist.index += direction
+	
+		// check that the index has an item in the playlist.
+		if ( this.modelPlaylist.index >= 0 && this.modelPlaylist.index < this.modelPlaylist.model.value().length ) {
+
+			// check for a currently playing node.
+			if ( this.modelPlaylist.ui.playingNode ) {
+				
+				// remove its playing class.
+				this.modelPlaylist.ui.playingNode.removeClass('playing')
+		
+				// determine the new playing node.
+				this.modelPlaylist.ui.playingNode = direction === -1 ? 
+					this.modelPlaylist.ui.playingNode.previousSibling :
+					this.modelPlaylist.ui.playingNode.nextSibling
+		
+			}
+		
+			// if there is no currently playing node.
+			else {
+				
+				// set the playing node to the first node in the list.
+				this.modelPlaylist.ui.playingNode = this.modelPlaylist.ui.list.firstChild
+		
+				// set the index to the first item in the playlist.
+				this.modelPlaylist.index = 0
+		
+			}
+		
+			// add the sound and start playing.
+			this.addSound(this.modelPlaylist.model.value()[this.modelPlaylist.index].trackid, true)
+		
+			// add the playing class to the playing node.
+			this.modelPlaylist.ui.playingNode.addClass('playing')
+		
+		}
+		
+		// if the index has no item in the playlist.
+		else {
+		
+			// set the index to zero.
+			this.modelPlaylist.index = 0
+			
+			// destruct any currently playing sound.
+			currentSound && currentSound.destruct()
+			
+			// remove the playing class from any playing sound.
+			this.modelPlaylist.ui.playingNode && this.modelPlaylist.ui.playingNode.removeClass('playing')
+			
+			// set the currently playing node to null.
+			this.modelPlaylist.ui.playingNode = null
+			
+		}
+	
 	}
 	
 	/**

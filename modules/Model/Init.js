@@ -193,11 +193,11 @@ define(['util'],function(util){
 							
 								self.rootNode.appendChildren([self.player.node, self.collection.node, self.playlist.node])
 								
-								new UIAnimator(self.player.node, 'fadeIn', 0.5)
+								new UIAnimator(self.player.node, 'fadeIn', 0.3)
 							
-								new UIAnimator(self.collection.node, 'fadeIn', 0.5)
+								new UIAnimator(self.collection.node, 'fadeIn', 0.3)
 								
-								new UIAnimator(self.playlist.node, 'fadeIn', 0.5)
+								new UIAnimator(self.playlist.node, 'fadeIn', 0.3)
 							
 							})
 						
