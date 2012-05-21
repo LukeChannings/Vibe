@@ -65,42 +65,47 @@ define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'],
 				}
 			})
 			
+			this.update = function(update) {
+			
+				if ( typeof update == 'object' ) {
+				
+					if ( update.trackPosition ) {
+					
+						this.slider.setValue(update.trackPosition)
+					
+						this.progress.style.width = parseInt(this.slider.handle.style.left.replace('px', '')) + 4 + 'px'
+					
+					}
+				
+					if ( update.bufferPosition ) {
+					
+						this.buffer.style.width = update.bufferPosition + '%'
+					
+					}
+					
+					if ( update.currentTime ) {
+					
+						currentTime.innerHTML = update.currentTime
+					
+					}
+				
+					if ( update.totalTime ) {
+					
+						console.log(totalTime.innerHTML)
+					
+						totalTime.innerHTML = update.totalTime
+					
+						console.log(totalTime.innerHTML)
+					
+					}
+				
+				}
+				
+			
+			}
+			
 			slider.disable()
 
-	}
-	
-	UIPlayerSlider.prototype.update = function(update) {
-	
-		if ( typeof update == 'object' ) {
-		
-			if ( update.trackPosition ) {
-			
-				this.slider.setValue(update.trackPosition)
-			
-				this.progress.style.width = parseInt(this.slider.handle.style.left.replace('px', '')) + 4 + 'px'
-			
-			}
-		
-			if ( update.bufferPosition ) {
-			
-				this.buffer.style.width = update.bufferPosition + '%'
-			
-			}
-			
-			if ( update.trackDuration ) {
-			
-				// update the track duration.
-			
-			}
-		
-			if ( update.trackProgress ) {
-			
-				// update the track progress.
-			
-			}
-		
-		}
-	
 	}
 
 	EventEmitter.augment(UIPlayerSlider.prototype)

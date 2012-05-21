@@ -23,6 +23,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		if ( ! options.withModelPlaylist ) throw util.error('Missing model playlist instance.')
 		else this.modelPlaylist = options.withModelPlaylist
 		
+		if ( !options.withUI ) throw util.error('Missing player interface instance.')
+		else this.uiPlayer = options.withUI
+		
 		// properties.
 		this.isMuted = false
 		this.isPlaying = false
@@ -79,6 +82,8 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		// destroy the current sound instance.
 		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct() 
 	
+		console.log(this.volume)
+	
 		// define the new sound.
 		var sound = {
 			'id' : id,
@@ -100,7 +105,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		// set the duration for the item in milliseconds.
 		currentSound.realDuration = Math.floor(duration * 1000)
 
-		this.emit('trackdurationchanged', duration)
+		this.uiPlayer.setTrackDuration(duration)
+
+		//this.emit('trackdurationchanged', duration)
 
 		// return the newly created sound.
 		return currentSound
@@ -227,7 +234,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	
 		this.settings.set('volume', n)
 	
-		currentSound.setVolume(n)
+		currentSound && currentSound.setVolume(n)
 	
 	}
 	

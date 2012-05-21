@@ -109,7 +109,8 @@ define(['util'],function(util){
 			
 				var modelPlayer = self.modelPlayer = new ModelPlayer({
 					'withSettings' : self.settings,
-					'withModelPlaylist' : self.modelPlaylist
+					'withModelPlaylist' : self.modelPlaylist,
+					'withUI' : player
 				})
 			
 				modelPlayer.on('loading', function(progress) {

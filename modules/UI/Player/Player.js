@@ -97,17 +97,20 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			
 			self.on('trackupdate', function(progress, time) {
 			
-				self.playerslider.currentTime.innerHTML = util.formatTime(time)
-			
 				self.playerslider.update({
-					'trackPosition' : progress
+					'trackPosition' : progress,
+					'currentTime' : util.formatTime(time)
 				})
 			
 			})
 			
 			self.on('trackdurationchanged', function(duration) {
 			
-				self.playerslider.totalTime.innerHTML = util.formatTime(duration)
+				console.log('called...')
+			
+				self.playerslider.update({
+					'totalTime' : util.formatTime(duration)
+				})
 			
 			})
 		
@@ -118,6 +121,14 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			
 			}, 0)
 		
+		})
+	
+	}
+
+	UIPlayer.prototype.setTrackDuration = function(duration) {
+	
+		this.playerslider.update({
+			'totalTime' : util.formatTime(duration)
 		})
 	
 	}
