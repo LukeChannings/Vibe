@@ -1,4 +1,4 @@
-html{height: 95%}
+html, body{height: 100%!important}
 
 body{
 	background: #f9f9f9;
@@ -6,13 +6,6 @@ body{
 	font-size: 62.5%;
 	color: #333;
 }
-
-body.loading{
-	height: 100%;
-	background: #f9f9f9 url('modules/UI/Collection/CollectionLoadingThrobber.gif') no-repeat center center;
-}
-
-body.loading #Vibe > *{display: none}
 
 #Vibe{
 	background: url('images/logo.png') no-repeat center 0px;
@@ -23,6 +16,17 @@ body.loading #Vibe > *{display: none}
 	/* keep the app layer above the overlay by default. */
 	position: relative;
 	z-index: 1;
+}
+
+#ModalDialogueOverlay .loading{
+	height: 100%;
+	width: 100%;
+	background: #fff url('modules/UI/Collection/CollectionLoadingThrobber.gif') center no-repeat;
+}
+
+*{
+	margin: 0;
+	padding: 0;
 }
 
 #Vibe #UICollection,#Vibe #UIPlaylist{

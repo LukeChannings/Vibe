@@ -102,7 +102,7 @@ define(['util'],function(util){
 		
 			require(['Model/Player', 'UI/Player/Player'], function(ModelPlayer, UIPlayer) {
 			
-				var player = self.player = new UIPlayer({
+				var uiPlayer = self.player = new UIPlayer({
 					'withControls' : [],
 					'withSlider' : true
 				})
@@ -110,82 +110,16 @@ define(['util'],function(util){
 				var modelPlayer = self.modelPlayer = new ModelPlayer({
 					'withSettings' : self.settings,
 					'withModelPlaylist' : self.modelPlaylist,
-					'withUI' : player
+					'withUI' : uiPlayer
 				})
 			
-				modelPlayer.on('loading', function(progress) {
-				
-					self.player.emit('bufferupdate', progress)
-				
-				})
-				
-				modelPlayer.on('progress', function(progress, duration) {
-				
-					self.player.emit('trackupdate', progress / duration, progress / 1000)
-				
-				})
+				// callback when the UIPlayer instance is ready.
+				uiPlayer.on('loaded', callback)
 			
-				modelPlayer.on('playstatechanged', function(state) {
-				
-					self.player.emit('playstatechanged', state)
-				
-				})
-			
-				modelPlayer.on('trackdurationchanged', function(duration) {
-				
-					self.player.emit('trackdurationchanged', duration)
-				
-				})
-			
-				var player = self.player = new UIPlayer({
-					'withControls' : [],
-					'withSlider' : true
-				})
-				
-				player.on('loaded', function() {
-				
-					callback && callback()
-				
-				})
-				
-				player.on('playtoggle', function(button) {
-				
-					if ( self.modelPlayer.isPlaying ) {
-					
-						self.modelPlayer.currentSound.pause()
-					
-					}
-				
-					else {
-					
-						self.modelPlayer.play()
-					
-					}
-					
-				})
-				
-				player.on('skip', function(direction) {
-				
-					self.modelPlayer.skip(direction)
-				
-				})
-				
-				player.on('seek', function(position) {
-				
-					var position = position * modelPlayer.currentSound.realDuration
-				
-					if ( position > 0 && position < modelPlayer.currentSound.realDuration ) {
-					
-						self.modelPlayer.currentSound.setPosition(position)
-					
-					}
-				
-				})
-				
 			})
 		
 		},
-		desktop : function() {
+		desktop : function(callback) {
 		
 			var self = this
 		
@@ -194,6 +128,8 @@ define(['util'],function(util){
 				initialise.collection.call(self, function() {
 				
 					initialise.player.call(self, function() {
+					
+						callback()
 					
 						if ( util.Browser.HasSupport.cssTransitions() ) {
 						
@@ -218,6 +154,7 @@ define(['util'],function(util){
 						
 							self.rootNode.appendChildren([self.player.node, self.collection.node, self.playlist.node])
 						}
+						
 					})
 				
 				})

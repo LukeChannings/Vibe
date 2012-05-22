@@ -15,7 +15,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	 */
 	var Player = function(options) {
 	
-		var options = options || {}
+		var options = options || {},
+		
+		self = this
 	
 		if ( ! options.withSettings ) throw util.error('Missing settings instance.')
 		else this.settings = options.withSettings
@@ -32,7 +34,139 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		this.isPaused = false
 		this.volume = typeof this.settings.get('volume') == 'number' ? this.settings.get('volume') : 70
 		
+		// UI Events.
+		this.uiPlayer.on('playtoggle', function(button) {
+			
+			self.playToggle(button)
+			
+		})
+		
+		this.uiPlayer.on('skip', function(direction) {
+		
+			self.skip(direction)
+		
+		})
+		
+		this.uiPlayer.on('seek', function(position) {
+		
+			self.seek(position * currentSound.realDuration)
+		
+		})
+		
 	}
+	
+	/**
+	 * adds the sound to the player.
+	 * @param id {string} the identifier for the track.
+	 * @param autoplay {boolean} will automatically start playing the track if true.
+	 */
+	Player.prototype.addSound = function(id, autoplay) {
+	
+		// destroy the current sound instance.
+		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct() 
+	
+		// define the new sound.
+		var sound = {
+			'id' : id,
+			'url' : 'http://' + this.settings.get('host') + ':' + this.settings.get('port') + '/stream/' + id,
+			'autoPlay' : !!autoplay || false,
+			'autoLoad' : true,
+			'stream' : true,
+			'volume' : this.volume,
+		}
+		
+		// add the player events to the sound.
+		util.augment(sound, this.Events, this)
+	
+		// create the SMSound object.
+		currentSound = this.currentSound = soundManager.createSound(sound)
+	
+		var duration = this.modelPlaylist.getItem().tracklength
+	
+		// set the duration for the item in milliseconds.
+		currentSound.realDuration = Math.floor(duration * 1000)
+
+		this.uiPlayer.playerSlider.updateDuration(duration)
+
+		// return the newly created sound.
+		return currentSound
+
+	}
+	
+	/**
+	 * SMSound event handler methods.
+	 */
+	Player.prototype.Events = (function() {
+
+		this.onplay = this.onresume = function() {
+			
+			this.isPaused = false
+				
+			this.isPlaying = true
+			
+			this.uiPlayer.controls.buttons.buttons.play_pause.node.addClass('pause')
+			
+			this.emit('play')
+	
+		}
+	
+		this.onpause = function() {
+		
+			this.isPaused = true
+				
+			this.isPlaying = false
+		
+			this.uiPlayer.controls.buttons.buttons.play_pause.node.removeClass('pause')
+		
+			this.emit('pause')
+		
+		}
+	
+		this.onstop = function() {
+		
+			this.isPlaying = false
+			
+			this.isPaused = false
+		
+			this.uiPlayer.playerSlider.updateDuration(0)
+			
+			this.uiPlayer.playerSlider.updateProgress(0,0)
+			
+			this.uiPlayer.playerSlider.updateBuffer(0)
+		
+			this.emit('stop')
+		
+		}
+		
+		this.onfinish = function() {
+		
+			this.isPlaying = false
+			
+			this.isPaused = false
+		
+			this.skip.call(this)
+			
+			this.emit('end')
+		
+		}
+		
+		this.whileplaying = function() {
+		
+			var progress = this.currentSound.position, duration = this.currentSound.realDuration
+		
+			this.uiPlayer.playerSlider.updateProgress(progress / duration, progress / 1000)
+
+		}
+	
+		this.whileloading = function() {
+		
+			this.uiPlayer.playerSlider.updateBuffer((this.currentSound.bytesLoaded / this.currentSound.bytesTotal) * 100)
+		
+		}
+	
+		return this
+	
+	}).call({})
 	
 	/**
 	 * skips to the next or previous track.
@@ -61,7 +195,9 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		
 			// destruct the current SMSound object.
 			currentSound && currentSound.destruct()
-
+	
+			currentSound = this.currentSound = undefined
+	
 			// call the stop event.
 			this.Events.onstop.call(this)
 
@@ -71,111 +207,6 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		else this.addSound(model.value()[index].trackid, true)
 
 	}
-	
-	/**
-	 * adds the sound to the player.
-	 * @param id {string} the identifier for the track.
-	 * @param autoplay {boolean} will automatically start playing the track if true.
-	 */
-	Player.prototype.addSound = function(id, autoplay) {
-	
-		// destroy the current sound instance.
-		if ( currentSound && currentSound.hasOwnProperty('destruct') ) currentSound.destruct() 
-	
-		console.log(this.volume)
-	
-		// define the new sound.
-		var sound = {
-			'id' : id,
-			'url' : 'http://' + this.settings.get('host') + ':' + this.settings.get('port') + '/stream/' + id,
-			'autoPlay' : !!autoplay || false,
-			'autoLoad' : true,
-			'stream' : true,
-			'volume' : this.volume,
-		}
-		
-		// add the player events to the sound.
-		util.augment(sound, this.Events, this)
-	
-		// create the SMSound object.
-		currentSound = this.currentSound = soundManager.createSound(sound)
-	
-		var duration = this.modelPlaylist.getItem().tracklength
-	
-		// set the duration for the item in milliseconds.
-		currentSound.realDuration = Math.floor(duration * 1000)
-
-		this.uiPlayer.setTrackDuration(duration)
-
-		//this.emit('trackdurationchanged', duration)
-
-		// return the newly created sound.
-		return currentSound
-
-	}
-	
-	/**
-	 * SMSound event handler methods.
-	 */
-	Player.prototype.Events = (function() {
-
-		this.onplay = this.onresume = function() {
-			
-			this.isPaused = false
-				
-			this.isPlaying = true
-			
-			this.emit('playstatechanged','play')
-	
-		}
-	
-		this.onpause = function() {
-		
-			this.isPaused = true
-				
-			this.isPlaying = false
-		
-			this.emit('playstatechanged','pause')
-		
-		}
-	
-		this.onstop = function() {
-		
-			this.isPlaying = false
-			
-			this.isPaused = false
-		
-			this.emit('playstatechanged','stop')
-		
-			this.emit('trackdurationchanged', 0)
-		
-			this.emit('progress', 0, 0)
-		
-		}
-		
-		this.onfinish = function() {
-		
-			this.skip.call(this)
-			
-			this.emit('playstatechanged','end')
-		
-		}
-		
-		this.whileplaying = function() {
-		
-			this.emit('progress', this.currentSound.position, this.currentSound.realDuration)
-		
-		}
-	
-		this.whileloading = function() {
-		
-			this.emit('loading', (this.currentSound.bytesLoaded / this.currentSound.bytesTotal) * 100)
-		
-		}
-	
-		return this
-	
-	}).call({})
 	
 	/**
 	 * play
@@ -235,6 +266,39 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		this.settings.set('volume', n)
 	
 		currentSound && currentSound.setVolume(n)
+	
+	}
+	
+	/**
+	 * toggles the play/pause state.
+	 */
+	Player.prototype.playToggle = function(button) {
+	
+		if ( this.isPlaying ) {
+		
+			currentSound.pause()
+		
+			button.removeClass('pause')
+		
+		}
+		
+		else {
+		
+			this.play()
+	
+			button.addClass('pause')
+	
+		}
+	
+	}
+	
+	/**
+	 * seeks to the position in the track.
+	 * @param position {number} position in milliseconds.
+	 */
+	Player.prototype.seek = function(position) {
+	
+		currentSound.setPosition(position)
 	
 	}
 	

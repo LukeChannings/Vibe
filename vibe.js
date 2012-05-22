@@ -10,7 +10,8 @@
 				'Model/Settings', // Settings Model.
 				'UI/Settings/Settings', // Settings UI.
 				'Api/Vibe', // Vibe Api.
-				'Model/Init' // UI Initialisation.
+				'Model/Init', // UI Initialisation.,
+				'UI/ModalDialogue/ModalDialogue' // modal dialogue for loading.
 			],
 			self = this
 	
@@ -18,13 +19,15 @@
 		require.config({baseUrl: './modules/'})
 	
 		// fetch the dependencies...
-		require(dependencies, function(domReady, util, ModelSettings, UISettings, Api, Init) {
+		require(dependencies, function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		
 			// get the root node.
 			var rootNode = self.rootNode = document.getElementById('Vibe')
 		
-			// set the loading indicator.
-			document.body.addClass('loading')
+			dialogue.open(util.createElement({
+				'tag' : 'div',
+				'customClass' : 'loading'
+			}))
 		
 			// instantiate settings model.
 			var settings = self.settings = new ModelSettings()
@@ -55,7 +58,12 @@
 					if ( util.Browser.isMobile() ) Init.mobile.call(self)
 					
 					// otherwise initialise the desktop interface.
-					else Init.desktop.call(self)
+					else Init.desktop.call(self, function() {
+					
+						// when the desktop interface is initialised close the loading dialogue.
+						dialogue.close()
+					
+					})
 				
 				})
 				

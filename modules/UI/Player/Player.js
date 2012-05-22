@@ -1,4 +1,4 @@
-define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls', 'UI/Player/PlayerSlider'], function(util, require, EventEmitter, UIPlayerControls, UIPlayerSlider){
+define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls', 'UI/Player/playerSlider'], function(util, require, EventEmitter, UIPlayerControls, UIPlayerSlider){
 
 	/**
 	 * constructs a player interface instance.
@@ -24,7 +24,7 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 				})
 			
 				controls.on('playtoggle', function(button) {
-				
+
 					self.emit('playtoggle', button)
 				
 				})
@@ -39,81 +39,26 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			
 			if ( options.withSlider ) {
 			
+				// delay the UIPlayerSlider instantiation by 40ms to allow for the styles to be computed.
 				setTimeout(function() {
 				
-					var playerslider = self.playerslider = new UIPlayerSlider({
+					// instantiate.
+					var playerSlider = self.playerSlider = new UIPlayerSlider({
 						'appendTo' : node
 					})
-				
-					playerslider.on('seek', function(position) {
 					
+					// listen for the seek event.
+					playerSlider.on('seek', function(position) {
+						
+						// pass the event to super.
 						self.emit('seek', position)
-					
+						
 					})
 				
-				}, 50)
+				}, 40)
 			
 			}
-		
-			self.on('playstatechanged', function(state) {
-			
-				if ( state == 'play' ) {
-				
-					controls.buttons.buttons.play_pause.node.addClass('pause')
-				
-					self.playerslider.slider.enable()
-				
-				}
-				
-				else if ( state == 'pause' ) {
-				
-					controls.buttons.buttons.play_pause.node.removeClass('pause')
-				
-					self.playerslider.slider.disable()
-				
-				}
-				
-				else if ( state == 'stop' ) {
-				
-					controls.buttons.buttons.play_pause.node.removeClass('pause')
-					
-					self.playerslider.progress.style.width = self.playerslider.buffer.style.width = 0 + '%'
-				
-					self.playerslider.slider.setValue(0)
-				
-					self.playerslider.slider.disable()
-				
-				}
-			
-			})
-			
-			self.on('bufferupdate', function(progress) {
-			
-				self.playerslider.update({
-					'bufferPosition' : progress
-				})
-			
-			})
-			
-			self.on('trackupdate', function(progress, time) {
-			
-				self.playerslider.update({
-					'trackPosition' : progress,
-					'currentTime' : util.formatTime(time)
-				})
-			
-			})
-			
-			self.on('trackdurationchanged', function(duration) {
-			
-				console.log('called...')
-			
-				self.playerslider.update({
-					'totalTime' : util.formatTime(duration)
-				})
-			
-			})
-		
+
 			// work around IE bug.
 			setTimeout(function() {
 			
@@ -121,14 +66,6 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 			
 			}, 0)
 		
-		})
-	
-	}
-
-	UIPlayer.prototype.setTrackDuration = function(duration) {
-	
-		this.playerslider.update({
-			'totalTime' : util.formatTime(duration)
 		})
 	
 	}
