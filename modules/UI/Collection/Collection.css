@@ -24,6 +24,7 @@ body.svg #UICollection.noResults{background-image: url('CollectionNoSearchResult
 #UICollection.useSearch > div.search{
 	height: 35px;
 	width: 100%;
+	overflow: hidden;
 	position: absolute;
 	top: 0;
 }
