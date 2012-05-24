@@ -70,8 +70,6 @@
 				// listen for an error.
 				api.once('error', function() {
 				
-					console.log('error.')
-				
 					// error message.
 					var message = "<p>Vibe was unable to connect to '" + settings.get('host') + ':' + settings.get('port') + "'.</p>"
 					message += "<p>Please check the Vibe Server is running, and that the address for the server is correct.</p>"
