@@ -55,7 +55,7 @@ define(['util','require', 'dependencies/EventEmitter', 'UI/Player/PlayerControls
 						
 					})
 				
-				}, 40)
+				}, 50)
 			
 			}
 
