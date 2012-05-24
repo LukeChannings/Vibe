@@ -232,7 +232,7 @@ define(['util','Model/Persistence' ,'dependencies/md5'], function(util, Persiste
 			
 				if ( ( branches.length ) > currentBranch )
 				{
-					branches.splice(currentBranch + 1)
+					branches.splice(currentBranch + 1, branches.length)
 				}
 			
 				if ( branches.length == 0 )
@@ -402,7 +402,7 @@ define(['util','Model/Persistence' ,'dependencies/md5'], function(util, Persiste
 		this.prune = function() {
 			
 			// prune branches.
-			branches.splice(currentBranch + 1)
+			branches.splice(currentBranch + 1, branches.length)
 			
 			// get all ids used in all trees.
 			var allIds = {}
