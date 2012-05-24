@@ -6,6 +6,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 	soundManager.allowScriptAccess = 'always'
 	soundManager.flashVersion = 8
 	soundManager.preferFlash = true
+	soundManager.useFlashBlock = true
 	
 	// control variables.
 	var currentSound = null
