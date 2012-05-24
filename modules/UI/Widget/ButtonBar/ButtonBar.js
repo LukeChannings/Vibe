@@ -4,8 +4,7 @@ define(['require','util'],function(require, util){
 
 	var UIButtonBarWidget = function(options) {
 	
-		if ( typeof options == 'object' ) 
-		{
+		if ( typeof options == 'object' ) {
 			
 			var node = this.node = util.createElement({
 				'tag' : 'ol',
@@ -15,8 +14,8 @@ define(['require','util'],function(require, util){
 			
 			var buttons = this.buttons = {}
 			
-			if ( options.buttons instanceof Array )
-			{
+			if ( options.buttons instanceof Array ) {
+			
 				options.buttons.forEach(function(button) {
 				
 					var li = util.createElement({'tag' : 'li', appendTo : node})
@@ -52,6 +51,7 @@ define(['require','util'],function(require, util){
 				
 				})
 			}
+			
 			else {
 				
 				throw util.error("UIButtonBarWidget requires an array of button objects.")

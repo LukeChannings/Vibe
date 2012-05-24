@@ -6,8 +6,7 @@ define(['util'],function(util){
 
 	var UIPlaceholderWidget = function(node, placeholder) {
 	
-		if ( node instanceof Element && placeholder )
-		{
+		if ( node instanceof Element && placeholder ) {
 			
 			node.value = placeholder
 			
@@ -19,8 +18,8 @@ define(['util'],function(util){
 			
 				var target = e.target || e.srcElement
 				
-				if ( target.value == placeholder )
-				{
+				if ( target.value == placeholder ) {
+				
 					target.value = ''
 					
 					target.removeClass('placeholder')
@@ -28,12 +27,12 @@ define(['util'],function(util){
 			
 			})
 			
-			util.addListener(node,'blur',function(e){
+			util.addListener(node,'blur',function(e) {
 			
 				var target = e.target || e.srcElement
 			
-				if ( target.value == '' )
-				{
+				if ( target.value == '' ) {
+				
 					target.value = placeholder
 					
 					target.addClass('placeholder')
@@ -42,9 +41,8 @@ define(['util'],function(util){
 			})
 			
 		}
-		else {
-			throw util.error('Invalid Parameters.')
-		}
+		
+		else throw util.error('Invalid Parameters.')
 	}
 	
 	return UIPlaceholderWidget

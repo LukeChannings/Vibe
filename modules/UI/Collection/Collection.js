@@ -10,15 +10,16 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * creates a new collection instance.
 	 * @param options {object} options with which to configure the instance.
 	 */
-	var Collection = function(options){
+	var Collection = function(options) {
 
 		// check for a valid options object.
-		if ( !( typeof options == 'object' && options.withApi !== 'undefined') )
-		{
+		if ( !( typeof options == 'object' && options.withApi !== 'undefined') ) {
+		
 			this.emit('error', util.error('A valid options object was not passed to the UICollection constructor. Please consult the usage documentation at - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection.','OPT_ERR'))
 		}
 		
 		var self = this
+		
 		this.options = options
 		
 		util.registerStylesheet(require.toUrl('./Collection.css'), function() {
@@ -36,8 +37,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			if ( ! options.clickTimeout ) options.clickTimeout = 270
 	
 			// check for an Api instance.
-			if ( api )
-			{
+			if ( api ) {
+			
 				// check for the search bar option.
 				if ( options.useSearch ) {
 					
@@ -85,15 +86,13 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			}
 			
 			// if there is no Api instance emit an error.
-			else
-			{
-				self.emit('error', util.error('A valid Api instance was not passed to the UICollection constructor.','API_ERR'))
-				
+			else {
+			
+				self.emit('error', util.error('A valid Api instance was not passed to the UICollection constructor.','API_ERR'))	
 			}
 	
 			// check for a drag and drop element.
-			if ( options.dragAndDropElement instanceof Element )
-			{
+			if ( options.dragAndDropElement instanceof Element ) {
 			
 				// if there is a drag and drop element set it as a property,
 				self.dropTarget = options.dragAndDropElement
@@ -116,7 +115,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * populates the top-level collection with genres, artists, albums or tracks.
 	 * @param type {string} populate the collection with: genre, artist, album or track.
 	 */
-	Collection.prototype.populateWithType = function(type){
+	Collection.prototype.populateWithType = function(type) {
 	
 		var self = this
 	
@@ -124,14 +123,14 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		if ( ! /(genre|album|artist|track)/i.test(type) ) throw util.error('Unrecognised type.')
 		
 		// get the top level data..
-		this.api['get' + type[0].toUpperCase() + type.slice(1) + 's'](function(data){
+		this.api['get' + type[0].toUpperCase() + type.slice(1) + 's'](function(data) {
 		
 			// normalise type option.
 			type = type.toLowerCase()
 		
 			// remap genre.
-			if ( type == 'genre' )
-			{
+			if ( type == 'genre' ) {
+			
 				data.forEach(function(genre){
 					
 					genre.name = genre.genre
@@ -142,8 +141,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 					
 				})
 			}
-			else if ( type == 'album' )
-			{
+			else if ( type == 'album' ) {
 				
 				data.forEach(function(album){
 				
@@ -168,8 +166,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				'setAttributes' : []
 			}
 			
-			if ( self.dropTarget )
-			{
+			if ( self.dropTarget ) {
+			
 				options.setAttributes.push(['draggable','true'])
 				options.dragStartMethod = self.dragStart
 			}
@@ -181,7 +179,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			
 			// itemClicked
 			// handles populating sub-items.
-			list.on('itemClicked',function(item,isPopulated){
+			list.on('itemClicked',function(item,isPopulated) {
 			
 				clickHandler.call(self,item,isPopulated)
 			
@@ -189,7 +187,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 			// itemDoubleClicked
 			// handles a double click event on a tree list item.
-			list.on('itemDoubleClicked',function(item){
+			list.on('itemDoubleClicked',function(item) {
 			
 				doubleClickHandler.call(self,item)
 			
@@ -203,7 +201,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * initDragAndDrop
 	 * @description sets drag and drop methods dragstart, dragover, dragenter, dragleave and drop.
 	 */
-	var initDragAndDrop = function(){
+	var initDragAndDrop = function() {
 	
 		var self = this
 	
@@ -213,7 +211,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 		// dragstart.
 		// triggered when a draggable item is dragged.
-		this.dragStart = function(e){
+		this.dragStart = function(e) {
 		
 			// set dnd mode.
 			e.dataTransfer.dropEffect = 'copy'
@@ -233,8 +231,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			}))
 			
 			// set a drag image.
-			if ( e.dataTransfer.setDragImage )
-			{
+			if ( e.dataTransfer.setDragImage ) {
 				// Create a new ghost image.
 				var DragImage = new Image()
 				
@@ -255,7 +252,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	
 		// dragover
 		// triggered when the dragged item enters the drop target.
-		util.addListener(this.dropTarget,'dragover',function(e){
+		util.addListener(this.dropTarget,'dragover',function(e) {
 			
 			if (e.preventDefault) e.preventDefault()
 			
@@ -269,7 +266,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 		// dragenter
 		// triggered when the item enters the drop target.
-		util.addListener(this.dropTarget,'dragenter',function(e){
+		util.addListener(this.dropTarget,'dragenter',function(e) {
 		
 			return false
 		
@@ -277,7 +274,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 		// dragleave
 		// triggered when the dragged item leaves the drop target.
-		util.addListener(this.dropTarget,'dragleave',function(e){
+		util.addListener(this.dropTarget,'dragleave',function(e) {
 			
 			self.dropTarget.removeClass('draghighlight')
 			
@@ -285,24 +282,21 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	
 		// drop
 		// triggered when the dragged item is dropped within the drop target.
-		util.addListener(this.dropTarget,'drop',function(e){
+		util.addListener(this.dropTarget,'drop',function(e) {
 			
 			var target = e.target || e.srcElement
 			
 			self.dropTarget.removeClass('draghighlight')
 			
-			if ( e.dataTransfer.getData('Text') )
-			{
+			if ( e.dataTransfer.getData('Text') ) {
 			
 				self.emit('itemSelected', JSON.parse(e.dataTransfer.getData('Text')))
 			}
-			else
-			{
+			else {
 			
 				var data = []
 
-				for ( var i = 0; i < e.dataTransfer.files.length; i++ )
-				{
+				for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
 				
 					var reader = new FileReader()
 				
@@ -310,7 +304,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				
 					reader.readAsDataURL(e.dataTransfer.files[i])
 				
-					reader.onloadend = function(e){
+					reader.onloadend = function(e) {
 					
 						data.push({
 							'type' : type,
@@ -335,7 +329,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * initialise the TreeList view.
 	 * @param type (string) - Top-level type to initialise with. e.g. genre, artist, album or track.
 	 */
-	var initList = function(){
+	var initList = function() {
 	
 		var self = this
 		
@@ -348,13 +342,13 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	/**
 	 * add an info bar below the TreeList to indicate the number of items there are in the collection. e.g. 300 Artists.
 	 */
-	var initInfoBar = function(){
+	var initInfoBar = function() {
 	
 		this.node.addClass('useInfo')
 	
 		var statusBar = this.statusBar = util.createElement({tag : 'div', children : [{tag : 'span'}],customClass : 'statusBar', appendTo : this.node})
 	
-		this.updateStatusBar = function(type,itemCount){
+		this.updateStatusBar = function(type,itemCount) {
 		
 			statusBar.getElementsByTagName('span')[0].innerHTML = itemCount + ' ' + type.charAt(0).toUpperCase() + type.slice(1)
 			
@@ -373,8 +367,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	
 		var self = this
 	
-		if ( ! isPopulated )
-		{
+		if ( ! isPopulated ) {
+	
 			// get the item id.
 			var id = item.getAttribute('data-id')
 		
@@ -392,25 +386,23 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 			if ( options.customClass == 'track' ) options.isFinalNode = true
 		
-			if ( this.dropTarget )
-			{
+			if ( this.dropTarget ) {
+			
 				options.setAttributes.push(['draggable','true'])
 				options.dragStartMethod = self.dragStart
 			}
 			
-			if ( this.api.getMethod(type) )
-			{
-				this.api[this.api.getMethod(type)](id,function(items){
+			if ( this.api.getMethod(type) ) {
+			
+				this.api[this.api.getMethod(type)](id,function(items) {
 				
-					if ( type == 'artist' )
-					{
-						items.forEach(function(album){
+					if ( type == 'artist' ) {
+					
+						items.forEach(function(album) {
 						
 							album.title = album.title || "Unknown Album"
 						
-							album.setAttributes = {
-								'data-albumart' : album.art_medium
-							}
+							album.setAttributes = { 'data-albumart' : album.art_medium }
 							
 							util.cacheImage(album.art_medium)
 							
@@ -437,7 +429,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 	 * handle a double click on a TreeList item.
 	 * @param item (HTMLLIElement) - the item clicked.
 	 */
-	var doubleClickHandler = function(item){
+	var doubleClickHandler = function(item) {
 	
 		this.emit('itemSelected',{
 			'id' : item.getAttribute('data-id'),

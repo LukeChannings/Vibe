@@ -6,7 +6,7 @@
  * @method createMultiView - Method for creating a view-based dialogue with sidebar navigation.
  * @dependencies - modules/util, modal.css, modal.mobile.css (For mobile.)
  */
-define(['require','util'],function(require, util){
+define(['require','util'],function(require, util) {
 
 	/**
 	 * Stylesheet injection.
@@ -30,27 +30,29 @@ define(['require','util'],function(require, util){
 	 * @param MDD (object) - Modal Dialogue Definition.
 	 */
 	function isValidMDD(MDD) {
+	
 		// make sure the MDD is actually an object.
-		if ( typeof MDD == 'object' && !( MDD instanceof Array) )
-		{
+		if ( typeof MDD == 'object' && !( MDD instanceof Array) ) {
+		
 			// check for a title and body.
 			if ( ! MDD.title || ! MDD.body ) return false
 			
 			// check if the MDD is part of a wizard.
-			if ( MDD.isWizardDialogue )
-			{
+			if ( MDD.isWizardDialogue ) {
+			
 				// check for buttons.
 				if ( ! MDD.buttons ) return false
-				else
-				{
+				
+				else {
+				
 					// if there is no previous button, next button or close button then the user cannot escape.
 					if ( ! MDD.buttons.next && ! MDD.buttons.prev && ! MDD.buttons.close ) return false
 					
 				}
 			}
 			
-			if ( MDD.form )
-			{
+			if ( MDD.form ) {
+			
 				if ( ! MDD.form.name || ! MDD.form.inputs ) return false
 			}
 			
@@ -70,8 +72,8 @@ define(['require','util'],function(require, util){
 		this.MDD = MDD
 		
 		// check that the MDD is valid.
-		if ( isValidMDD(MDD) )
-		{
+		if ( isValidMDD(MDD) ) {
+		
 			// create the dialogue element.
 			var dialogue = this.dialogue = util.createElement({'tag' : 'div', 'id' : MDD.customId || 'ModalDialogue', 'customClass' : 'visible'})
 			
@@ -221,8 +223,7 @@ define(['require','util'],function(require, util){
 			}
 			
 			// check for a placeholder.
-			if ( input.placeholder && input.type !== 'select' )
-			{
+			if ( input.placeholder && input.type !== 'select' ) {
 			
 				// check for native placeholder support.
 				if ( 'placeholder' in element ) {
@@ -240,8 +241,7 @@ define(['require','util'],function(require, util){
 			}
 			
 			// if the MDD specified an input title..
-			if ( label )
-			{
+			if ( label ) {
 				// append the input to the label
 				label.appendChild(element)
 				
@@ -381,8 +381,7 @@ define(['require','util'],function(require, util){
 	 * @description creates a simple dialogue from a Modal Dialogue Definition (MDD).
 	 * @param MDD (object) - Modal Dialogue Definition.
 	 */
-	ModalDialogue.createSingle = function(MDD)
-	{
+	ModalDialogue.createSingle = function(MDD) {
 	
 		// set the animate in property.
 		animateIn = ( MDD.animate && typeof MDD.animate.animateIn !== 'undefined' ) ? MDD.animate.animateIn : null
@@ -401,8 +400,8 @@ define(['require','util'],function(require, util){
 	 * @description Creates a dialogue that allows switching between panes. (Next/Prev)
 	 * @param dialogues (array) - An array of MDDs, each MDD is a pane of its own.
 	 */
-	ModalDialogue.createWizard = function(dialogues, animate)
-	{
+	ModalDialogue.createWizard = function(dialogues, animate) {
+	
 		// index of the current dialogue.
 		var index = 0
 		
@@ -469,8 +468,8 @@ define(['require','util'],function(require, util){
 	 * @description Creates a dialogue with a sidebar and views.
 	 * @param MVD (object) - Defines the dialogue. (See documentation.)
 	 */
-	ModalDialogue.createMultiView = function(MVD)
-	{
+	ModalDialogue.createMultiView = function(MVD) {
+	
 		// return false if the MVD is invalid.
 		if ( typeof MVD !== 'object' ) return false
 	
@@ -630,7 +629,7 @@ define(['require','util'],function(require, util){
 	 * close
 	 * @description removes the currently visible modal dialogue.
 	 */
-	ModalDialogue.close = function(){
+	ModalDialogue.close = function() {
 	
 		if ( AnimationPrefix && animateOut ) {
 		
@@ -660,8 +659,7 @@ define(['require','util'],function(require, util){
 	 * @description Adds the dialogue to the overlay.
 	 * @param dialogue (HTMLElement) - dialogue to add.
 	 */
-	ModalDialogue.open = function(dialogue)
-	{
+	ModalDialogue.open = function(dialogue) {
 	
 		// remove any dialogues that may already exist.
 		overlay.removeChildren()
@@ -695,6 +693,7 @@ define(['require','util'],function(require, util){
 			else open()
 						
 		}
+		
 		else {
 		
 			overlay.appendChild(dialogue)

@@ -1,4 +1,4 @@
-define(['util'],function(util) {
+define(['util'], function(util) {
 
 	/**
 	 * Persistence
@@ -7,16 +7,15 @@ define(['util'],function(util) {
 	 */
 	var ModelPersistence = function(name) {
 	
-		var support = this.support = util.Browser.HasSupport.localStorage();
+		var support = this.support = util.Browser.HasSupport.localStorage()
 	
-		this.name = name;
+		this.name = name
 	
 		// if util returns an object it's an exception.
-		if ( typeof support === 'object' && ! ModelPersistence.prototype.hasShownError )
-		{
+		if ( typeof support === 'object' && ! ModelPersistence.prototype.hasShownError ) {
 				
 			// require ModalDialogue.
-			require(['UI/ModalDialogue/ModalDialogue'],function(modal) {
+			require(['UI/ModalDialogue/ModalDialogue'], function(modal) {
 			
 				// create an error dialogue.
 				modal.createSingle({
@@ -26,14 +25,14 @@ define(['util'],function(util) {
 					'errorDialogue' : true,
 					'buttons' : {Close : function() {
 							
-						this.close();
+						this.close()
 							
 					}}
-				});
+				})
 			
-			});
-			
-			ModelPersistence.prototype.hasShownSecurityError = true;
+			})
+		
+			ModelPersistence.prototype.hasShownSecurityError = true
 			
 		}
 	
@@ -41,43 +40,44 @@ define(['util'],function(util) {
 	
 	ModelPersistence.prototype.load = function() {
 		
-		var data = ( this.support === true ) ? localStorage[this.name] : false;
+		var data = ( this.support === true ) ? localStorage[this.name] : false
 		
-		if ( data )
-		{
+		if ( data ) {
 		
 			try {
-				data = JSON.parse(localStorage[this.name]);
+			
+				data = JSON.parse(localStorage[this.name])
 			}
-			catch (ex) {
-				data = false;
+			catch (ex){
+			
+				data = false
 			}
 			finally {
-				return data;
+			
+				return data
 			}
 		}
 		
-		else return false;
+		else return false
 	}
 	
 	ModelPersistence.prototype.save = function(set) {
 	
-		if ( typeof set == 'object' && this.support === true )
-		{
+		if ( typeof set == 'object' && this.support === true ) {
 			
-			localStorage[this.name] = JSON.stringify(set);
+			localStorage[this.name] = JSON.stringify(set)
 			
 		}
 	}
 	
 	ModelPersistence.prototype.clear = function() {
 	
-		if ( this.support === true ) delete localStorage[this.name];
+		if ( this.support === true ) delete localStorage[this.name]
 	
 	}
 	
-	ModelPersistence.prototype.hasShownError = false;
+	ModelPersistence.prototype.hasShownError = false
 	
-	return ModelPersistence;
+	return ModelPersistence
 
-});
+})

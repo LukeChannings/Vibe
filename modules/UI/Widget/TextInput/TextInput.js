@@ -4,129 +4,120 @@
  */
 define(['require','util','dependencies/EventEmitter'],function(require,util,EventEmitter){
 
-	util.registerStylesheet(require.toUrl('./TextInput.css'));
+	util.registerStylesheet(require.toUrl('./TextInput.css'))
 
-	function UIWidgetTextInput(options)
-	{
+	var UIWidgetTextInput = function(options) {
 	
-		var options = ( options ) ? options : {};
+		var options = ( options ) ? options : {},
+			appendTo = options.appendTo || document.body,
+			self = this,
+			textInput = this.element = document.createElement('div'),
+			input = document.createElement('input')
 		
-		var appendTo = options.appendTo || document.body;	
-	
-		var self = this;
+		textInput.setAttributes({'class' : 'TextInputWidget'})
 		
-		var textInput = this.element = document.createElement('div');
+		input.setAttributes({'type' : 'text'})
 		
-		textInput.setAttributes({
-			'class' : 'TextInputWidget'
-		});
+		if ( typeof options.customClass == 'string' ) textInput.addClass(options.customClass)
 		
-		var input = document.createElement('input');
+		if ( options.placeholder ) {
 		
-		input.setAttributes({
-			'type' : 'text'
-		});
-		
-		if ( typeof options.customClass == 'string' ) textInput.addClass(options.customClass);
-		
-		if ( options.placeholder )
-		{
-			if ( 'placeholder' in input )
-			{
-				input.setAttribute('placeholder',options.placeholder);
+			if ( 'placeholder' in input ) {
+				input.setAttribute('placeholder', options.placeholder)
 			}
-			else
-			{
-				require(['UI/Widget/Placeholder/Placeholder'],function(PlaceholderShim){
+			else {
+			
+				require(['UI/Widget/Placeholder/Placeholder'], function(PlaceholderShim) {
 				
-					new PlaceholderShim(input, options.placeholder);
+					new PlaceholderShim(input, options.placeholder)
 				
-				});
+				})
 			}
 		}
 		
-		textInput.appendChild(input);
+		textInput.appendChild(input)
 		
-		var clear = document.createElement('button');
+		var clear = document.createElement('button')
 		
-		util.addListener(input,'keydown',function(e){
+		util.addListener(input,'keydown',function(e) {
 			
-			if ( e.keyCode == 13 )
-			{
+			if ( e.keyCode == 13 ) {
 			
-				var target = e.target || e.srcElement;
+				var target = e.target || e.srcElement
 			
-				self.emit('enter', target.value);
+				self.emit('enter', target.value)
 				
-				if ( e.preventDefault ) e.preventDefault();
-				else if ( e.stopPropogation ) e.stopPropogation();
-				else e.returnValue = false;
+				if ( e.preventDefault ) e.preventDefault()
 				
-				return false;
+				else if ( e.stopPropogation ) e.stopPropogation()
+				
+				else e.returnValue = false
+				
+				return false
 			}
 		
-		});
+		})
 		
-		util.addListener(input,'keyup',function(e){
+		util.addListener(input,'keyup',function(e) {
 
 			// don't handle enter or key presses with meta, ctrl, alt or shift.
-			if ( e.keyCode.toString().match(/(1(3|7|8)|91)/) || e.metaKey || e.ctrlKey ) return;
+			if ( e.keyCode.toString().match(/(1(3|7|8)|91)/) || e.metaKey || e.ctrlKey ) return
 
-			var target = e.target || e.srcElement;
+			var target = e.target || e.srcElement
 
-			if ( target.value.length > 0 )
-			{
-				var key = String.fromCharCode(e.keyCode);
+			if ( target.value.length > 0 ) {
+			
+				var key = String.fromCharCode(e.keyCode)
 				
-				if ( ! e.shiftKey ) key = key.toLowerCase();
+				if ( ! e.shiftKey ) key = key.toLowerCase()
 			
-				clear.style.display = 'block';
+				clear.style.display = 'block'
 				
-				self.emit('input',target.value,key);
+				self.emit('input',target.value,key)
 			}
-			else
-			{
-				clear.style.display = 'none';
-				self.emit('clear');
+			else {
+			
+				clear.style.display = 'none'
+				self.emit('clear')
 			}
 		
-		});
+		})
 		
-		util.addListener(input,'focus',function(){
+		util.addListener(input,'focus',function() {
 			
-			textInput.addClass('focus');
+			textInput.addClass('focus')
 			
-			self.emit('focus');
-		});
+			self.emit('focus')
+		})
 		
-		util.addListener(input,'blur',function(){
+		util.addListener(input,'blur',function() {
 			
-			textInput.removeClass('focus');
+			textInput.removeClass('focus')
 			
-			self.emit('blur');
+			self.emit('blur')
 			
-		});
+		})
 		
-		util.addListener(clear,'click',function(){
+		util.addListener(clear,'click',function() {
 		
-			clear.style.display = 'none';
+			clear.style.display = 'none'
 			
-			input.value = '';
+			input.value = ''
 		
-			input.focus();
+			input.focus()
 		
-			self.emit('clear');
+			self.emit('clear')
 		
-		});
+		})
 		
-		textInput.appendChild(clear);
+		textInput.appendChild(clear)
 		
-		appendTo.appendChild(textInput);
+		appendTo.appendChild(textInput)
 		
 	}
 	
-	EventEmitter.augment(UIWidgetTextInput.prototype);
+	EventEmitter.augment(UIWidgetTextInput.prototype)
 	
-	return UIWidgetTextInput;
+	return UIWidgetTextInput
 
-});
+})

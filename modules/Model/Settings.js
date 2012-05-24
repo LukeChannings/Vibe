@@ -4,33 +4,33 @@ define(['Model/Persistence'],function(Persistence){
 	 * Settings
 	 * @description MusicMe settings object. (Keeps persistency.)
 	 */
-	function Settings(done){
+	var Settings = function(done) {
 	
-		var self = this;
+		var self = this
 	
 		// settings object.
-		var settings = this.settings = {};
+		var settings = this.settings = {}
 	
-		var persistence = new Persistence('vibeSettings');
+		var persistence = new Persistence('vibeSettings')
 	
 		/**
 		 * readSettings
 		 * @description reads the contents of settings.json into the settings object.
 		 */
-		(function readSettings(){
+		;(function readSettings() {
 		
-			settings = persistence.load() || {};
+			settings = persistence.load() || {}
 		
-		})();
+		})()
 		
 		/**
 		 * writeSettings
 		 * @description write the settings object back into settings.json.
 		 */
-		function writeSettings(){
+		var writeSettings = function() {
 		
 			// convert the object into a string and overwrite the persistent storage.
-			persistence.save(settings);
+			persistence.save(settings)
 		
 		}
 	
@@ -40,13 +40,13 @@ define(['Model/Persistence'],function(Persistence){
 		 * @param key (string) - the setting key.
 		 * @param value (string) - the value for the setting.
 		 */
-		this.set = function(key,value){
+		this.set = function(key,value) {
 		
 			// set a setting.
-			settings[key] = value;
+			settings[key] = value
 		
 			// commit the setting.
-			writeSettings();
+			writeSettings()
 		
 		}
 		
@@ -55,21 +55,20 @@ define(['Model/Persistence'],function(Persistence){
 		 * @description Delete a setting.
 		 * @param key (string) - the key to unset.
 		 */
-		this.unset = function(key){
+		this.unset = function(key) {
 		
 			// make sure there is a key.
-			if ( settings[key] )
-			{
+			if ( settings[key] ) {
 				// delete the key.
-				delete settings[key];
+				delete settings[key]
 			
 				// write the change to settings.json.
-				writeSettings();
+				writeSettings()
+			
 			}
-			else
-			{
+			else {
 				// if there is no key then log it.
-				console.error("Unable to unset '" + key + "' as it does not exist.");
+				console.error("Unable to unset '" + key + "' as it does not exist.")
 			}
 		}
 		
@@ -78,21 +77,21 @@ define(['Model/Persistence'],function(Persistence){
 		 * @description Get a setting.
 		 * @param key (string) - the name of the setting.
 		 */
-		this.get = function(key){
+		this.get = function(key) {
 		
 			// return the value.
-			return settings[key];
+			return settings[key]
 		
 		}
 		
 		// alias.
-		this.clear = function(){
+		this.clear = function() {
 			
-			persistence.clear();
+			persistence.clear()
 			
 		}
 	}
 	
-	return Settings;
+	return Settings
 
-});
+})

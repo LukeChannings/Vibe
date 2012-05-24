@@ -21,24 +21,17 @@
 		// fetch the dependencies...
 		require(dependencies, function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		
-			// get the root node.
-			var rootNode = self.rootNode = document.getElementById('Vibe')
-		
+			var rootNode = self.rootNode = document.getElementById('Vibe'), // Vibe root element.
+				settings = self.settings = new ModelSettings(), // settings model instance.
+				uiSettings = self.uiSettings = new UISettings(self), // settings interface
+				api = self.api = new Api(settings) // settings instance.
+			
+			self.init = Init
+			
 			dialogue.open(util.createElement({
 				'tag' : 'div',
 				'customClass' : 'loading'
 			}))
-		
-			// instantiate settings model.
-			var settings = self.settings = new ModelSettings()
-			
-			// instantiate settings user interface.
-			var uiSettings = self.uiSettings = new UISettings(self)
-		
-			self.init = Init
-		
-			// instantiate the Vibe Api.
-			var api = self.api = new Api(settings)
 		
 			if ( typeof callback == 'function' ) callback.call(self)
 		
@@ -62,9 +55,7 @@
 					
 						// when the desktop interface is initialised close the loading dialogue.
 						dialogue.close()
-					
 					})
-				
 				})
 				
 				// listen for an error.
@@ -80,7 +71,7 @@
 					
 						api.connect()
 					
-					},"Unable to connect.", message)
+					}, "Unable to connect.", message)
 				
 				})
 				
@@ -91,22 +82,16 @@
 					
 						// attempt to reconnect using the new settings.
 						api.connect()
-					
 					})
-				
 				})
-			
 			})
-		
 		})
-	
 	}
 	
 	// start your engines...
 	var vibe = new Vibe(function() {
 	
 		if ( this.settings.get('debug') ) window.vibe = vibe
-	
 	})
 	
 })();
