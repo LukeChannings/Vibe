@@ -1,10 +1,18 @@
 (function(){
 
-	// define the vibe controller.
+	/**
+	 * Fetches base dependencies, creates an Api instance and initialises the interface.
+	 * @param callback {function} called when vibe has initialised.
+	 */
 	var Vibe = function(callback) {
 	
-		// define Vibe base dependencies.
-		var dependencies = [
+		var self = this
+	
+		// set require.js base url.
+		require.config({baseUrl: './modules/'})
+	
+		// fetch the dependencies...
+		require([
 				'dependencies/domReady', // DOM Ready require.js plugin.
 				'util', // require utility methods.
 				'Model/Settings', // Settings Model.
@@ -13,13 +21,7 @@
 				'Model/Init', // UI Initialisation.,
 				'UI/ModalDialogue/ModalDialogue' // modal dialogue for loading.
 			],
-			self = this
-	
-		// set require.js base url.
-		require.config({baseUrl: './modules/'})
-	
-		// fetch the dependencies...
-		require(dependencies, function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
+			function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		
 			var rootNode = self.rootNode = document.getElementById('Vibe'), // Vibe root element.
 				settings = self.settings = new ModelSettings(), // settings model instance.
@@ -91,7 +93,14 @@
 	// start your engines...
 	var vibe = new Vibe(function() {
 	
+		// if we're debugging then expose the vibe instance.
 		if ( this.settings.get('debug') ) window.vibe = vibe
+		
+		// if we're not debugging then expose only the settings instance. (for plugins.)
+		else window.vibe = {
+			settings : this.uiSettings,
+			player : this.modelPlayer
+		}
 	})
 	
-})();
+})()
