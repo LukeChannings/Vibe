@@ -88,26 +88,31 @@
 	width: 170px;
 }
 
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon{
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{
 	height: 54px;
 	width: 54px;
-	background: url('./PlayerButtons.png') no-repeat;
-	background-size: auto 54px;
+	background: url('./PlayerPlayPauseButton.png') no-repeat;
 }
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-position: -216px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -270px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{background-position: -324px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause:hover{background-position: -378px 0}
 
 #UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev, #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{
 	height: 32px;
 	width: 32px;
-	background-size: auto 32px
 }
 
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background-position: 0 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover{background-position: -32px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -54px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{background-position: -108px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause:hover{background-position: -162px 0}
 
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background-position: -64px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover{background-position: -96px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background: url('./PlayerBackButton.png') no-repeat}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background: url('./PlayerForwardButton.png') no-repeat}
+
+body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-image: url('./PlayerPlayPauseButton.svg')}
+body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background-image: url('./PlayerBackButton.svg')}
+body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background-image: url('./PlayerForwardButton.svg')}
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover{background-position: -32px 0}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover{background-position: -32px 0}
+
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover:active{-ms-background-position: -31px 1px;
+}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover:active{-ms-background-position: -31px 1px}

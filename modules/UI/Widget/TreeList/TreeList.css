@@ -10,7 +10,10 @@
 	padding: 0;
 }
 
-body.svg .UITreeListWidget{background-image: url('TreeListZebraStripes.svg')}
+body.svg .UITreeListWidget{
+	background-image: url('TreeListZebraStripes.svg');
+	background-size: auto 50px
+}
 
 .UITreeListWidget *{
 	margin: 0;

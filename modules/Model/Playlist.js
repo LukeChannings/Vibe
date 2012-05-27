@@ -20,7 +20,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		var self = this, // alias this.
 		
 			// model stores the complete playlist items that construct a PlaylistItem.
-			model = this.model = new UndoManager('ModelPlaylist'),
+			model = this.model = new Array.UndoManager().withPersistence('ModelPlaylist'),
 			
 			// api property stores the Vibe Api instance.
 			api = this.api = options.withApi,
@@ -35,16 +35,14 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 			index = this.index = 0
 			
 		// redraw the UI from persistent storage.
-		ui.redraw(model.value())
+		ui.redraw(model)
 
 		// wait for the playlist info bar to finish loading.
 		ui.on('infoBarLoaded', function() {
 
 			// set the playlist info when it has loaded.
 			self.updateInfo()
-		
 		})
-
 	}
 	
 	/**
@@ -58,11 +56,10 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		this.duration = 0
 	
 		// iterate the playlist items.
-		this.model.value().forEach(function(track) {
+		this.model.forEach(function(track) {
 		
 			// increment the playlist by the duration of the current playlist item.
 			self.duration += track.tracklength
-		
 		})
 	
 		// determine the units of time to describe the playlist duration.
@@ -76,24 +73,29 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		// determine the presentation of hours.
 		if ( hours !== 0 ) {
 			hours = ( hours == 1 ) ? hours + ' hour, ' : hours + ' hours, '
-		} else hours = ''
+		}
+		
+		else hours = ''
 		
 		// determine the presentation of minutes.
 		if ( minutes !== 0 ) {
 			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : minutes + ' minutes and '
-		} else minutes = ''
+		}
+		
+		else minutes = ''
 		
 		// determine the presentation of seconds.
 		if ( seconds !== 0 ) {
 			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
-		} else seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
+		}
+		
+		else seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
 		
 		// concatenate the playlist durations.
 		var info = hours + minutes + seconds
 		
 		// update the info bar.
 		this.ui.infoBar.update(info)
-
 	}
 	
 	/**
@@ -108,16 +110,14 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		getItems.call(this, type, id, function(items) {
 
-			self.model.push.apply(this, items)
+			self.model.push.apply(self.model, items)
 			
 			self.ui.addRows(items)
 			
 			self.updateInfo()
 			
 			if ( typeof callback == 'function' ) callback()
-			
 		})
-	
 	}
 	
 	/**
@@ -129,8 +129,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		
 		this.updateInfo()
 		
-		this.ui.redraw(this.model.value())
-	
+		this.ui.redraw(this.model)
 	}
 	
 	/**
@@ -142,8 +141,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		
 		this.updateInfo()
 		
-		this.ui.redraw(this.model.value())
-	
+		this.ui.redraw(this.model)
 	}
 	
 	/**
@@ -163,7 +161,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		this.index = 0
 	
 		this.ui.playingNode = null
-	
 	}
 
 	/**
@@ -171,12 +168,11 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.setIndex = function(n, node) {
 	
-		if ( n < 0 || n > this.model.value().length ) {
+		if ( n < 0 || n > this.model.length ) {
 		
 			n = 0
 			
 			node = null
-		
 		}
 	
 		// set the index.
@@ -190,7 +186,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		
 		// set the new node.
 		this.ui.playingNode = node
-	
 	}
 
 	/**
@@ -200,7 +195,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	ModelPlaylist.prototype.indexOfTrackId = function(trackid) {
 	
 		// fetch an array of all tracks in the playlist.
-		var tracks = this.model.value()
+		var tracks = this.model
 	
 		// iterate.
 		for ( var i = 0; i < tracks.length; i++ ) {
@@ -208,12 +203,10 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 			// compare the current item's trackid with the trackid sent.
 			// if the trackids match, return the index at which they match.
 			if ( tracks[i].trackid == trackid ) return i
-		
 		}
 	
 		// if no trackids match, return -1 to signal the item is not in the playlist.
 		return -1
-	
 	}
 
 	/**
@@ -222,8 +215,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
 	
-		return this.model.getItemAtIndex(this.index)
-	
+		return this.model[this.index || n]
 	}
 
 	/**
@@ -249,14 +241,11 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 			
 				// return the results to the callback.
 				if ( typeof callback == 'function' ) callback(tracks)
-			
 			})
-		
 		}
 		
 		else throw util.error("Invalid type used in getItems.","REF_ERR")
 	}
 	
 	return ModelPlaylist
-
 })

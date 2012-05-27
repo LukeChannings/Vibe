@@ -83,7 +83,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		// create the SMSound object.
 		currentSound = this.currentSound = soundManager.createSound(sound)
 	
-		var duration = this.modelPlaylist.getItem().tracklength
+		var duration = this.modelPlaylist.model[this.modelPlaylist.index].tracklength
 	
 		// set the duration for the item in milliseconds.
 		currentSound.realDuration = Math.floor(duration * 1000)
@@ -193,7 +193,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		modelPlaylist.setIndex(index, node)
 	
 		// if the index isn't in the playlist..
-		if ( index < 0 || index >= model.value().length ) {
+		if ( index < 0 || index >= model.length ) {
 		
 			// destruct the current SMSound object.
 			currentSound && currentSound.destruct()
@@ -206,7 +206,7 @@ define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager
 		}
 
 		// otherwise add a new sound.
-		else this.addSound(model.value()[index].trackid, true)
+		else this.addSound(model[index].trackid, true)
 
 	}
 	

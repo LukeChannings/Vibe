@@ -30,6 +30,10 @@
 			
 			self.init = Init
 			
+			// hardcode server and port.
+			settings.set('host', 'channings.me')
+			settings.set('port', 6232)
+			
 			dialogue.open(util.createElement({
 				'tag' : 'div',
 				'customClass' : 'loading'

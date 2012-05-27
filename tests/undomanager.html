@@ -8,9 +8,9 @@
 
 		require.config({ 'baseUrl' : '../modules' })
 		
-		require(['Model/UndoManager 2'], function(UndoManager) {
+		require(['Model/UndoManagerRewrite'], function() {
 		
-			tmp = new UndoManager([])
+			tmp = new Array.UndoManager().withPersistence('tmp')
 		
 		})
 		</script>

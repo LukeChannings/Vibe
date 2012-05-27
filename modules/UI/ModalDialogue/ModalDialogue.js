@@ -6,11 +6,9 @@
  * @method createMultiView - Method for creating a view-based dialogue with sidebar navigation.
  * @dependencies - modules/util, modal.css, modal.mobile.css (For mobile.)
  */
-define(['require','util'],function(require, util) {
+define(['require', 'util'], function(require, util) {
 
-	/**
-	 * Stylesheet injection.
-	 */
+	// inject stylesheet.
 	util.registerStylesheet(require.toUrl('./ModalDialogue.css'))
 	
 	// mobile stylesheet.
@@ -47,13 +45,13 @@ define(['require','util'],function(require, util) {
 				
 					// if there is no previous button, next button or close button then the user cannot escape.
 					if ( ! MDD.buttons.next && ! MDD.buttons.prev && ! MDD.buttons.close ) return false
-					
 				}
 			}
 			
 			if ( MDD.form ) {
 			
 				if ( ! MDD.form.name || ! MDD.form.inputs ) return false
+			
 			}
 			
 			return true
@@ -100,12 +98,10 @@ define(['require','util'],function(require, util) {
 			
 			// return the constructed element.
 			return dialogue
-			
 		}
 		
 		// handle invalid MDD.
 		else throw util.error('Invalid Modal Dialogue Definiion.','MDD_ERR')
-	
 	}
 	
 	/**
@@ -141,7 +137,6 @@ define(['require','util'],function(require, util) {
 			}
 		
 		})
-	
 	}
 
 	/**
@@ -190,9 +185,7 @@ define(['require','util'],function(require, util) {
 					})
 					
 					if ( input.placeholder && option == input.placeholder ) optionNode.setAttribute('selected', 'selected')
-					
 				})
-				
 			}
 			
 			// button input.
@@ -219,7 +212,6 @@ define(['require','util'],function(require, util) {
 				})
 				
 				if ( input.type == 'checkbox' ) element.checked = input.checked || false
-				
 			}
 			
 			// check for a placeholder.
@@ -227,6 +219,7 @@ define(['require','util'],function(require, util) {
 			
 				// check for native placeholder support.
 				if ( 'placeholder' in element ) {
+				
 					element.setAttribute('placeholder', input.placeholder)
 				}
 				
@@ -235,7 +228,6 @@ define(['require','util'],function(require, util) {
 					require(['UI/Widget/Placeholder/Placeholder'],function(Placeholder) {
 					
 						new Placeholder(element, input.placeholder)
-					
 					})
 				}
 			}
@@ -247,7 +239,6 @@ define(['require','util'],function(require, util) {
 				
 				// and then the label to the form.
 				formElement.appendChild(label)
-				
 			}
 			
 			// if the MDD specified no title for the input, append the input to the form.
@@ -262,11 +253,8 @@ define(['require','util'],function(require, util) {
 				util.addListener(element, 'keyup', function(e) {
 				
 					if ( e.keyCode === 13 ) form.callback.call(ModalDialogue, inputs)
-				
 				})
-			
 			}
-		
 		})
 	
 		// check for a callback specification.
@@ -277,14 +265,11 @@ define(['require','util'],function(require, util) {
 			this.MDD.buttons[form.buttonName || "Submit"] = function() {
 			
 				form.callback.call(ModalDialogue, inputs)
-			
 			}
-		
 		}
 	
 		// append the form to the dialogue.
 		this.dialogue.appendChild(formElement)
-	
 	}
 
 	/**
@@ -303,13 +288,11 @@ define(['require','util'],function(require, util) {
 			return function(e) {
 		
 				callback.call(context || ModalDialogue, e)
-			
 			}
 		
 		})(callback, context))
 	
 		return button
-	
 	}
 
 	/**
@@ -351,11 +334,8 @@ define(['require','util'],function(require, util) {
 					callback = function() {
 						
 						ModalDialogue.close()
-						
 					}
-				
 				}
-			
 			} 
 		
 			// determine the context under which the callback is executed. (default to ModalDialogue.)
@@ -366,9 +346,7 @@ define(['require','util'],function(require, util) {
 		
 			// append it to the container.
 			if ( button ) buttonContainer.appendChild(button)
-		
 		}
-	
 	}
 
 	/**
@@ -392,7 +370,6 @@ define(['require','util'],function(require, util) {
 		var dialogue = new dialogueFromMDD(MDD)
 		
 		this.open(dialogue)
-		
 	}
 
 	/**
@@ -445,19 +422,15 @@ define(['require','util'],function(require, util) {
 								
 								// append the new dialogue to the overlay.
 								overlay.appendChild(currentDialogue)
-								
 							}
 							
 						})(j)
 					}
-					
 				}
-			
 			}
 		
 			// turn the MDD into an actual element structure.
 			dialogues[i] = new dialogueFromMDD(dialogue)
-		
 		})
 		
 		this.open(dialogues[0])
@@ -510,7 +483,6 @@ define(['require','util'],function(require, util) {
 			if ( index === 0 ) item.addClass('active')
 		
 			return item
-		
 		}
 	
 		/**
@@ -537,7 +509,6 @@ define(['require','util'],function(require, util) {
 			
 			// add the new current view.
 			viewContainer.appendChild(currentView)
-		
 		}
 	
 		var dialogue, // root node.
@@ -570,7 +541,6 @@ define(['require','util'],function(require, util) {
 		
 			// hijack the createButtons method used in creating a dialogue.
 			dialogueFromMDD.prototype.createButtons(MVD.buttons, buttonContainer)
-		
 		}
 
 		// set views.
@@ -601,13 +571,10 @@ define(['require','util'],function(require, util) {
 					navItems.push(navItem)
 				
 					navigationList.appendChild(navItem)
-				
 				}
 			
 				else throw util.error('Invalid MDD - ' + i)
-			
 			})
-		
 		}
 		
 		else throw util.error('The MutiView Definition does not have any views.')
@@ -622,7 +589,6 @@ define(['require','util'],function(require, util) {
 		this.open(dialogue, MVD.animate && MVD.animate.animateIn)
 
 		return dialogue
-
 	}
 	
 	/**
@@ -640,7 +606,6 @@ define(['require','util'],function(require, util) {
 				currentDialogue.removeNode(true)
 				
 				overlay.removeClass('visible')
-				
 			})
 		}
 		
@@ -649,7 +614,6 @@ define(['require','util'],function(require, util) {
 			currentDialogue.removeNode(true)
 			
 			overlay.removeClass('visible')
-		
 		}
 	
 	}
@@ -691,7 +655,6 @@ define(['require','util'],function(require, util) {
 			if ( ! Animator ) require(['UI/Animator/Animator'], open)
 			
 			else open()
-						
 		}
 		
 		else {
@@ -699,7 +662,6 @@ define(['require','util'],function(require, util) {
 			overlay.appendChild(dialogue)
 		
 			overlay.addClass('visible')
-		
 		}
 		
 	}

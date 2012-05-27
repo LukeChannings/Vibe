@@ -1,10 +1,10 @@
 {
   "name": "Vibe",
-  "description": "Get the vibe.",
-  "version": "0.0.1",
+  "description": "Good vibrations.",
+  "version": "0.0.2",
   "app": {
     "launch": {
-      "local_path": "app.html"
+      "local_path": "vibe.html"
     }
   },
   "icons": {

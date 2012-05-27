@@ -8,15 +8,19 @@ body{
 }
 
 #Vibe{
-	background: url('images/logo.png') no-repeat center 0px;
+	background: url('images/logo.png') no-repeat center 15px;
 	background-size: auto 50px;
 	width: 95%;
 	min-width: 900px;
 	margin: auto;
+	overflow: hidden;
+	padding-top: 15px;
 	/* keep the app layer above the overlay by default. */
 	position: relative;
 	z-index: 1;
 }
+
+body.svg #Vibe{background-image: url('images/logo.svg')}
 
 #ModalDialogueOverlay .loading{
 	height: 100%;

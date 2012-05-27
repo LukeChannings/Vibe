@@ -1,440 +1,355 @@
 /**
- * UndoManager
- * @description acts like an Array but provides methods for undo / redo and has optional persistency.
+ * Extends the Array to support undo and redo for operations, plus optional persistence feature.
+ * 
+ * Copyright (C) 2012 Luke Channings
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
-define(['util','Model/Persistence' ,'dependencies/md5'], function(util, Persistence, MD5) {
+define(['dependencies/MD5', 'Model/Persistence'], function(MD5, Persistence) {
 
-	// constructor
-	var UndoManager = function(persistenceId) {
-		
-		var store = {}, // keeps raw values keyed by hashes.
-			branches = [[]], // each change to the array creates a new branch.
-			currentBranch = 0, // current branch pointer.
-			persistence = new Persistence('undoManagerStorage' + persistenceId) // persistence instance.
+	/**
+	 * undo manager constructor.
+	 * @param persistence {}
+	 * @return {array} current value.
+	 */
+	var UndoManager = function(persistence) {
+	
+		this.versions = [[]], // initialise the version to a blank array.
+		this.currentVersion = 0 // initially point to the blank version.
+		this.store = {}
+		this.persistence = false // persistence is off by default.
 
-		var save = function() {
+		var self = this, // alias the instance.
+			mutators = ['push', 'splice', 'pop', 'shift', 'unshift', 'reverse', 'sort'],
+			array = [] // create the array to be the value.
+	
+		// apply mutator methods to the instance.
+		for ( var i = 0; i < mutators.length; i++ ) {
 		
-			persistence.save({
-				store : store,
-				branches : branches,
-				currentBranch: currentBranch
-			})
-		
-		}
-
-		// set up persistence.
-		if ( persistenceId )
-		{
-			var self = this
-		
-			// load previous persistence.
-			var persistedInstance = persistence.load()
+			array[mutators[i]] = (function(mutator) {
 			
-			// if there is a previous persistent session.
-			if ( persistedInstance )
-			{
-				store = persistedInstance.store // load the store.
-				branches = persistedInstance.branches // load the branches.
-				currentBranch = persistedInstance.currentBranch // load the current branch pointer.
-			}
-			
-		}
-		
-		// utility methods.
-		var objectToString = function(object) {
-			
-			var string
-			
-			if ( typeof object == 'object' )
-			{
-			
-				for ( var i in object )
-				{
-					if ( object.hasOwnProperty(i) )
-					{
-						if ( typeof object[i] == 'string' )
-						{
-							string += object[i]
-						}
-						else if ( object[i] == 'object' )
-						{
-							string += objectToString(object[i])
-						}
-					}
-				}
-			
-			}
-			else if ( typeof object == 'string' || typeof object == 'number')
-			{
-				string = object
-			}
-			
-			else return undefined
-			
-			return string
-			
-		}
-		
-		var getHash = function(item) {
-			
-			if (typeof item == 'string')
-			{
-				return MD5(item)
-			}
-			else if ( typeof item == 'number' )
-			{
-				return item
-			}
-			else if ( typeof item == 'array' )
-			{
-				var uniqueName
+				return function() {
 				
-				for ( var i = 0; i < item.length; i++ )
-				{
-					if ( typeof item[i] == 'object' )
-					{
-						for ( var j in item[i] )
-						{
-							if ( item[i].hasOwnProperty(j) && typeof item[i][j] == 'string' )
-							{
-								uniqueName += item[i][j]
-							}
-						}
-					} 
-					else if ( typeof item[i] == 'string' ) uniqueName += item[i]
+					return self.mutator.call(self, this, arguments, mutator)
 				}
 				
-				return MD5(uniqueName)
-			}
+			})(mutators[i])
+		}
+
+		/**
+		 * undoes the last mutation on the array.
+		 * @param n {number} number of undo operations to perform.
+		 */
+		array.undo = function(n) {
+		
+			return self.undoAndRedo.call(this, n, self, false)
+		}
+		
+		/**
+		 * redoes the previously undone mutation on the array.
+		 * @param n {number} number of redo operations to perform.
+		 */
+		array.redo = function(n) {
+		
+			return self.undoAndRedo.call(this, n, self, true)
+		}
+		
+		/**
+		 * checks if there is a version behind the current version.
+		 * @param n {number} for checking if n undo operations are possible.
+		 * @return {bool} true if there is a version, false if not.
+		 */
+		array.canUndo = function(n) {
+		
+			return !! self.versions[self.currentVersion - (n || 1)]
+		}
+		
+		/**
+		 * checks if there is a version ahead of the current version.
+		 * @param n {number} for checking if n redo operations are possible.
+		 * @return {bool} true if there is a version, false if not.
+		 */
+		array.canRedo = function(n) {
+		
+			return !! self.versions[self.currentVersion + (n || 1)]
+		}
+		
+		/**
+		 * enables persistence on the UndoManager instance.
+		 * @param store {string} the name of the store to use for persistence.
+		 */
+		array.withPersistence = function(store) {
 			
-		}
-		
-		// creates a new branch snapshot.
-		var fork = function() {
-		
-			var branch = (function(branch){
+			var instance = this
+			
+			self.persistence = new Persistence(store)
 				
-				var arr = []
-				
-				for ( var i in branch )
-				{
-					if ( branch.hasOwnProperty(i) )
-					{
-						arr.push(branch[i])
-					}
-				}
-				
-				return arr
-				
-			})(branches[currentBranch])
-		
-			branches.push(branch)
-		
-			currentBranch++
-		}
-		
-		// undo and redo methods.
-		this.undo = function(n) {
-		
-			if ( typeof n == 'number' )
-			{
-				if ( typeof branches[currentBranch - n] !== 'undefined')
-				{
-					currentBranch = currentBranch - n
+			var store = self.persistence.load()
+			
+			if ( store.store && store.versions && store.currentVersion ) {
 					
-				}
-				
-			}
-			
-			else if ( typeof branches[currentBranch - 1] !== 'undefined' ) currentBranch--
-		
-			save()
-		
-			return branches[currentBranch].length
-		
-		}
-		
-		this.redo = function(n) {
-		
-			if ( typeof n == 'number' )
-			{
-				if ( typeof branches[currentBranch + n] !== 'undefined')
-				{
-					currentBranch = currentBranch + n
+				self.store = store.store
 					
-				}
+				self.versions = store.versions
+					
+				self.currentVersion = store.currentVersion
+					
+				Array.prototype.splice.call(instance, 0, instance.length)
+					
+				Array.prototype.push.apply(instance, self.replaceKeysWithValues(self.versions[self.currentVersion]))
 			}
 			
-			else if ( typeof branches[currentBranch + 1] !== 'undefined' ) currentBranch++
+			array.clearPersistence = function() {
 			
-			save()
+				versions = [[]]; currentVersion = 0
 			
-			return branches[currentBranch].length
-			
-		}
-		
-		// custom mutator methods.
-		this.removeItemsAtIndexes = function() {
-		
-			fork()
-		
-			var toRemove = []
-		
-			for ( var i = 0; i < arguments.length; i++ )
-			{
-				if ( typeof arguments[i] == 'number' )
-				{
-					toRemove.push(arguments[i])
-				}
-			}
-			
-			toRemove.sort()
-			
-			for ( var i = toRemove.length; i > 0; i-- )
-			{
-				branches[currentBranch].splice(toRemove[i], 1)
-			}
-			
-			save()
-		}
-		
-		this.clear = function(purge) {
-		
-			if ( purge ) {
-			
-				// set defaults.
-				branches = [[]]
-				currentBranch = 0
 				store = {}
 			
-				// clear the localStorage.
-				delete localStorage['undoManagerStorage' + persistenceId]
+				this.splice(0, this.length)
 			
+				self.persistence.clear()
+			}
+			
+			return array
+		}
+		
+		/**
+		 * checks if there is a version behind the current version.
+		 * @param n {number} for checking if n undo operations are possible.
+		 * @return {bool} true if there is a version, false if not.
+		 */
+		array.canUndo = function(n) {
+		
+			return !! self.versions[self.currentVersion - (n || 1)]
+		}
+		
+		/**
+		 * checks if there is a version ahead of the current version.
+		 * @param n {number} for checking if n redo operations are possible.
+		 * @return {bool} true if there is a version, false if not.
+		 */
+		array.canRedo = function(n) {
+		
+			return !! self.versions[self.currentVersion + (n || 1)]
+		}
+	
+		array.clear = function() {
+		
+			self.newVersion()
+			
+			this.splice(0,this.length)
+		}
+	
+		// return the array.
+		return array
+	
+	}
+	
+	/**
+	 * undoes or redoes the last mutation (if any) performed on the array.
+	 * @param n {number} number of undo operations to perform.
+	 * @param self {object} the visible array instance.
+	 * @param direction {boolean} true for redo, false for undo. 
+	 */
+	UndoManager.prototype.undoAndRedo = function(n, self, direction) {
+		
+		// if it is not possible to undo or redo then return false.
+		if ( ( direction === true && ! this.canRedo(n) ) || ( direction === false && ! this.canUndo(n) ) ) return false
+	
+		// set the new version.
+		self.currentVersion = direction ? self.currentVersion + (n || 1) : self.currentVersion - (n || 1)
+	
+		// clear the array instance.
+		Array.prototype.splice.call(this, 0, this.length)
+	
+		var newValue = self.persistence ? self.replaceKeysWithValues(self.versions[self.currentVersion]) : self.versions[self.currentVersion]
+	
+		// push the new version onto the array instance.
+		return Array.prototype.push.apply(this, newValue)
+	}
+	
+	/**
+	 * intercepts mutator methods and creates a new version.
+	 * @param context {object} the value instance.
+	 * @param arguments {pseudo-array} arguments for the mutator method.
+	 * @param method {string} name of the mutator method.
+	 * @return the output of the mutator.
+	 */
+	UndoManager.prototype.mutator = function(context, arguments, method) {
+	
+		// if there are versions ahead of the current version remove them.
+		if ( this.versions.length > this.currentVersion ) this.versions.splice(this.currentVersion + 1)
+	
+		// create a new version.
+		this.newVersion()
+		
+		// apply the mutator to the value.
+		if ( method != 'sort' ) Array.prototype[method].apply(context, arguments)
+		
+		// things to do if we're using persistence.
+		if ( this.persistence ) {
+			
+			if ( /^(splice|pop)$/.test(method) ) {
+				
+				var result = Array.prototype[method].apply(this.versions[this.currentVersion], arguments)
+				
+				result = this.replaceKeysWithValues(result)
+			}
+			
+			else if ( method == 'reverse' ) {
+			
+				var result = Array.prototype.reverse.apply(this.versions[this.currentVersion])
+				
+				result = this.replaceKeysWithValues(result)
+			}
+			
+			else if ( method == 'sort' ) {
+			
+				var values = this.replaceKeysWithValues(this.versions[this.currentVersion])
+				
+				var result = Array.prototype.sort.apply(values, arguments)
+				
+				Array.prototype.splice.call(context, 0, context.length)
+				
+				Array.prototype.push.apply(context, values)
+				
+				this.versions[this.currentVersion] = this.replaceValuesWithKeys(values)
 			}
 			
 			else {
 			
-				fork()
-				
-				branches[currentBranch] = []
-				
-				save()
-			}
-		
-		}
-		
-		// array mutator methods:
-		this.push = function() {
-		
-			// check for initial items...
-			if ( arguments.length !== 0 )
-			{
-			
-				if ( ( branches.length ) > currentBranch )
-				{
-					branches.splice(currentBranch + 1, branches.length)
-				}
-			
-				if ( branches.length == 0 )
-				{
-					fork()
-					currentBranch = 0
-				}
-				else
-				{
-					fork()
-				}
-			
-				for ( var i = 0; i < arguments.length; i++ )
-				{
-					var id = getHash(objectToString(arguments[i]))
-					
-					store[id] = arguments[i]
-					
-					branches[currentBranch].push(id)
-				}
-				
-			}
-		
-			save()
-		
-			return branches[currentBranch].length
-		
-		}
-		
-		this.pop = function() {
-			
-			fork()
-			
-			var id = branches[currentBranch].pop()
-				
-			save()
-			
-			return store[id]
-			
-		}
-		
-		this.shift = function() {
-		
-			fork()
-			
-			var id = branches[currentBranch].shift()
-		
-			save()
-			
-			return store[id]
-		
-		}
-		
-		this.reverse = function() {
-			
-			fork()
-			
-			branches[currentBranch].reverse()
-			
-			var result = []
-			
-			for ( var i in branches[currentBranch] )
-			{
-				result.push(store[branches[currentBranch][i]])
+				// convert the values to keys and apply the mutator.
+				var result = Array.prototype[method].apply(this.versions[this.currentVersion], this.replaceValuesWithKeys(arguments))
 			}
 			
-			return result
-			
-			save()
-			
-		}
-		
-		this.splice = function() {
-		
-			fork()
-			
-			var removed = Array.prototype.splice.apply(branches[currentBranch],arguments)
-		
-			for ( var i in removed ) {
-				if ( removed.hasOwnProperty(i) )
-				{
-					removed[i] = store[removed[i]]
-				}
-			}
-			
-			save()
-			
-			return removed
-			
-		}
-		
-		this.unshift = function() {
-			
-			fork()
-			
-			for ( var i = 0; i < arguments.length; i++ )
-			{
-				var id = getHash(objectToString(arguments[i]))
-				
-				store[id] = arguments[i]
-				
-				branches[currentBranch].unshift(id)
-			}
-			
-			save()
-			
-			return branches[currentBranch].length
-			
-		}
-		
-		// accessor methods:
-		this.getItemAtIndex = function(n) {
-		
-			return store[branches[currentBranch][n]]
-		
-		}
-		
-		this.value = function(injectPropertyName) {
-			
-			var value = []
-			
-			for ( var i = 0; i < branches[currentBranch].length; i++ )
-			{
-			
-				var item = store[branches[currentBranch][i]]
-			
-				if ( injectPropertyName ) item.UMPropertyName = branches[currentBranch][i]
-			
-				value.push(item)
-			}
-			
-			return value
-			
-		}
-		
-		this.concat = function() {
-			
-			// construct current array.
-			var currentArray = []
-			
-			for ( var i in branches[currentBranch] )
-			{
-				currentArray.push(store(branches[currentBranch]))
-			}
-			
-			return currentArray.concat.apply(this,arguments)
-			
-		}
-		this.join = function() {
-		
-			// construct current array.
-			var currentArray = []
-			
-			for ( var i in branches[currentBranch] )
-			{
-				currentArray.push(store(branches[currentBranch]))
-			}
-			
-			return currentArray.concat.join(this,arguments)
-		
-		}
-		this.getBranches = function() { return branches}
-		this.getStore = function() { return store }
-		
-		
-		// method to remove unnecessary stored values and branches.
-		this.prune = function() {
-			
-			// prune branches.
-			branches.splice(currentBranch + 1, branches.length)
-			
-			// get all ids used in all trees.
-			var allIds = {}
-			
-			// find unique ids used in branches.
-			branches.forEach(function(branch){
-			
-				branch.forEach(function(id){
-					
-					allIds[id] = true
-					
-				})
-			
+			// update the persistence.
+			this.persistence.save({
+				'versions' : this.versions,
+				'currentVersion' : this.currentVersion,
+				'store' : this.store
 			})
-			
-			// walk the store.
-			for ( var id in store )
-			{
-				// match ids that are in the store but not the branches.
-				if ( ! ( id in allIds ) )
-				{
-					// remove those ids.
-					delete store[id]
-				}
-			}
-			
-			save()
-			
 		}
 		
+		else {
+		
+			// apply the mutator to the version.
+			var result = Array.prototype[method].apply(this.versions[this.currentVersion], arguments)
+		}
+		
+		return result
 	}
 	
-	return UndoManager
+	/**
+	 * transforms an array of values into an array of keys.
+	 * @param values {array} to turn into keys.
+	 * @return keys {array} array of keys for the values.
+	 */
+	UndoManager.prototype.replaceValuesWithKeys = function(value) {
+	
+		var keys = []
+	
+		for ( var i = 0; i < value.length; i++ ) {
+		
+			var key = this.generateHash(value[i])
+		
+			this.store[key] = value[i]
+		
+			keys.push(key)
+		}
+		
+		return keys
+	}
+	
+	/**
+	 * transforms an array of keys to an array of related values.
+	 * @param keys {array} of keys.
+	 * @return {array} of values.
+	 */
+	UndoManager.prototype.replaceKeysWithValues = function(keys) {
+	
+		var values = [],
+			keys = keys instanceof Array ? keys : [keys]
+	
+		for ( var i = 0; i < keys.length; i++ ) {
+		
+			values.push(this.store[keys[i]])
+		}
+		
+		return values
+	}
 
+	/**
+	 * generates a hash for any variable, including objects and arrays.
+	 * @param value {generic} value to be hashed.
+	 */
+	UndoManager.prototype.generateHash = function(value) {
+
+		/**
+		 * transforms any variable into a string.
+		 * @param value {generic} value to be stringified.
+		 */
+		var toString = function(value) {
+			
+			var string = ''
+			
+			if ( typeof value == 'object' ) {
+		
+				if ( value instanceof Array ) {
+				
+					if ( ! /\[object .*?\]/.test(value.join('')) ) return value.join('')
+					
+					else for ( var i = 0; i < value.length; i++ ) string += i + toString(value[i])
+				}
+				
+				else for ( var i in value ) string += i + toString(value[i])
+				
+				return string
+			}
+		
+			else if ( !! value ) return value.toString()
+			
+			else return string + value
+		}
+
+		// return the hashed stringified variable.
+		return MD5(toString(value))
+	}
+	
+	/**
+	 * creates a clone of the current branch and sets it up as the new branch.
+	 */
+	UndoManager.prototype.newVersion = function() {
+
+		// clone the current version.
+		var version = (function(currentVersion) {
+		
+			var fork = []
+			
+			for ( var i = 0; i < currentVersion.length; i++ ) fork.push(currentVersion[i])
+
+			return fork
+		
+		})(this.versions[this.currentVersion])
+	
+		// push the clone into the 
+		this.versions.push(version)
+		
+		// increment the version pointer.
+		this.currentVersion++
+	}
+
+	if ( typeof Array.UndoManager == 'undefined' ) Array.UndoManager = UndoManager
+
+	return UndoManager
 })

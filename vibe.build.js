@@ -1,6 +1,9 @@
 ({
 	baseUrl : 'modules',
 	appDir : '.',
-	dir : '../VibeBuild',
-	name : 'vibe'
+	dir : '../VibeBuilds/vibe-' + Date.now(),
+	name : '../vibe',
+	optimizeCss : 'standard',
+	findNestedDependencies : true,
+	preserveLicenseComments : false
 })

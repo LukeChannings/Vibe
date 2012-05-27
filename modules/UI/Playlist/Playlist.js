@@ -39,9 +39,7 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 					var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
 				
 					node.addClass('usingControlBar')
-				
 				})
-			
 			}
 			
 			else  var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
@@ -70,9 +68,7 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				
 					// tell any listeners that the info bar module is loaded.
 					self.emit('infoBarLoaded')
-				
 				})
-			
 			}
 			
 			// work around IE bug.
@@ -81,10 +77,7 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				self.emit('loaded')
 			
 			}, 0)
-			
-			
 		})
-		
 	}
 
 	/**
@@ -124,7 +117,6 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			item.row.addClass('selected')
 		
 			this.selectedPlaylistItems.push(item)
-		
 		}
 		
 		else {
@@ -132,7 +124,6 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			this.selectedPlaylistItems.forEach(function(node, index) {
 			
 				node.row.removeClass('selected')
-			
 			})
 			
 			this.selectedPlaylistItems = []
@@ -140,17 +131,14 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 			item.row.addClass('selected')
 		
 			this.selectedPlaylistItems.push(item)
-		
 		}
 		
 		this.emit('itemSelected', e, item, isSelected)
-		
 	}
 	
 	UIPlaylist.prototype.playItem = function(e, item) {
 	
 		this.emit('playItem', item.id, item.row)
-	
 	}
 	
 	/**
@@ -164,7 +152,6 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 		
 		// add the items.
 		this.addRows(items)
-	
 	}
 	
 	// use EventEmitter.
