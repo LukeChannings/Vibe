@@ -1,13 +1,5 @@
-define(['require','dependencies/EventEmitter','util', 'dependencies/soundmanager2'], function(require, EventEmitter, util) {
+define(['require','dependencies/EventEmitter','util'], function(require, EventEmitter, util) {
 
-	// SM2 setup.
-	soundManager.url = 'modules/dependencies/'
-	soundManager.debugMode = false
-	soundManager.allowScriptAccess = 'always'
-	soundManager.flashVersion = 8
-	soundManager.preferFlash = true
-	soundManager.wmode = 'transparent'
-	
 	// control variables.
 	var currentSound = null
 	
