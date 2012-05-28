@@ -25,7 +25,7 @@ body.svg #Vibe{background-image: url('images/logo.svg')}
 #ModalDialogueOverlay .loading{
 	height: 100%;
 	width: 100%;
-	background: #fff url('modules/UI/Collection/CollectionLoadingThrobber.gif') center no-repeat;
+	background: #fff url('images/LoadingThrobber.gif') center no-repeat;
 }
 
 *{
