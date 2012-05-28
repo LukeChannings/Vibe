@@ -1,7 +1,9 @@
 #!/bin/sh
 #
-# Bbuilds a flattened package file for Vibe.
+# Builds a flattened package file for Vibe.
 #
+
+echo $1
 
 name="vibe-$(date +"%s")"
 dir="../VibeBuilds/$name" # generate a name for the build.
