@@ -28,10 +28,22 @@ rm -rf modules images build* Diagrams tests Vibe.esproj createMultiView.png crea
 # fix some paths in the source code.
 sed -i '' s#modules/dependencies/## vibe.html
 sed -i '' 's/[a-z]\.toUrl//g' vibe.js
-sed -i '' 's/images\///g' vibe.html vibe.css manifest.json
+sed -i '' 's/images\///g' vibe.html vibe.css vibe.js manifest.json
 
 mkdir vibe
 mv * vibe
 
+# build chrome app.
+if [ -f /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome ]; then
+	/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --pack-extension=vibe --no-message-box
+	rm vibe.pem
+	mv vibe.crx vibe-chrome-app.crx
+fi
+
+# remove chrome extras.
+rm vibe/manifest.json vibe/icon_{32,64}.png
+
 zip -r vibe.zip vibe
 tar -zcvf vibe.tar.gz vibe
+
+scp -r ../$dir luke@sherlock:/var/www/music.channings.me/htdocs
