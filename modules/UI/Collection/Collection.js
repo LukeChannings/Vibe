@@ -4,7 +4,13 @@
  * @docs - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection
  * @dependencies - util, musicme/api, UI/Widget/TreeList, EventEmitter.
  */
-define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/TreeList'], function(require, util, EventEmitter, TreeList) {
+define([
+	'require',
+	'util',
+	'dependencies/EventEmitter',
+	'UI/Widget/TreeList/TreeList',
+	'UI/Widget/DragAndDrop/DragAndDrop'
+	],	function(require, util, EventEmitter, TreeList, DnD) {
 
 	/**
 	 * creates a new collection instance.
@@ -166,11 +172,7 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 				'setAttributes' : []
 			}
 			
-			if ( self.dropTarget ) {
-			
-				options.setAttributes.push(['draggable','true'])
-				options.dragStartMethod = self.dragStart
-			}
+			if ( self.dropTarget ) options.dragStartMethod = self.dragStart
 			
 			// create the tree list.
 			var list = new TreeList(data, options, self.options.clickTimeout)
@@ -211,13 +213,10 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 		
 		// dragstart.
 		// triggered when a draggable item is dragged.
-		this.dragStart = function(e) {
+		this.dragStart = function(target, e) {
 		
 			// set dnd mode.
 			e.dataTransfer.dropEffect = 'copy'
-		
-			// determine the target node.
-			var target = e.target || e.srcElement
 		
 			// get the collection type.
 			var type = target.parentNode.className.match(/(genre|artist|album|track)/)[0]
@@ -250,79 +249,43 @@ define(['require', 'util', 'dependencies/EventEmitter', 'UI/Widget/TreeList/Tree
 			}
 		}
 	
-		// dragover
-		// triggered when the dragged item enters the drop target.
-		util.addListener(this.dropTarget,'dragover',function(e) {
+		DnD.droppable({
+			node : this.dropTarget,
+			zoneClass : 'draghighlight',
+			zoneHighlightNode : this.dropTarget,
+			dropZone : 'collection_playlist',
+			drop : function(target, e) {
 			
-			if (e.preventDefault) e.preventDefault()
-			
-			self.dropTarget.addClass('draghighlight')
-			
-			e.dataTransfer.effectAllowed = 'all'
-			
-			return false
-			
-		})
-		
-		// dragenter
-		// triggered when the item enters the drop target.
-		util.addListener(this.dropTarget,'dragenter',function(e) {
-		
-			return false
-		
-		})
-		
-		// dragleave
-		// triggered when the dragged item leaves the drop target.
-		util.addListener(this.dropTarget,'dragleave',function(e) {
-			
-			self.dropTarget.removeClass('draghighlight')
-			
-		})
-	
-		// drop
-		// triggered when the dragged item is dropped within the drop target.
-		util.addListener(this.dropTarget,'drop',function(e) {
-			
-			var target = e.target || e.srcElement
-			
-			self.dropTarget.removeClass('draghighlight')
-			
-			if ( e.dataTransfer.getData('Text') ) {
-			
-				self.emit('itemSelected', JSON.parse(e.dataTransfer.getData('Text')))
-			}
-			else {
-			
-				var data = []
-
-				for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
+				if ( e.dataTransfer.getData('Text') ) {
 				
-					var reader = new FileReader()
-				
-					var type = e.dataTransfer.files[i].type
-				
-					reader.readAsDataURL(e.dataTransfer.files[i])
-				
-					reader.onloadend = function(e) {
-					
-						data.push({
-							'type' : type,
-							'data' : e.currentTarget.result.replace('data:' + type + 'base64,','')
-						})
-					
-					}
-					
+					self.emit('itemSelected', JSON.parse(e.dataTransfer.getData('Text')))
 				}
 				
-				self.emit('dataDrop', data)
+				else {
 				
-			}
-			
-			if ( e.preventDefault ) e.preventDefault()
-			
-		})
+					var data = []
 	
+					for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
+					
+						var reader = new FileReader()
+					
+						var type = e.dataTransfer.files[i].type
+					
+						reader.readAsDataURL(e.dataTransfer.files[i])
+					
+						reader.onloadend = function(e) {
+						
+							data.push({
+								'type' : type,
+								'data' : e.currentTarget.result.replace('data:' + type + 'base64,','')
+							})
+						}
+					}
+					
+					self.emit('dataDrop', data)
+				}
+			}
+		})
 	}
 
 	/**

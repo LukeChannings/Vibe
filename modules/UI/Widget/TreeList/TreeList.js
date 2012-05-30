@@ -2,7 +2,7 @@
  * UITreeListWidget
  * @description Generates a tree list view that displays a list based on an array of objects.
  */
-define(['require','util','dependencies/EventEmitter'],function(require, util, EventEmitter){
+define(['require','util','dependencies/EventEmitter', 'UI/Widget/DragAndDrop/DragAndDrop'],function(require, util, EventEmitter, DnD){
 
 	// include stylesheet.
 	util.registerStylesheet(require.toUrl('./TreeList.css'))
@@ -77,7 +77,7 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			if ( typeof options.setAttributes == 'object' ) item.setAttributes(options.setAttributes)
 		
 			// set data-id.
-			if ( typeof itemObj.id == 'string' ) item.setAttribute('data-id',itemObj.id)
+			if ( typeof itemObj.id == 'string' ) item.setAttribute('data-id', itemObj.id)
 			
 			// check for item children.
 			if ( itemObj.children instanceof Array ) {
@@ -96,21 +96,12 @@ define(['require','util','dependencies/EventEmitter'],function(require, util, Ev
 			// if there is a drag start method specified bind it to the dragstart event.
 			if ( typeof options.dragStartMethod == 'function' && options.isRootNode ) {
 			
-				util.addListener(item,'dragstart',options.dragStartMethod)
+				DnD.draggable({
+					node : item,
+					dropZone : 'collection_playlist',
+					start : options.dragStartMethod
+				})
 			}
-			
-			util.addListener(item,'selectstart',function(e) {
-			
-				if ( e.preventDefault ) e.preventDefault()
-			
-				if ( typeof options.dragStartMethod == 'function' && options.isRootNode ) {
-				
-					(e.target || e.srcElement).dragDrop()
-				}
-			
-				return false
-				
-			})
 			
 			// append the item to the list.
 			node.appendChild(item)
