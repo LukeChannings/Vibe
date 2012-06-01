@@ -115,4 +115,22 @@ body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background-image:
 
 #UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover:active{-ms-background-position: -31px 1px;
 }
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover:active{-ms-background-position: -31px 1px}
+#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover:active{-ms-background-position: -31px 1px}/**
+ * Dragdealer JS v0.9.5
+ * http://code.ovidiu.ch/dragdealer-js
+ *
+ * Copyright (c) 2010, Ovidiu Chereches
+ * MIT License
+ * http://legal.ovidiu.ch/licenses/MIT
+ */
+
+.dragdealer {
+	position: relative;
+	height: 20px;
+	background: #eee;
+}
+
+.dragdealer .handle {
+	position: absolute;
+	cursor: pointer;
+}

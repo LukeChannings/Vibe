@@ -1,4 +1,4 @@
-define(['util', 'UI/Widget/DragDealer/DragDealer', 'dependencies/EventEmitter'], function(util, DragDealer, EventEmitter) {
+define(['util', 'dependencies/DragDealer', 'dependencies/EventEmitter'], function(util, DragDealer, EventEmitter) {
 
 	/**
 	 * constructs a slider instance.

@@ -43,6 +43,8 @@ fi
 # remove chrome extras.
 rm vibe/manifest.json vibe/icon_{32,64}.png
 
+ln -s vibe/vibe.html vibe/index.html
+
 zip -r vibe.zip vibe
 tar -zcvf vibe.tar.gz vibe
 

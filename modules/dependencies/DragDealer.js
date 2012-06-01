@@ -9,9 +9,6 @@
 
 define(['require','util'],function(require, util) {
 
-	// register stylesheet.
-	util.registerStylesheet(require.toUrl('./DragDealer.css'))
-
 	/* Cursor */
 	
 	var Cursor = {
