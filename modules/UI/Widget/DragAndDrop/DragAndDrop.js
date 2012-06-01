@@ -23,12 +23,12 @@ define(['util'], function(util) {
 		
 			window.dropZone = options.dropZone
 		
+			if ( options.data ) e.dataTransfer.setData('Text', options.data)
+			else e.dataTransfer.setData('Text', '')
+		
 			options.start.call(this, target, e)
 			
 			e.dataTransfer.dropEffect = 'copy'
-			
-			if ( options.data ) e.dataTransfer.setData('Text', options.data)
-			else e.dataTransfer.setData('Text', 'bob')
 		})
 		
 		util.addListener(options.node, 'selectstart', function(e) {

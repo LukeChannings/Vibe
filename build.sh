@@ -46,4 +46,4 @@ rm vibe/manifest.json vibe/icon_{32,64}.png
 zip -r vibe.zip vibe
 tar -zcvf vibe.tar.gz vibe
 
-scp -r ../$dir luke@sherlock:/var/www/music.channings.me/htdocs
+scp -r ../$dir luke@192.168.0.135:/var/www/music.channings.me/htdocs
