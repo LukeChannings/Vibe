@@ -2,18 +2,15 @@
 <html lang="en">
 	<head>
 		<title>RearrangeableList</title>
-		<meta charset="utf-8" />
 		<style>
-#RearrangeableList li{
-	display: block;
-	background: #333;
-	color: #fff;
-}
-
-#RearrangeableList li.dropzone{
-	border-bottom: 2px dashed #eee;
+#UIPlaylist{
+	width: 500px;
+	height: 300px;
+	border: 1px solid #333;
+	overflow: auto;
 }
 		</style>
+		<meta charset="utf-8" />
 		<script src="../modules/dependencies/require.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		
@@ -22,24 +19,39 @@
 		require(['dependencies/domReady', 'util', 'UI/Widget/RearrangeableList/RearrangeableList'], function(domReady, util, RearrangeableList) {
 		
 			domReady(function() {
-			
-				var list = util.createElement({
-					'tag' : 'ol',
-					'id' : 'RearrangeableList',
-					'appendTo' : document.body
+
+				function rowFactory(item) {
+				
+					return util.createElement({
+						tag : 'li',
+						inner : item
+					})
+				}
+
+				var container = util.createElement({
+					tag : 'div',
+					customClass : 'container',
+					appendTo : document.getElementById('UIPlaylist')
 				})
-				
-				var rows = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"]
-				
+
 				rearrangeableList = new RearrangeableList({
-					'node' : list
+					appendTo : container,
+					insertBorderStyle : '2px dashed #333'
 				})
 				
-				rearrangeableList.render(rows)
+				var items = []
+				
+				for ( var i = 0; i < 10; i++ ) {
+				
+					items.push('Item ' + (i + 1) )
+				}
+				
+				rearrangeableList.addNodes(items.map(rowFactory))
 			})
 		})
-
-		</script>
+	</script>
 	</head>
-	<body></body>
+	<body>
+		<div id="UIPlaylist"></div>
+	</body>
 </html>

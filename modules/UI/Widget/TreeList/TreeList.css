@@ -5,7 +5,7 @@
 .UITreeListWidget{
 	width: 100%;
 	overflow: auto;
-	background: #fff url('TreeListZebraStripes.png');
+	background: #fff url('ZebraStripes.png');
 	margin: 0;
 	padding: 0;
 }

@@ -224,11 +224,6 @@ define([
 			// get the id of the collection type.
 			var id = target.getAttribute('data-id')
 		
-			e.dataTransfer.setData('Text', JSON.stringify({
-				'id' : id,
-				'type' : type
-			}))
-			
 			// set a drag image.
 			if ( e.dataTransfer.setDragImage ) {
 				// Create a new ghost image.
@@ -246,6 +241,11 @@ define([
 				
 				// Set the ghost image.
 				e.dataTransfer.setDragImage(DragImage,-10,-10)
+				
+				return {
+					'id' : id,
+					'type' : type
+				}
 			}
 		}
 	
@@ -254,13 +254,10 @@ define([
 			zoneClass : 'draghighlight',
 			zoneHighlightNode : this.dropTarget,
 			dropZone : 'collection_playlist',
-			drop : function(target, e) {
+			drop : function(target, e, data) {
 			
-				if ( e.dataTransfer.getData('Text') ) {
-				
-					self.emit('itemSelected', JSON.parse(e.dataTransfer.getData('Text')))
-				}
-				
+				if ( typeof data == 'object' ) self.emit('itemSelected', data)
+
 				else {
 				
 					var data = []

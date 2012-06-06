@@ -33,7 +33,7 @@
 }
 
 #UIPlaylist > .listContainer > ol{
-	background: url('PlaylistZebraStripes.png');
+	background: url('ZebraStripes.png');
 }
 
 #UIPlaylist > .listContainer > ol > li > ol{

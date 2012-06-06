@@ -7,36 +7,45 @@ define(['util'], function(util) {
 	
 	/**
 	 * makes a node draggable
-	 * @param node {Element} to be made a draggable item.
-	 * @param start {function} to be called when the element begins to be dragged.
-	 * @param data {string} to be set in the drag event and read on drop.
+	 * @param options.node {Element} to be made a draggable item.
+	 * @param options.start {function} to be called when the element begins to be dragged. Returns the data.
 	 */
 	DragAndDrop.draggable = function(options) {
 	
-		var options = options || {}
+		if ( typeof options != 'object' || ( typeof options == 'object' && ( !options.start || !options.node ) ) ) {
+		
+			throw new Error('Draggable options invalid.')
+			
+			return false
+		}
 	
+		// set the draggable attribute.
 		options.node.setAttribute('draggable', 'true')
 	
 		util.addListener(options.node, 'dragstart', function(e) {
 		
-			var target = e.target || e.srcElement
-		
 			window.dropZone = options.dropZone
 		
-			if ( options.data ) e.dataTransfer.setData('Text', options.data)
-			else e.dataTransfer.setData('Text', '')
+			var data = options.start(e.target || e.srcElement, e)
 		
-			options.start.call(this, target, e)
-			
+			if ( typeof data == 'object' ) data = JSON.stringify(data)
+			else data = data.toString()
+		
+			e.dataTransfer.setData('Text', data)
+		
 			e.dataTransfer.dropEffect = 'copy'
 		})
 		
 		util.addListener(options.node, 'selectstart', function(e) {
 		
-			if ( e.preventDefault ) e.preventDefault()
-		
-			e.srcElement && e.srcElement.dragDrop && e.srcElement.dragDrop()
-		
+			if ( !e.shiftKey && !e.ctrlKey && !e.metaKey ) {
+			
+				if ( e.preventDefault ) e.preventDefault()
+			
+				e.srcElement && e.srcElement.dragDrop && e.srcElement.dragDrop()
+			
+			}
+			
 			return false
 		})
 	}
@@ -45,13 +54,19 @@ define(['util'], function(util) {
 	 * makes a node a drop zone.
 	 * @param node {Element} to be made a drop zone.
 	 * @param enter {function} to be called when a draggable item enters the drop zone.
+	 * @param whileentered {function} to be called whilst the cursor is in the drop zone.
 	 * @param leave {function} to be called when a draggable item leaves the drop zone.
 	 * @param drop {function} to be called when a draggable item is released whilst inside the drop zone.
 	 * @param zoneClass {string} the class that is set when an item is dragged into the zone.
 	 */
 	DragAndDrop.droppable = function(options) {
 	
-		var options = options || {}
+		if ( typeof options != 'object' || ( typeof options == 'object' && ( !options.drop || !options.node ) ) ) {
+		
+			throw new Error('Droppable options invalid.')
+			
+			return false
+		}
 	
 		util.addListener(options.node, 'dragover', function(e) {
 		
@@ -73,6 +88,11 @@ define(['util'], function(util) {
 			
 			else e.dataTransfer.effectAllowed = 'none'
 			
+			if ( typeof options.whileentered == 'function' ) {
+			
+				options.whileentered(target, e)
+			}
+			
 			return false
 		})
 		
@@ -80,7 +100,10 @@ define(['util'], function(util) {
 		
 			var target = e.target || e.srcElement
 		
-			options.enter && options.enter.call(this, target, e)
+			if ( typeof options.enter == 'function' ) {
+			
+				options.enter(target, e)
+			}
 		
 			return false
 		})
@@ -96,7 +119,10 @@ define(['util'], function(util) {
 				classNode.removeClass(options.zoneClass) 
 			}
 		
-			options.leave && options.leave.call(this, target, e)
+			if ( typeof options.leave == 'function' ) {
+			
+				options.leave(target, e)
+			}
 		
 			return false
 		})
@@ -112,8 +138,23 @@ define(['util'], function(util) {
 				classNode.removeClass(options.zoneClass) 
 			}
 
-			options.drop && options.drop.call(this, target, e)
+			var data = e.dataTransfer.getData('Text')
 
+			if ( data ) {
+			
+				try {
+				
+					data = JSON.parse(data)
+				}
+				catch (ex) {
+				
+					if ( /^\d+$/.test(data) ) data = parseInt(data)
+					else if ( /^\d+\.\d+$/.test(data) ) data = parseFloat(data)
+				}
+	
+				options.drop(target, e, data)
+			}
+			
 			if ( options.dropZone ) window.dropZone = undefined
 
 			if ( e.preventDefault ) e.preventDefault()

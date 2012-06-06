@@ -23,6 +23,49 @@ define(function(){
 		}
 	}
 	
+	// map shim.
+	if ( ! Array.prototype.map ) {
+	
+		Array.prototype.map = function(f) {
+		
+			var arr = []
+			
+			this.forEach(function(item) {
+				
+				arr.push(f(item))
+			})
+			
+			return arr
+		}
+	}
+	
+	// Array indexOf. (for IE <= 8)
+	// From MDC - https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf#Compatibility
+	if ( ! Array.prototype.indexOf) {
+	
+	  Array.prototype.indexOf = function(elt , from) {
+	  
+	    var len = this.length >>> 0;
+	
+	    var from = Number(arguments[1]) || 0
+	    
+	    from = (from < 0)
+	         ? Math.ceil(from)
+	         : Math.floor(from)
+	         
+	    if (from < 0)
+	      from += len;
+	
+	    for (; from < len; from++) {
+	    
+	      if (from in this &&
+	          this[from] === elt)
+	        return from;
+	    }
+	    return -1;
+	  }
+	}
+	
 	// setAttributes.
 	if ( typeof Element.prototype.setAttributes == "undefined" ) {
 	
@@ -104,35 +147,7 @@ define(function(){
 					self.appendChild(child)
 				}
 			})
-			
 		}
-	}
-	
-	// Array indexOf. (for IE <= 8)
-	// From MDC - https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf#Compatibility
-	if ( ! Array.prototype.indexOf) {
-	
-	  Array.prototype.indexOf = function(elt /*, from*/) {
-	  
-	    var len = this.length >>> 0;
-	
-	    var from = Number(arguments[1]) || 0
-	    
-	    from = (from < 0)
-	         ? Math.ceil(from)
-	         : Math.floor(from)
-	         
-	    if (from < 0)
-	      from += len;
-	
-	    for (; from < len; from++) {
-	    
-	      if (from in this &&
-	          this[from] === elt)
-	        return from;
-	    }
-	    return -1;
-	  }
 	}
 	
 	// addClass
@@ -236,7 +251,7 @@ define(function(){
 		
 			if ( window.registeredStylesheets.indexOf(url) == -1) {
 			
-				(document.head || document.getElementsByTagName("head")[0]).appendChild(function() {
+				document.getElementsByTagName("head")[0].appendChild(function() {
 				
 					var link = document.createElement('link')
 				
@@ -455,7 +470,7 @@ define(function(){
 			else return false;
 		
 		},
-		
+
 		error : function(message, type) {
 		
 			var error = new Error()

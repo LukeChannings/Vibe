@@ -1,0 +1,23 @@
+.UIRearrangeableListWidget{
+	background: url('./ZebraStripes.png') repeat;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.UIRearrangeableListWidget > li{
+	display: block;
+	height: 23px;
+	line-height: 23px;
+	border-bottom: 2px dashed transparent;
+}
+
+.UIRearrangeableListWidget > li:first-child{
+	border-top: 2px dashed transparent;
+	height: 21px;
+}
+
+.UIRearrangeableListWidget > li.selected{
+	background: #c2deff;
+}
