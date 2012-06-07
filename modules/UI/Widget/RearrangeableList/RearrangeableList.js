@@ -1,4 +1,4 @@
-define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(require, util, DnD) {
+define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 
 	util.registerStylesheet(require.toUrl('./RearrangeableList.css'))
 
@@ -158,6 +158,33 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 	}
 
 	/**
+	 * determines the area of the node that the cursor is in.
+	 * @param node {Element} the target node.
+	 * @param e {Event} the MouseEvent. 
+	 * @returns {string} top or bottom, reflecting the cursor being in the top 50% of the node or vice versa respectively.
+	 */
+	function cursorRegion(node, e) {
+	
+		var distance = 0, _node = node
+		
+		do {
+		
+			distance += node.offsetTop
+			
+			node = node.offsetParent
+			
+		} while ( node )
+		
+		distance -= _node.parentNode.parentNode.parentNode.scrollTop
+		
+		var range = [distance, distance + ( _node.offsetHeight / 2 ) ]
+		
+		if ( e.clientY >= range[0] && e.clientY <= range[1]  ) return 'top'
+		
+		else return 'bottom'
+	}
+
+	/**
 	 * adds selection functionality to a node.
 	 * @param node {Element} to add selection functionality to.
 	 */
@@ -265,33 +292,6 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 		
 		// clear the selected nodes array.
 		this.selectedNodes.splice(0, this.selectedNodes.length)
-	}
-
-	/**
-	 * determines the area of the node that the cursor is in.
-	 * @param node {Element} the target node.
-	 * @param e {Event} the MouseEvent. 
-	 * @returns {string} top or bottom, reflecting the cursor being in the top 50% of the node or vice versa respectively.
-	 */
-	function cursorRegion(node, e) {
-	
-		var distance = 0, _node = node
-		
-		do {
-		
-			distance += node.offsetTop
-			
-			node = node.offsetParent
-			
-		} while ( node )
-		
-		distance -= _node.parentNode.parentNode.parentNode.scrollTop
-		
-		var range = [distance, distance + ( _node.offsetHeight / 2 ) ]
-		
-		if ( e.clientY >= range[0] && e.clientY <= range[1]  ) return 'top'
-		
-		else return 'bottom'
 	}
 
 	return RearrangeableList

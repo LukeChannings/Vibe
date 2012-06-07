@@ -9,7 +9,7 @@ define([
 	'util',
 	'dependencies/EventEmitter',
 	'UI/Widget/TreeList/TreeList',
-	'UI/Widget/DragAndDrop/DragAndDrop'
+	'Model/DragAndDrop'
 	],	function(require, util, EventEmitter, TreeList, DnD) {
 
 	/**
