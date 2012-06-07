@@ -2,22 +2,24 @@
 	background: url('./ZebraStripes.png') repeat;
 	list-style: none;
 	padding: 0;
+	padding-bottom: 2px;
 	margin: 0;
 	width: 100%;
+	position: relative;
 }
 
 .UIRearrangeableListWidget > li{
 	display: block;
-	height: 23px;
-	line-height: 23px;
-	border-bottom: 2px dashed transparent;
+	height: 25px;
+	line-height: 25px;
 }
 
-.UIRearrangeableListWidget > li:first-child{
-	border-top: 2px dashed transparent;
-	height: 21px;
-}
+.UIRearrangeableListWidget > li.selected{background: #c2deff}
 
-.UIRearrangeableListWidget > li.selected{
-	background: #c2deff;
+.UIRearrangeableListWidget #dropIndicator{
+	width: 100%;
+	height: 0px;
+	border-bottom: 2px dashed #333;
+	position: absolute;
+	left: 0;
 }

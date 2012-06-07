@@ -6,7 +6,6 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 	 * creates a rearrangeable list instance.
 	 * @param options {object literal} options with which to configure the instance.
 	 * @param options.appendTo {Element} HTML node to append the list node to.
-	 * @param options.insertBorderStyle {string} style of the insert indicator.
 	 */
 	var RearrangeableList = function(options) {
 	
@@ -19,9 +18,6 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 		
 		// add selection support.
 		selectionify.call(this, this.node)
-		
-		// set the drop indicator style.
-		this.dropIndicator = ( typeof options.dropIndicator == 'string' ) ? options.dropIndicator : '2px solid #333'
 		
 		// list of selected nodes.
 		this.selectedNodes = []
@@ -40,20 +36,125 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 			// make draggable.
 			DnD.draggable({
 				node : item,
-				start : function() {}
+				start : function() {
+				
+					return Array.prototype.indexOf.call(self.node.childNodes, item)
+				}
 			})
 			
 			// make droppable.
 			DnD.droppable({
 				node : item,
-				whileentered : function() {},
-				leave : function() {},
-				drop : function() {}
+				whileentered : function(target, e) {
+				
+					dragWhileEntered.call(self, target, e)
+				},
+				leave : function(target) {
+				
+					dragLeave()
+				},
+				drop : function(target, e, index) {
+				
+					dragDrop.call(self, item, index)
+				}
 			})
 		
 			// append the node to the list.
 			self.node.appendChild(item)
 		})
+	}
+
+	/**
+	 * moves the node(s) associated with the dragstart event to the drop target.
+	 * @param item {Element} the item to move the selected node to.
+	 * @param index {number} index of the selected node.
+	 */
+	function dragDrop(item, index) {
+	
+		document.getElementById('dropIndicator').removeNode()
+		
+		var group,
+			draggedNode = this.node.childNodes[index]
+		
+		if ( draggedNode.hasClass('selected') ) {
+		
+			group = this.selectedNodes
+		}
+		else {
+		
+			group = [draggedNode]
+		}
+		
+		moveTo.call(this, group, item, window.dropRegion)
+		
+		window.dropRegion = undefined
+	}
+	 
+	/**
+	 * updates the drag indicator based on the position of the cursor within the current list item.
+	 * @param item {Element} target html element.
+	 * @param e {Event} the dragover event.
+	 */
+	function dragWhileEntered(item, e) {
+	
+		clearTimeout(window.dropLeaveTimeout)
+				
+		if ( item instanceof HTMLLIElement ) {
+	
+			var region = window.dropRegion = cursorRegion(item, e),
+				indicator = document.getElementById('dropIndicator'),
+				index = Array.prototype.indexOf.call(this.node.childNodes, item)
+			
+			if ( !indicator ) {
+			
+				var indicator = util.createElement({
+					tag : 'div',
+					id : 'dropIndicator',
+					appendTo : this.node
+				})
+			}
+			
+			if ( region == 'top' ) indicator.style.top = (index * 25) + 'px'
+
+			else indicator.style.top = ((index * 25) + 25) + 'px'
+		}
+	}
+
+	/**
+	 * cleans up the drop target indicator.
+	 */
+	function dragLeave() {
+	
+		window.dropLeaveTimeout = window.setTimeout(function() {
+		
+			var indicator = document.getElementById('dropIndicator')
+		
+			if ( indicator ) indicator.removeNode()
+		}, 100)
+	}
+
+	/**
+	 * moves a node or a series of nodes to before or after a given node.
+	 * @param group {array} list of nodes to be moved.
+	 * @param moveTo {Element} node to be used as an insertion reference.
+	 * @param direction {string} top or bottom, to insert above or below the reference node.
+	 */
+	function moveTo(group, moveTo, direction) {
+	
+		if ( direction == 'bottom' ) {
+	
+			for ( var i = group.length - 1; i >= 0; i-- ) {
+			
+				this.node.insertBefore(group[i], moveTo.nextSibling)
+			}
+		}
+		else {
+		
+			for ( var i = 0; i < group.length; i++ ) {
+				
+				this.node.insertBefore(group[i], moveTo)
+			}
+		}
 	}
 
 	/**
@@ -74,7 +175,7 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 			if ( e.shiftKey && selectedIndex !== -1 ) {
 			
 				// get the indexes of the clicked node and the closest selected node.
-				var range = [selectedIndex, clickedIndex].sort()
+				var range = [selectedIndex, clickedIndex].sort(function(a, b) { return a - b })
 
 				// select all items in the range.
 				for ( var i = range[0]; i <= range[1]; i++ ) {
@@ -124,7 +225,7 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 			
 		
 		// start searching upwards.
-		for ( var i = clickedIndex; i > 0; i-- ) {
+		for ( var i = clickedIndex; i >= 0; i-- ) {
 		
 			if ( list.childNodes[i].hasClass(className) && i !== clickedIndex ) {
 			
@@ -184,7 +285,7 @@ define(['require', 'util', 'UI/Widget/DragAndDrop/DragAndDrop'], function(requir
 			
 		} while ( node )
 		
-		distance -= _node.scrollTop
+		distance -= _node.parentNode.parentNode.parentNode.scrollTop
 		
 		var range = [distance, distance + ( _node.offsetHeight / 2 ) ]
 		
