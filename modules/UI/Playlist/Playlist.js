@@ -2,9 +2,15 @@
  * MusicMe Playlist
  * @description Provides the Playlist view and mutator methods.
  */
-define(['require','util','dependencies/EventEmitter', 'UI/Playlist/PlaylistRow', 'UI/Playlist/PlaylistLegend'],
+define( [
+	'require',
+	'util',
+	'dependencies/EventEmitter',
+	'UI/Playlist/PlaylistRow',
+	'UI/Playlist/PlaylistLegend',
+	'UI/Widget/RearrangeableList/RearrangeableList'
 
-function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar) {
+], function(require, util, EventEmitter, PlaylistRow, UIPlaylistLegend, RearrangeableList) {
 
 	/**
 	 * constructs a UIPlaylist instance.
@@ -34,7 +40,10 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				// fetch the control bar module.
 				require(['UI/Playlist/PlaylistControlBar'], function(UIPlaylistControlBar) {
 				
-					var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar)
+					var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar, function() {
+					
+						self.emit('loaded')
+					})
 				
 					var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
 				
@@ -42,7 +51,15 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				})
 			}
 			
-			else  var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
+			else {
+			
+				var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
+				
+				setTimeout(function() {
+				
+					self.emit('loaded')
+				}, 0)
+			}
 			
 			var listContainer = self.listContainer = util.createElement({
 				'tag' : 'div',
@@ -50,9 +67,7 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 				'appendTo' : node
 			})
 			
-			var list = self.list = util.createElement({'tag' : 'ol', 'appendTo' : listContainer})
-			
-			var selectedPlaylistItems = self.selectedPlaylistItems = []
+			var list = self.list = new RearrangeableList({appendTo : listContainer})
 			
 			// check if we're using the info bar.
 			if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
@@ -70,72 +85,28 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 					self.emit('infoBarLoaded')
 				})
 			}
-			
-			// work around IE bug.
-			setTimeout(function() {
-			
-				self.emit('loaded')
-			
-			}, 0)
 		})
 	}
 
 	/**
 	 * adds item rows to the playlist.
 	 * @param items {array} playlist items to be appended.
+	 * @param afterItem {Element} (optional) insert new rows after current row.
 	 */
-	UIPlaylist.prototype.addRows = function(items) {
+	UIPlaylist.prototype.addRows = function(items, afterItem) {
 	
 		var self = this
 	
-		items.forEach(function(item, index) {
+		var rows = items.map(function(item) {
 		
-			if ( UIPlaylistRow.isValidDefinition(item) ) {
-			
-				var playlistRow = new UIPlaylistRow(item).withColumns(self.useColumns)
-				
-				playlistRow.on('itemSelected', function() { self.itemSelected.apply(self, arguments) })
-				
-				playlistRow.on('playItem', function() { self.playItem.apply(self, arguments) })
-				
-				self.list.appendChild(playlistRow.row)
-				
-			}
-			
-			else { console.warn('Cannot add item ' + index + ' to the playlist. It is not a valid playlist row.')
-			
-				console.log(item)
-			}
+			return new PlaylistRow(item).withColumns(self.useColumns).row
 		})
 	
-	}
+		this.emit('change')
 	
-	UIPlaylist.prototype.itemSelected = function(e, item, isSelected) {
-		
-		if ( ! isSelected && e.ctrlKey || e.metaKey ) {
-			
-			item.row.addClass('selected')
-		
-			this.selectedPlaylistItems.push(item)
-		}
-		
-		else {
-		
-			this.selectedPlaylistItems.forEach(function(node, index) {
-			
-				node.row.removeClass('selected')
-			})
-			
-			this.selectedPlaylistItems = []
-			
-			item.row.addClass('selected')
-		
-			this.selectedPlaylistItems.push(item)
-		}
-		
-		this.emit('itemSelected', e, item, isSelected)
+		this.list.addNodes(rows, afterItem)
 	}
-	
+
 	UIPlaylist.prototype.playItem = function(e, item) {
 	
 		this.emit('playItem', item.id, item.row)
@@ -152,6 +123,8 @@ function(require, util, EventEmitter, UIPlaylistRow, UIPlaylistLegend, ButtonBar
 		
 		// add the items.
 		this.addRows(items)
+		
+		this.emit('change')
 	}
 	
 	// use EventEmitter.

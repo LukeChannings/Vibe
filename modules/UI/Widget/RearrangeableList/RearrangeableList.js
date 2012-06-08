@@ -1,4 +1,4 @@
-define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
+define(['require', 'util', 'dependencies/EventEmitter', 'Model/DragAndDrop'], function(require, util, EventEmitter, DnD) {
 
 	util.registerStylesheet(require.toUrl('./RearrangeableList.css'))
 
@@ -16,9 +16,6 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 			appendTo : (options.appendTo instanceof Element) ? options.appendTo : document.body
 		})
 		
-		// add selection support.
-		selectionify.call(this, this.node)
-		
 		// list of selected nodes.
 		this.selectedNodes = []
 	}
@@ -26,8 +23,9 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 	/**
 	 * adds an array of HTMLLIElement nodes to the list, turning them into ListItems.
 	 * @param nodes {array} list of nodes to add.
+	 * @param afterItem {Element} (optional) insert new rows after given row.
 	 */
-	RearrangeableList.prototype.addNodes = function(items) {
+	RearrangeableList.prototype.addNodes = function(items, afterItem) {
 	
 		var self = this
 	
@@ -36,6 +34,7 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 			// make draggable.
 			DnD.draggable({
 				node : item,
+				dropZone : 'rearrangeablelist',
 				start : function() {
 				
 					return Array.prototype.indexOf.call(self.node.childNodes, item)
@@ -45,6 +44,7 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 			// make droppable.
 			DnD.droppable({
 				node : item,
+				dropZone : 'rearrangeablelist',
 				whileentered : function(target, e) {
 				
 					dragWhileEntered.call(self, target, e)
@@ -59,10 +59,59 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 				}
 			})
 		
+			// add selection support.
+			selectionify.call(self, item)
+		
+			if ( afterItem instanceof Element ) afterItem.parentNode.insertBefore(item, afterItem)
+			
 			// append the node to the list.
-			self.node.appendChild(item)
+			else self.node.appendChild(item)
 		})
 	}
+
+	/**
+	 * removes a group of items from the list by their index in the list.
+	 * @param group {array} list of indexes.
+	 */
+	RearrangeableList.prototype.removeNodesByIndex = function(group) {
+	
+		if ( group instanceof Array && /^\d+$/.test(group.join('')) ) {
+		
+			group = group.sort(function(a,b) { return a + b })
+		
+			for ( var i = 0; i < group.length; i++ ) {
+			
+				this.emit('noderemoved', i)
+			
+				this.node.childNodes[group[i]].removeNode(true)
+			}
+		}
+	}
+
+	/**
+	 * removes a group of nodes from the list.
+	 * @param group {array} list of item nodes.
+	 */
+	RearrangeableList.prototype.removeNodes = function(group) {
+	
+		for ( var i = 0; i < group.length; i++ ) {
+		
+			this.emit('noderemoved', Array.prototype.indexOf.call(this.node.childNodes, group[i]))
+		
+			group[i].removeNode(true)
+		}
+	}
+
+	RearrangeableList.prototype.removeChildren = function() {
+	
+		while ( this.node.firstChild ) {
+		
+			this.node.firstChild.removeNode(true)
+		}
+	}
+
+	// add events.
+	EventEmitter.augment(RearrangeableList.prototype)
 
 	/**
 	 * moves the node(s) associated with the dragstart event to the drop target.
@@ -71,23 +120,26 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 	 */
 	function dragDrop(item, index) {
 	
+		if ( window.dropZone == 'rearrangeablelist' ) {
+		
+			var group,
+				draggedNode = this.node.childNodes[index]
+			
+			if ( draggedNode.hasClass('selected') ) {
+			
+				group = this.selectedNodes
+			}
+			else {
+			
+				group = [draggedNode]
+			}
+			
+			moveTo.call(this, group, item, window.dropRegion)
+			
+			window.dropRegion = undefined
+		}
+		
 		document.getElementById('dropIndicator').removeNode()
-		
-		var group,
-			draggedNode = this.node.childNodes[index]
-		
-		if ( draggedNode.hasClass('selected') ) {
-		
-			group = this.selectedNodes
-		}
-		else {
-		
-			group = [draggedNode]
-		}
-		
-		moveTo.call(this, group, item, window.dropRegion)
-		
-		window.dropRegion = undefined
 	}
 	 
 	/**
@@ -98,7 +150,9 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 	function dragWhileEntered(item, e) {
 	
 		clearTimeout(window.dropLeaveTimeout)
-				
+		
+		item = item.parentNode.parentNode
+		
 		if ( item instanceof HTMLLIElement ) {
 	
 			var region = window.dropRegion = cursorRegion(item, e),
@@ -117,6 +171,8 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 			if ( region == 'top' ) indicator.style.top = (index * 25) + 'px'
 
 			else indicator.style.top = ((index * 25) + 25) + 'px'
+			
+			window.dropIndex = ( region == 'bottom' ) ? index + 1 : index
 		}
 	}
 
@@ -124,6 +180,8 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 	 * cleans up the drop target indicator.
 	 */
 	function dragLeave() {
+	
+		window.dropIndex = null
 	
 		window.dropLeaveTimeout = window.setTimeout(function() {
 		
@@ -175,7 +233,7 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 			
 		} while ( node )
 		
-		distance -= _node.parentNode.parentNode.parentNode.scrollTop
+		distance -= _node.parentNode.parentNode.scrollTop
 		
 		var range = [distance, distance + ( _node.offsetHeight / 2 ) ]
 		
@@ -194,8 +252,7 @@ define(['require', 'util', 'Model/DragAndDrop'], function(require, util, DnD) {
 	
 		util.addListener(node, 'click', function(e) {
 		
-			var node = e.target || e.srcElement,
-				clickedIndex = Array.prototype.indexOf.call(self.node.childNodes, node),
+			var clickedIndex = Array.prototype.indexOf.call(self.node.childNodes, node),
 				selectedIndex = closestIndex(node, 'selected')
 		
 			// group select.

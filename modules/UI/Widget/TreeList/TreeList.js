@@ -2,7 +2,7 @@
  * UITreeListWidget
  * @description Generates a tree list view that displays a list based on an array of objects.
  */
-define(['require','util','dependencies/EventEmitter', 'UI/Widget/DragAndDrop/DragAndDrop'],function(require, util, EventEmitter, DnD){
+define(['require','util','dependencies/EventEmitter', 'Model/DragAndDrop'],function(require, util, EventEmitter, DnD){
 
 	// include stylesheet.
 	util.registerStylesheet(require.toUrl('./TreeList.css'))

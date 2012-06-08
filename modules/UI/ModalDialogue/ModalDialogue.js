@@ -225,7 +225,7 @@ define(['require', 'util'], function(require, util) {
 				
 				// if there is no native support then shim it.
 				else {
-					require(['UI/Widget/Placeholder/Placeholder'],function(Placeholder) {
+					require(['UI/Widget/Model/Placeholder'],function(Placeholder) {
 					
 						new Placeholder(element, input.placeholder)
 					})

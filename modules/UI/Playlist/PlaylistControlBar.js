@@ -1,6 +1,6 @@
 define(['util', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidget) {
 
-	var PlaylistControllerBar = function(buttons) {
+	var PlaylistControllerBar = function(buttons, loaded) {
 	
 		var self = this
 	
@@ -10,15 +10,12 @@ define(['util', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidg
 			'appendTo' : this.header
 		})
 		
-		var buttons = new UIButtonBarWidget({
+		var buttons = this.buttons = new UIButtonBarWidget({
 			appendTo : node,
 			buttons : buttons
 		})
 	
-		this.emit('controlBarLoaded')
-	
-		return node
-	
+		loaded()
 	}
 	
 	return PlaylistControllerBar

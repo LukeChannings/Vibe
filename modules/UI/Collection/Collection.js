@@ -256,8 +256,11 @@ define([
 			dropZone : 'collection_playlist',
 			drop : function(target, e, data) {
 			
-				if ( typeof data == 'object' ) self.emit('itemSelected', data)
-
+				if ( typeof data == 'object' ) {
+				
+					self.emit('itemSelected', data)
+				}
+				
 				else {
 				
 					var data = []

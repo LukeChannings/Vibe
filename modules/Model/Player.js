@@ -214,7 +214,7 @@ define(['require','dependencies/EventEmitter','util'], function(require, EventEm
 		
 			this.modelPlaylist.index = 0
 		
-			this.modelPlaylist.ui.playingNode = this.modelPlaylist.ui.list.firstChild
+			this.modelPlaylist.ui.playingNode = this.modelPlaylist.ui.list.node.firstChild
 		
 			this.modelPlaylist.ui.playingNode.addClass('playing')
 		

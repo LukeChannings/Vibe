@@ -43,13 +43,14 @@ define(['util'],function(util){
 			
 				playlist.on('loaded', function() {
 				
-					self.modelPlaylist = new ModelPlaylist({
+					var modelPlaylist = self.modelPlaylist = new ModelPlaylist({
 						'withUI' : playlist,
 						'withApi' : self.api
 					})
 					
 					callback()
-				
+					
+					updatePlaylistButtons()
 				})
 				
 				playlist.on('playItem', function(id, node) {
@@ -63,9 +64,35 @@ define(['util'],function(util){
 					self.modelPlayer.addSound(id, true)
 				
 				})
-			
+				
+				playlist.on('change', updatePlaylistButtons)
+				
+				function updatePlaylistButtons() {
+				
+					if ( self.modelPlaylist ) {
+				
+						if ( self.modelPlaylist.model.canUndo() ) {
+						
+							playlist.buttons.buttons.undo.node.removeClass('disabled')
+						
+						}
+						else {
+						
+							playlist.buttons.buttons.undo.node.addClass('disabled')
+						}
+						
+						if ( self.modelPlaylist.model.canRedo() ) {
+						
+							playlist.buttons.buttons.redo.node.removeClass('disabled')
+						}
+						
+						else {
+						
+							playlist.buttons.buttons.redo.node.addClass('disabled')
+						}
+					}
+				}
 			})
-		
 		},
 		collection : function(callback) {
 		

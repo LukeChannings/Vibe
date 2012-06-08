@@ -3,9 +3,14 @@
 	<head>
 		<title>RearrangeableList</title>
 		<style>
+*{
+	margin: 0;
+	padding: 0;
+}
+
 #UIPlaylist{
-	width: 500px;
-	height: 300px;
+	width: 800px;
+	height: 500px;
 	border: 1px solid #333;
 	overflow: auto;
 }
@@ -16,16 +21,43 @@
 		
 		require.config({baseUrl : '../modules'})
 		
-		require(['dependencies/domReady', 'util', 'UI/Widget/RearrangeableList/RearrangeableList'], function(domReady, util, RearrangeableList) {
+		require(['dependencies/domReady', 'util', 'UI/Widget/RearrangeableList/RearrangeableList', 'UI/Widget/ContextMenu/ContextMenu'], function(domReady, util, RearrangeableList, ContextMenu) {
 		
 			domReady(function() {
 
 				function rowFactory(item) {
 				
-					return util.createElement({
+					var node = util.createElement({
 						tag : 'li',
 						inner : item
 					})
+					
+					util.addListener(node, 'contextmenu', function(e) {
+					
+						new ContextMenu([{
+							title : "Remove Item.",
+							callback : function() {
+								
+								var target = e.target || e.srcElement,
+									index = Array.prototype.indexOf.call(rearrangeableList.node.childNodes, target)
+								
+								if ( target.hasClass('selected') ) {
+								
+									rearrangeableList.removeNodes(rearrangeableList.selectedNodes)
+								}
+								else {
+								
+									rearrangeableList.removeNodesByIndex([index])
+								}
+							}
+							}], e.clientX, e.clientY)
+						
+						if ( e.preventDefault ) e.preventDefault()
+						
+						return false
+					})
+					
+					return node
 				}
 
 				var container = util.createElement({
@@ -35,13 +67,12 @@
 				})
 
 				rearrangeableList = new RearrangeableList({
-					appendTo : container,
-					insertBorderStyle : '2px dashed #333'
+					appendTo : container
 				})
 				
 				var items = []
 				
-				for ( var i = 0; i < 25; i++ ) {
+				for ( var i = 0; i < 100; i++ ) {
 				
 					items.push('Item ' + (i + 1) )
 				}

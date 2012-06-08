@@ -1,4 +1,4 @@
-define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
+define(['util'], function(util) {
 
 	/**
 	 * represents a playlist row.
@@ -7,59 +7,47 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 	 */
 	var UIPlaylistRow = function(definition) {
 	
-		var self = this
+		if ( isValidDefinition(definition) ) {
 	
-		// set the identifier.
-		this.id = definition.trackid
-	
-		// define the playlist row.
-		var row = this.row = util.createElement({ 'tag' : 'li', 'appendTo' : definition.appendTo })
-	
-		// define a container for the columns.
-		var columnContainer = this.columnContainer = util.createElement({'tag' : 'ol', 'appendTo' : row})
-		
-		// create an array to contain the columns.
-		var columns = this.columns = {}
-	
-		// create columns.
-		for ( var i in definition ) {
-		
-			if ( definition.hasOwnProperty(i) ) {
+			var self = this
 			
-				var column = document.createElement('li')
-				
-				util.disableUserSelect(column)
-				
-				column.innerHTML = ( i == 'tracklength' ) ? util.formatTime(definition[i]) : definition[i]
-				
-				column.className = i
-				
-				columns[i] = column
+			// set the identifier.
+			this.id = definition.trackid
+		
+			// define the playlist row.
+			var row = this.row = util.createElement({ 'tag' : 'li', 'appendTo' : definition.appendTo })
+		
+			// define a container for the columns.
+			var columnContainer = this.columnContainer = util.createElement({'tag' : 'ol', 'appendTo' : row})
 			
+			// create an array to contain the columns.
+			var columns = this.columns = {}
+		
+			// create columns.
+			for ( var i in definition ) {
+			
+				if ( definition.hasOwnProperty(i) ) {
+				
+					var column = document.createElement('li')
+					
+					util.disableUserSelect(column)
+					
+					column.innerHTML = ( i == 'tracklength' ) ? util.formatTime(definition[i]) : definition[i]
+					
+					column.className = i
+					
+					columns[i] = column
+				}
 			}
-		
 		}
 		
-		util.addListener(columnContainer, 'click', (function(instance) {
-	
-			return function(e) {
-			
-				self.click(e, instance)
-			
+		else {
+		
+			throw {
+				name : "DEF_ERR",
+				message : "Invalid definition - " + definition
 			}
-		
-		})(this))
-		
-		util.addListener(columnContainer, 'dblclick', (function(instance) {
-		
-			return function(e) {
-				
-				self.doubleClick(e, instance)
-				
-			}
-			
-		})(this))
-	
+		}
 	}
 	
 	/**
@@ -80,47 +68,19 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 			
 					self.columnContainer.appendChild(self.columns[columnName])
 				}
-			
 			})
-		
 		}
 		
 		else return false
 	
 		return this
-	
-	}
-	
-	/**
-	 * handles the click event on a playlist row.
-	 * @param e {object} the event object.
-	 * @param item {object} the UIPlaylistRow instance associated with this row.
-	 */
-	UIPlaylistRow.prototype.click = function(e, item) {
-	
-		if ( ! item.row.hasClass('selected') ) {
-
-			var isSelected = false
-			
-		}
-		
-		else var isSelected = true
-	
-		this.emit('itemSelected', e, item, isSelected)
-	
-	}
-	
-	UIPlaylistRow.prototype.doubleClick = function(e, item) {
-	
-		this.emit('playItem', e, item)
-	
 	}
 	
 	/**
 	 * checks that an object defines the minimum properties to conform to a UIPlaylistRow specification.
 	 * @param definition {object} the definition of the row.
 	 */
-	UIPlaylistRow.isValidDefinition = function(definition) {
+	function isValidDefinition(definition) {
 	
 		if ( typeof definition == 'object' ) {
 			
@@ -136,8 +96,5 @@ define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 	
 	}
 	
-	EventEmitter.augment(UIPlaylistRow.prototype)
-	
 	return UIPlaylistRow
-
 })

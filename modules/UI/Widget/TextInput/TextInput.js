@@ -27,7 +27,7 @@ define(['require','util','dependencies/EventEmitter'],function(require,util,Even
 			}
 			else {
 			
-				require(['UI/Widget/Placeholder/Placeholder'], function(PlaceholderShim) {
+				require(['UI/Widget/Model/Placeholder'], function(PlaceholderShim) {
 				
 					new PlaceholderShim(input, options.placeholder)
 				

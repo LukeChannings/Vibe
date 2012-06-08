@@ -72,14 +72,14 @@ define(['util'], function(util) {
 		
 			var target = e.target || e.srcElement
 		
-			if ( typeof options.zoneClass == 'string' ) {
-			
-				var classNode = options.zoneHighlightNode || target
-			
-				classNode.addClass(options.zoneClass) 
-			}
-			
 			if ( ( options.dropZone && window.dropZone == options.dropZone ) || ! options.dropZone ) {
+			
+				if ( typeof options.zoneClass == 'string' ) {
+				
+					var classNode = options.zoneHighlightNode || target
+				
+					classNode.addClass(options.zoneClass) 
+				}
 			
 				e.dataTransfer.effectAllowed = 'all'
 				

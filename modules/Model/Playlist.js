@@ -33,7 +33,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 			
 			// index stores the index of the currently playing item.
 			index = this.index = 0
-			
+		
 		// redraw the UI from persistent storage.
 		ui.redraw(model)
 
@@ -106,15 +106,30 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.add = function(type, id, callback) {
 	
-		var self = this
+		var self = this,
+			index = window.dropIndex,
+			insertAfter = this.ui.list.node.childNodes[index]
 	
 		getItems.call(this, type, id, function(items) {
 
-			self.model.push.apply(self.model, items)
+			if ( typeof index == 'number' ) {
 			
-			self.ui.addRows(items)
+				items.unshift(index, 0)
+				
+				self.model.splice.apply(self.model, items)
+				
+				items.splice(0,2)
+				
+				console.log(self.model)
+			}
+			else {
+			
+				self.model.push.apply(self.model, items)
+			}
 			
 			self.updateInfo()
+			
+			self.ui.addRows(items, insertAfter)
 			
 			if ( typeof callback == 'function' ) callback()
 		})
@@ -215,7 +230,9 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 */
 	ModelPlaylist.prototype.getItem = function(n) {
 	
-		return this.model[this.index || n]
+		var index = ( typeof n == 'number' ) ? n : this.index
+	
+		return this.model[index]
 	}
 
 	/**
