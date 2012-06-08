@@ -1,21 +1,3 @@
-/**
- * Extends the Array to support undo and redo for operations, plus optional persistence feature.
- * 
- * Copyright (C) 2012 Luke Channings
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
 define(['dependencies/MD5', 'Model/Persistence'], function(MD5, Persistence) {
 
 	/**
@@ -202,9 +184,22 @@ define(['dependencies/MD5', 'Model/Persistence'], function(MD5, Persistence) {
 			
 			if ( /^(splice|pop)$/.test(method) ) {
 				
-				var result = Array.prototype[method].apply(this.versions[this.currentVersion], arguments)
+				if ( method == 'splice' && arguments.length > 2 ) {
 				
-				result = this.replaceKeysWithValues(result)
+					var startIndex = arguments[0],
+						itemsToRemove = arguments[1],
+						additions = this.replaceValuesWithKeys(Array.prototype.splice.call(arguments, 2, arguments.length))
+					
+					additions.unshift(startIndex, itemsToRemove)
+					
+					var result = Array.prototype.splice.apply(this.versions[this.currentVersion], additions)
+				} 
+				else {
+				
+					var result = Array.prototype[method].apply(this.versions[this.currentVersion], arguments)
+						
+					result = this.replaceKeysWithValues(result)
+				}
 			}
 			
 			else if ( method == 'reverse' ) {
