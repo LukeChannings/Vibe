@@ -99,7 +99,14 @@ define( [
 	
 		var rows = items.map(function(item) {
 		
-			return new PlaylistRow(item).withColumns(self.useColumns).row
+			var row = new PlaylistRow(item).withColumns(self.useColumns)
+		
+			row.on('playItem', function(e, instance) {
+			
+				self.emit('playItem', instance.id, instance.row)
+			})
+		
+			return row.row
 		})
 	
 		this.emit('change')

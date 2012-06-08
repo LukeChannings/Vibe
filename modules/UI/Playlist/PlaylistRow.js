@@ -1,4 +1,4 @@
-define(['util'], function(util) {
+define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 
 	/**
 	 * represents a playlist row.
@@ -39,6 +39,11 @@ define(['util'], function(util) {
 					columns[i] = column
 				}
 			}
+			
+			util.addListener(row, 'dblclick', function(e) {
+			
+				self.emit('playItem', e, self)
+			})
 		}
 		
 		else {
@@ -49,6 +54,8 @@ define(['util'], function(util) {
 			}
 		}
 	}
+	
+	EventEmitter.augment(UIPlaylistRow.prototype)
 	
 	/**
 	 * uses the specified columns by order of name. clears the row before appending.
