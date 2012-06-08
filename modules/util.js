@@ -313,7 +313,12 @@ define(function(){
 				},
 				svg : function() {
 				
-					// check hasFeature for basic SVG support.
+					// check for SVG support.
+					var support
+				
+					// disable SVG on Opera due to poor implementation.
+					if ( /opera/i.test(navigator.userAgent) ) support = false
+				
 					return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")
 				},
 				cssTransitions : function() {

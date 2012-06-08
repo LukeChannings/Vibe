@@ -23,26 +23,22 @@
 			],
 			function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		
-			var rootNode = self.rootNode = document.getElementById('Vibe'), // Vibe root element.
-				settings = self.settings = new ModelSettings(), // settings model instance.
-				uiSettings = self.uiSettings = new UISettings(self), // settings interface
-				api = self.api = new Api(settings) // settings instance.
-			
-			self.init = Init
-			
-			// hardcode server and port.
-			settings.set('host', 'channings.me')
-			settings.set('port', 6232)
-			
-			dialogue.open(util.createElement({
-				'tag' : 'div',
-				'customClass' : 'loading'
-			}))
-		
-			if ( typeof callback == 'function' ) callback.call(self)
-		
 			// wait for the DOM to load...
 			domReady(function() {
+			
+				var rootNode = self.rootNode = document.getElementById('Vibe'), // Vibe root element.
+					settings = self.settings = new ModelSettings(), // settings model instance.
+					uiSettings = self.uiSettings = new UISettings(self), // settings interface
+					api = self.api = new Api(settings) // settings instance.
+				
+				self.init = Init
+				
+				dialogue.open(util.createElement({
+					'tag' : 'div',
+					'customClass' : 'loading'
+				}))
+			
+				if ( typeof callback == 'function' ) callback.call(self)
 			
 				// if the browser is mobile, load the mobile stylesheet.
 				if ( util.Browser.isMobile() ) util.registerStylesheet('vibe.mobile.css')
