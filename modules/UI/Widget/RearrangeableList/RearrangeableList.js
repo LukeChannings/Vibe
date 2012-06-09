@@ -134,6 +134,8 @@ define(['require', 'util', 'dependencies/EventEmitter', 'Model/DragAndDrop'], fu
 				group = [draggedNode]
 			}
 			
+			this.emit('moved', index)
+			
 			moveTo.call(this, group, item, window.dropRegion)
 			
 			window.dropRegion = undefined

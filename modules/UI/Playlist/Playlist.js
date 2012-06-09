@@ -35,15 +35,12 @@ define( [
 			var header = self.header = util.createElement({'tag' : 'div', 'appendTo' : node})
 			
 			// we're using the control bar.
-			if ( typeof options.useControlBar !== 'undefined' && options.useControlBar instanceof Array ) {
+			if ( options.useControlBar  ) {
 			
 				// fetch the control bar module.
 				require(['UI/Playlist/PlaylistControlBar'], function(UIPlaylistControlBar) {
 				
-					var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar, function() {
-					
-						self.emit('loaded')
-					})
+					var control = self.control = UIPlaylistControlBar.call(self, options.useControlBar)
 				
 					var legend = new UIPlaylistLegend(header).withColumns(self.useColumns)
 				
@@ -68,6 +65,11 @@ define( [
 			})
 			
 			var list = self.list = new RearrangeableList({appendTo : listContainer})
+			
+			list.on('move', function(toIndex) {
+			
+				console.log(toIndex)
+			})
 			
 			// check if we're using the info bar.
 			if ( typeof options.useInfoBar == 'boolean' && options.useInfoBar ) {
@@ -125,13 +127,16 @@ define( [
 	 */
 	UIPlaylist.prototype.redraw = function(items) {
 	
-		// empty playlist UI.
-		this.list.removeChildren()
-		
-		// add the items.
-		this.addRows(items)
-		
-		this.emit('change')
+		if ( this.list ) {
+	
+			// empty playlist UI.
+			this.list.removeChildren()
+			
+			// add the items.
+			this.addRows(items)
+			
+			this.emit('change')
+		}
 	}
 	
 	// use EventEmitter.

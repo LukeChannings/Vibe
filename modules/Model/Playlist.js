@@ -8,7 +8,7 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	 * creates an instance of ModalPlaylist.
 	 * @param options {object} options to configure the instance with.
 	 */
-	var ModelPlaylist = function(options) {
+	var ModelPlaylist = function(options, loaded) {
 	
 		if ( typeof options !== 'object' || typeof options.withApi == 'undefined' || typeof options.withUI == 'undefined' )
 		{
@@ -36,13 +36,8 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 		
 		// redraw the UI from persistent storage.
 		ui.redraw(model)
-
-		// wait for the playlist info bar to finish loading.
-		ui.on('infoBarLoaded', function() {
-
-			// set the playlist info when it has loaded.
-			self.updateInfo()
-		})
+		
+		if ( typeof loaded == 'function' ) loaded()
 	}
 	
 	/**
@@ -127,8 +122,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 				self.model.push.apply(self.model, items)
 			}
 			
-			self.updateInfo()
-			
 			self.ui.addRows(items, insertAfter)
 			
 			if ( typeof callback == 'function' ) callback()
@@ -142,8 +135,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		this.model.undo(n)
 		
-		this.updateInfo()
-		
 		this.ui.redraw(this.model)
 	}
 	
@@ -153,8 +144,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	ModelPlaylist.prototype.redo = function(n) {
 	
 		this.model.redo(n)
-		
-		this.updateInfo()
 		
 		this.ui.redraw(this.model)
 	}
@@ -167,8 +156,6 @@ define(['util','Model/UndoManager'], function(util,UndoManager){
 	
 		this.model.clear()
 	
-		this.updateInfo()
-		
 		this.ui.list.removeChildren()
 	
 		this.ui.selectedPlaylistItems = []

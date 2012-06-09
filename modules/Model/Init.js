@@ -17,18 +17,21 @@ define(['util'],function(util){
 						'isIcon' : true,
 						'customClass' : 'undo',
 						'callback' : function() {
+						
 							self.modelPlaylist.undo()
 						}
 					},{
 						'isIcon' : true,
 						'customClass' : 'redo',
 						'callback' : function() {
+						
 							self.modelPlaylist.redo()
 						}
 					},{
 						'isIcon' : true,
 						'customClass' : 'clear',
 						'callback' : function() {
+						
 							self.modelPlaylist.clear()
 						}
 					},{
@@ -36,21 +39,10 @@ define(['util'],function(util){
 						'customClass' : 'settings',
 						'floatRight' : true,
 						'callback' : function() {
+						
 							self.uiSettings.show()
 						}
 					}]
-				})
-			
-				playlist.on('loaded', function() {
-				
-					var modelPlaylist = self.modelPlaylist = new ModelPlaylist({
-						'withUI' : playlist,
-						'withApi' : self.api
-					})
-					
-					callback()
-					
-					updatePlaylistButtons()
 				})
 				
 				playlist.on('playItem', function(id, node) {
@@ -65,33 +57,10 @@ define(['util'],function(util){
 				
 				})
 				
-				playlist.on('change', updatePlaylistButtons)
-				
-				function updatePlaylistButtons() {
-				
-					if ( self.modelPlaylist ) {
-				
-						if ( self.modelPlaylist.model.canUndo() ) {
-						
-							playlist.buttons.buttons.undo.node.removeClass('disabled')
-						
-						}
-						else {
-						
-							playlist.buttons.buttons.undo.node.addClass('disabled')
-						}
-						
-						if ( self.modelPlaylist.model.canRedo() ) {
-						
-							playlist.buttons.buttons.redo.node.removeClass('disabled')
-						}
-						
-						else {
-						
-							playlist.buttons.buttons.redo.node.addClass('disabled')
-						}
-					}
-				}
+				var modelPlaylist = self.modelPlaylist = new ModelPlaylist({
+					'withUI' : playlist,
+					'withApi' : self.api
+				}, callback)
 			})
 		},
 		collection : function(callback) {
@@ -152,9 +121,15 @@ define(['util'],function(util){
 		
 			initialise.playlist.call(this, function() {
 			
+				console.log('playlist loaded')
+			
 				initialise.collection.call(self, function() {
 				
+					console.log('collection loaded')
+				
 					initialise.player.call(self, function() {
+					
+						console.log('player loaded')
 					
 						callback()
 					

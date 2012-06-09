@@ -13,7 +13,7 @@ r.js -o baseUrl=modules appDir=. dir=$dir name=../vibe optimizeCss=standard find
 cd $dir
 
 # move requirejs and soundmanager into the root.
-cp modules/dependencies/{require.js,soundmanager2.{js,swf}} .
+mv modules/dependencies/{require.js,soundmanager2.{js,swf}} .
 
 # move all png, svg and css files to the root.
 find . -name \*.png -exec cp {} . \;
@@ -23,7 +23,7 @@ find . -name \*.css -exec cp {} . \;
 mv images/LoadingThrobber.gif .
 
 # remove unnecessary files.
-#rm -rf modules images build* Diagrams tests Vibe.esproj createMultiView.png createSingle.png createWizard.png icon_{128,256,512,1024}.png background.{svg,png} icon.icns icon_alt.svg README.md .git
+rm -rf modules images build* Diagrams tests Vibe.esproj createMultiView.png createSingle.png createWizard.png icon_{128,256,512,1024}.png background.{svg,png} icon.icns icon_alt.svg README.md .git
 
 # fix some paths in the source code.
 sed -i '' s#modules/dependencies/## vibe.html
@@ -42,8 +42,6 @@ fi
 
 # remove chrome extras.
 rm vibe/manifest.json vibe/icon_{32,64}.png
-
-ln -s vibe/vibe.html vibe/index.html
 
 zip -r vibe.zip vibe
 tar -zcvf vibe.tar.gz vibe

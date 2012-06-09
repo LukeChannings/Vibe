@@ -1,6 +1,6 @@
 define(['util', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidget) {
 
-	var PlaylistControllerBar = function(buttons, loaded) {
+	var PlaylistControllerBar = function(buttons) {
 	
 		var self = this
 	
@@ -14,10 +14,7 @@ define(['util', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidg
 			appendTo : node,
 			buttons : buttons
 		})
-	
-		loaded()
 	}
 	
 	return PlaylistControllerBar
-
 })
