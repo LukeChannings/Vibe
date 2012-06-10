@@ -17,6 +17,10 @@ simplistic but easy to navigate interface.
 
 #Screenshots
 
+Set up screen, displayed when Vibe is first run.
+
+![First Run](https://github.com/TheFuzzball/Vibe/raw/master/demo/vibe_setup.png)
+
 Normal Vibe view in Google Chrome on OS X:
 
 ![Normal View](https://github.com/TheFuzzball/Vibe/raw/master/demo/vibe.png)
