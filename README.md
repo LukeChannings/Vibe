@@ -15,6 +15,15 @@ into any window comfortably.
 Vibe also has an alternative User Interface for Mobile devices like smartphones, providing a
 simplistic but easy to navigate interface.
 
+#Screenshots
+
+Normal Vibe view in Google Chrome on OS X:
+
+![Normal View](./demo/vibe.png)
+
+Vibe settings menu in Google Chrome on OS X:
+![Settings](./demo/vibe_settings.png)
+
 #How It Works#
 
 Vibe uses the Client-Server model, so it requires you to have a Vibe Server configured on your
