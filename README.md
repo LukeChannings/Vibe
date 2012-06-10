@@ -19,10 +19,10 @@ simplistic but easy to navigate interface.
 
 Normal Vibe view in Google Chrome on OS X:
 
-![Normal View](./demo/vibe.png)
+![Normal View](https://github.com/TheFuzzball/Vibe/raw/master/demo/vibe.png)
 
 Vibe settings menu in Google Chrome on OS X:
-![Settings](./demo/vibe_settings.png)
+![Settings](https://github.com/TheFuzzball/Vibe/raw/master/demo/vibe_settings.png)
 
 #How It Works#
 
