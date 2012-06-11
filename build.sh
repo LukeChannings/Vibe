@@ -5,7 +5,8 @@
 
 echo $1
 
-name="vibe-$(date +"%s")"
+build=`date +"%s"`
+name="vibe-$build"
 dir="../VibeBuilds/$name" # generate a name for the build.
 
 r.js -o baseUrl=modules appDir=. dir=$dir name=../vibe optimizeCss=standard findNestedDependencies=true preserveLicenseComments=false # use require.js optimiser to concatenate the modules.
@@ -32,6 +33,10 @@ rm -rf modules images createMultiView.png createSingle.png createWizard.png icon
 sed -i '' s#modules/dependencies/## vibe.html
 sed -i '' 's/[a-z]\.toUrl//g' vibe.js
 sed -i '' 's/images\///g' vibe.html vibe.css vibe.js manifest.json
+
+# Set the build number.
+sed -i '' s/0\.0\.2/$build/ vibe.html manifest.json
+sed -i '' s/vibe-version/vibe-build/ vibe.html
 
 mkdir vibe
 mv * vibe
