@@ -2,7 +2,7 @@
  * Placeholder
  * @description Placeholder shim for non-compliant browsers. (IE.)
  */
-define(['util'],function(util){
+define(['util/methods'],function(util){
 
 	var UIPlaceholderWidget = function(node, placeholder) {
 	

@@ -1,4 +1,4 @@
-define(['util', 'dependencies/EventEmitter'], function(util, EventEmitter) {
+define(['util/methods', 'dependencies/EventEmitter'], function(util, EventEmitter) {
 
 	/**
 	 * represents a playlist row.

@@ -6,7 +6,7 @@
  * @method createMultiView - Method for creating a view-based dialogue with sidebar navigation.
  * @dependencies - modules/util, modal.css, modal.mobile.css (For mobile.)
  */
-define(['require', 'util'], function(require, util) {
+define(['require', 'util/methods'], function(require, util) {
 
 	// inject stylesheet.
 	util.registerStylesheet(require.toUrl('./ModalDialogue.css'))

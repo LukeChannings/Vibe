@@ -1,4 +1,4 @@
-define(['require','util'],function(require, util){
+define(['require','util/methods'],function(require, util){
 
 	util.registerStylesheet(require.toUrl('./ButtonBar.css'))
 

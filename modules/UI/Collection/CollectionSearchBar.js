@@ -1,4 +1,4 @@
-define(['util', 'UI/Widget/TextInput/TextInput', 'dependencies/EventEmitter'], function(util, TextInput, EventEmitter) {
+define(['util/methods', 'UI/Widget/TextInput/TextInput', 'dependencies/EventEmitter'], function(util, TextInput, EventEmitter) {
 
 	var UICollectionSearchBar = function(options) {
 	

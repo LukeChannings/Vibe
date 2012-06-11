@@ -1,4 +1,4 @@
-define(['util','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], function(util, EventEmitter, UIButtonBarWidget) {
+define(['util/methods','dependencies/EventEmitter','UI/Widget/ButtonBar/ButtonBar'], function(util, EventEmitter, UIButtonBarWidget) {
 
 	var UIPlayerControls = function(options) {
 	

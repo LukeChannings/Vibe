@@ -1,4 +1,4 @@
-define(['util'], function(util) {
+define(['util/methods'], function(util) {
 
 	/**
 	 * construct an info bar.

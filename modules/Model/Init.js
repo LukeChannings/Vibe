@@ -2,7 +2,7 @@
  * ModelInit
  * @description Defines initialisation routines for the User Interface. A delegee for the controller.
  */
-define(['util'],function(util){
+define(['util/methods'],function(util){
 
 	var initialise = {
 		playlist : function(callback) {

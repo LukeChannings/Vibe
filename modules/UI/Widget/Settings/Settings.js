@@ -2,7 +2,7 @@
  * Settings
  * @description Provides a modal frontend with which to change application settings.
  */
-define(['util','UI/Widget/ModalDialogue/ModalDialogue'], function(util, dialogue) {
+define(['util/methods','UI/Widget/ModalDialogue/ModalDialogue'], function(util, dialogue) {
 
 	/**
 	 * constructs an instance of the settings interface.

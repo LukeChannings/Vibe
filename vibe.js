@@ -9,19 +9,22 @@
 		var self = this
 	
 		// set require.js base url.
-		require.config({baseUrl: './modules/'})
+		require.config({
+			baseUrl: './modules/'
+		})
 	
 		// fetch the dependencies...
 		require([
+				'util/prototypes', // run-once prototype shims.
 				'dependencies/domReady', // DOM Ready require.js plugin.
-				'util', // require utility methods.
+				'util/methods', // require utility methods.
 				'Model/Settings', // Settings Model.
 				'UI/Widget/Settings/Settings', // Settings UI.
 				'Api/Vibe', // Vibe Api.
 				'Model/Init', // UI Initialisation.,
 				'UI/Widget/ModalDialogue/ModalDialogue' // modal dialogue for loading.
-			],
-			function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
+		],
+		function(proto, domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		
 			// wait for the DOM to load...
 			domReady(function() {
@@ -95,12 +98,5 @@
 	
 		// if we're debugging then expose the vibe instance.
 		if ( this.settings.get('debug') ) window.vibe = vibe
-		
-		// if we're not debugging then expose only the settings instance. (for plugins.)
-		else window.vibe = {
-			settings : this.uiSettings,
-			player : this.modelPlayer
-		}
 	})
-	
 })()

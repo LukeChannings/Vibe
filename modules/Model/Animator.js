@@ -6,7 +6,7 @@
  * @param duration - time the animation takes to complete.
  * @param callback - function to be called when the animation has completed.
  */
-define(['util'], function(util) {
+define(['util/methods'], function(util) {
 
 	// constructor.
 	var UIAnimator = function(element, animation, duration, callback) {

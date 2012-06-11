@@ -6,7 +6,7 @@
  */
 define([
 	'require',
-	'util',
+	'util/methods',
 	'dependencies/EventEmitter',
 	'UI/Widget/TreeList/TreeList',
 	'Model/DragAndDrop'

@@ -1,4 +1,4 @@
-define(['require', 'util', 'dependencies/EventEmitter', 'Model/DragAndDrop'], function(require, util, EventEmitter, DnD) {
+define(['require', 'util/methods', 'dependencies/EventEmitter', 'Model/DragAndDrop'], function(require, util, EventEmitter, DnD) {
 
 	util.registerStylesheet(require.toUrl('./RearrangeableList.css'))
 

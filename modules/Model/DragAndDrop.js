@@ -1,4 +1,4 @@
-define(['util'], function(util) {
+define(['util/methods'], function(util) {
 
 	/**
 	 * module to abstract binding dropzones and draggable nodes.

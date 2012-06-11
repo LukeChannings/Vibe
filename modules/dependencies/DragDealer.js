@@ -7,7 +7,7 @@
  * http://legal.ovidiu.ch/licenses/MIT
  */
 
-define(['require','util'],function(require, util) {
+define(['require','util/methods'],function(require, util) {
 
 	/* Cursor */
 	

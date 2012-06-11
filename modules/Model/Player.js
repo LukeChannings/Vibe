@@ -1,4 +1,4 @@
-define(['require','dependencies/EventEmitter','util'], function(require, EventEmitter, util) {
+define(['require','dependencies/EventEmitter','util/methods'], function(require, EventEmitter, util) {
 
 	// control variables.
 	var currentSound = null

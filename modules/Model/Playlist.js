@@ -2,7 +2,7 @@
  * ModelPlaylist
  * @description contains the playlist data and performs Api interactions.
  */
-define(['util','Model/UndoManager'], function(util,UndoManager){
+define(['util/methods','Model/UndoManager'], function(util,UndoManager){
 
 	/**
 	 * creates an instance of ModalPlaylist.

@@ -4,7 +4,7 @@
  */
 define( [
 	'require',
-	'util',
+	'util/methods',
 	'dependencies/EventEmitter',
 	'UI/Playlist/PlaylistRow',
 	'UI/Playlist/PlaylistLegend',

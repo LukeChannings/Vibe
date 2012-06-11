@@ -1,4 +1,4 @@
-define(['util'], function(util) {
+define(['util/methods'], function(util) {
 
 	/**
 	 * creates a legend container and appends it to the element.

@@ -2,7 +2,7 @@
  * Vibe API
  * @description Vibe Application Programming Interface. Allows interfacing with a Vibe server.
  */
-define(['dependencies/EventEmitter','util','dependencies/socket.io'],function(EventEmitter, util){
+define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],function(EventEmitter, util){
 
 	// constructor.
 	var Api = function(settings) {

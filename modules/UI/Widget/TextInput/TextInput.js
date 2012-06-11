@@ -2,7 +2,7 @@
  * UIWidgetTextInput
  * @description Creates a text input widget that implements a clear button.
  */
-define(['require','util','dependencies/EventEmitter'],function(require,util,EventEmitter){
+define(['require','util/methods','dependencies/EventEmitter'],function(require,util,EventEmitter){
 
 	util.registerStylesheet(require.toUrl('./TextInput.css'))
 

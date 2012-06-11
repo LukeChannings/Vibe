@@ -1,4 +1,4 @@
-define(['util', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidget) {
+define(['util/methods', 'UI/Widget/ButtonBar/ButtonBar'], function(util, UIButtonBarWidget) {
 
 	var PlaylistControllerBar = function(buttons) {
 	
