@@ -15,7 +15,7 @@ define(['util'], function(util) {
 		if ( typeof support === 'object' && ! ModelPersistence.prototype.hasShownError ) {
 				
 			// require ModalDialogue.
-			require(['UI/ModalDialogue/ModalDialogue'], function(modal) {
+			require(['UI/Widget/ModalDialogue/ModalDialogue'], function(modal) {
 			
 				// create an error dialogue.
 				modal.createSingle({

@@ -16,10 +16,10 @@
 				'dependencies/domReady', // DOM Ready require.js plugin.
 				'util', // require utility methods.
 				'Model/Settings', // Settings Model.
-				'UI/Settings/Settings', // Settings UI.
+				'UI/Widget/Settings/Settings', // Settings UI.
 				'Api/Vibe', // Vibe Api.
 				'Model/Init', // UI Initialisation.,
-				'UI/ModalDialogue/ModalDialogue' // modal dialogue for loading.
+				'UI/Widget/ModalDialogue/ModalDialogue' // modal dialogue for loading.
 			],
 			function(domReady, util, ModelSettings, UISettings, Api, Init, dialogue) {
 		

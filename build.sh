@@ -15,6 +15,9 @@ cd $dir
 # move requirejs and soundmanager into the root.
 mv modules/dependencies/{require.js,soundmanager2.{js,swf}} .
 
+# remove files unrelated to the application.
+rm -rf build* Diagrams tests Vibe.esproj demo README.md .git
+
 # move all png, svg and css files to the root.
 find . -name \*.png -exec cp {} . \;
 find . -name \*.svg -exec cp {} . \;
@@ -23,7 +26,7 @@ find . -name \*.css -exec cp {} . \;
 mv images/LoadingThrobber.gif .
 
 # remove unnecessary files.
-rm -rf modules images build* Diagrams tests Vibe.esproj createMultiView.png createSingle.png createWizard.png icon_{128,256,512,1024}.png background.{svg,png} icon.icns icon_alt.svg README.md .git
+rm -rf modules images createMultiView.png createSingle.png createWizard.png icon_{128,256,512,1024}.png background.{svg,png} icon.icns icon_alt.svg 
 
 # fix some paths in the source code.
 sed -i '' s#modules/dependencies/## vibe.html

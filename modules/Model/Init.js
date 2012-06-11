@@ -135,7 +135,7 @@ define(['util'],function(util){
 					
 						if ( util.Browser.HasSupport.cssTransitions() ) {
 						
-							require(['UI/Animator/Animator'], function(UIAnimator) {
+							require(['Model/Animator'], function(UIAnimator) {
 							
 								document.body.removeClass('loading')
 							
