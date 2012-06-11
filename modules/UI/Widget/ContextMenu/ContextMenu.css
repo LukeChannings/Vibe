@@ -1,0 +1,33 @@
+#ContextMenu{
+	width: 160px;
+	padding: 5px 0;
+	display: block;
+	margin: 0;
+	background: #f9f9f9;
+	border: 1px solid #ccc;
+	font-family: 'Lucida Grande', Helvetica, Verdana, Arial;
+	box-shadow: 1px 3px 15px rgba(0,0,0,0.1);
+	position: absolute;
+}
+
+#ContextMenu > hr{
+	margin: 2px 0;
+	border: none;
+	height: 1px;
+	background: #ddd;
+}
+
+#ContextMenu > li{
+	line-height: 20px;
+	padding: 0 5px;
+	height: 20px;
+	font-size: 13px;
+	display: block;
+	cursor: default;
+}
+
+#ContextMenu > li:hover{
+	background: #658bf8;
+	color: #fff;
+	text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}

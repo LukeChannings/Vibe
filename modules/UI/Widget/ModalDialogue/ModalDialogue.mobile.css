@@ -1,0 +1,75 @@
+#ModalDialogueOverlay.visible{
+	background: #f9f9f9;
+}
+
+#ModalDialogueOverlay #ModalDialogue{
+	background-color: transparent;
+	width: auto;
+	height: 100%;
+	margin: auto;
+	box-shadow: none;
+	background-size: 100% !important;
+	border: none;
+	font-size: 20px;
+}
+
+#ModalDialogueOverlay #ModalDialogue *{margin: 1em 0}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar *{margin: 0}
+
+#ModalDialogueOverlay #ModalDialogue.center.error p{color: #666}
+
+#ModalDialogueOverlay #ModalDialogue h1{
+	border-bottom: 1px solid #aaa;
+	padding-bottom: 0.2em;
+	margin-bottom: 0.5em;
+	font-size: 60px;
+	margin-top: 10px;
+}
+
+#ModalDialogueOverlay #ModalDialogue p{
+	font-size: 28px;
+	text-align: justify;
+}
+
+#ModalDialogueOverlay #ModalDialogue.center h1{border-bottom: none}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar{
+	width: auto;
+	border: none;
+}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar > *{float: none}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .navigation{
+	height: auto;
+	width: 100%;
+	overflow: auto;
+}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .navigation *{
+	display: inline-block;
+	border: none;
+}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .navigation li{
+	max-width: 150px;
+}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .navigation h1{display: none}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .views{
+	height: 90%;
+	width: 98%;
+	box-shadow: none;
+	border: none;
+}
+
+#ModalDialogueOverlay #ModalDialogue.sidebar .views .view h1{margin-bottom: 0.5em}
+
+#ModalDialogueOverlay #ModalDialogue form label input{
+	margin: 0em;
+	margin-left: 1em
+}
+
+#ModalDialogueOverlay #ModalDialogue.form form input{width: 8em}
