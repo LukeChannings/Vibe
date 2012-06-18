@@ -194,9 +194,7 @@ define([
 				doubleClickHandler.call(self,item)
 			
 			})
-		
 		})
-			
 	}
 
 	/**
@@ -355,9 +353,9 @@ define([
 				options.dragStartMethod = self.dragStart
 			}
 			
-			if ( this.api.getMethod(type) ) {
+			if ( this.api.getMethod(type, true) ) {
 			
-				this.api[this.api.getMethod(type)](id,function(items) {
+				this.api[this.api.getMethod(type, true)](id,function(items) {
 				
 					if ( type == 'artist' ) {
 					
@@ -383,9 +381,7 @@ define([
 					'id' : id
 				})
 			}
-		
 		}
-	
 	}
 	
 	/**

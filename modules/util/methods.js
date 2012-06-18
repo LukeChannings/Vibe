@@ -340,6 +340,16 @@ define(function() {
 			
 			}
 		
+		},
+		
+		implementsProtocol : function(obj, methodNames) {
+		
+			for ( var i = 0; i < methodNames.length; i++ ) {
+			
+				if ( typeof obj[methodNames[i]] !== 'function' ) return false
+			}
+			
+			return true
 		}
 	}
 	

@@ -7,6 +7,8 @@ define(['util/methods', 'dependencies/EventEmitter'], function(util, EventEmitte
 	 */
 	var UIPlaylistRow = function(definition) {
 	
+		console.log(definition)
+	
 		if ( isValidDefinition(definition) ) {
 	
 			var self = this

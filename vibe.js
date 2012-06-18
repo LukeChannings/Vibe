@@ -30,9 +30,17 @@
 			domReady(function() {
 			
 				var rootNode = self.rootNode = document.getElementById('Vibe'), // Vibe root element.
+				
 					settings = self.settings = new ModelSettings(), // settings model instance.
+					
 					uiSettings = self.uiSettings = new UISettings(self), // settings interface
-					api = self.api = new Api(settings) // settings instance.
+					
+					api = self.api = new Api({
+						settings : settings,
+						onconnect : apiConnected,
+						onerror : apiError,
+						onfirstrun : apiFirstRun
+					}) // settings instance.
 				
 				self.init = Init
 				
@@ -49,8 +57,7 @@
 				// detect SVG support.
 				if ( util.Browser.HasSupport.svg() && ! util.Browser.isIE() ) document.body.addClass('svg')
 				
-				// listen for a connection event.
-				api.once('connected', function() {
+				function apiConnected() {
 				
 					// initialise the mobile interface if the device is mobile.
 					if ( util.Browser.isMobile() ) Init.mobile.call(self)
@@ -61,10 +68,11 @@
 						// when the desktop interface is initialised close the loading dialogue.
 						dialogue.close()
 					})
-				})
+				}
 				
-				// listen for an error.
-				api.once('error', function() {
+				function apiError() {
+				
+					console.log('Got error.')
 				
 					// error message.
 					var message = "<p>Vibe was unable to connect to '" + settings.get('host') + ':' + settings.get('port') + "'.</p>"
@@ -77,10 +85,9 @@
 						api.connect()
 					
 					}, "Unable to connect.", message)
+				}
 				
-				})
-				
-				api.once('firstrun', function() {
+				function apiFirstRun() {
 				
 					// first run dialogue.
 					uiSettings.firstrun(function() {
@@ -88,7 +95,7 @@
 						// attempt to reconnect using the new settings.
 						api.connect()
 					})
-				})
+				}
 			})
 		})
 	}

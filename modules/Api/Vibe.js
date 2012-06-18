@@ -4,40 +4,50 @@
  */
 define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],function(EventEmitter, util){
 
-	// constructor.
-	var Api = function(settings) {
+	/**
+	 * constructs an Api instance.
+	 * @param config {object} contains properties and methods for configuring the instance.
+	 * @param config.settings {object} instance of ModelSettings.
+	 * @param config.onload {function} to be called when the Api is loaded.
+	 * @param config.onerror {function} to be called if the Api has an error.
+	 * @param config.onfirstrun {function} to be called if the model settings does not have a host or port.
+	 */
+	var Api = function(config) {
 	
-		var self = this
+		var self = this,
+			settings = this.settings = config.settings
 
-		this.settings = settings
-
-		// connect.
-		this.connect()
+		if ( util.implementsProtocol(config, ['onconnect', 'onerror', 'onfirstrun']) ) {
 		
+			this.connected = config.onconnect
+			this.error = config.onerror
+			this.firstrun = config.onfirstrun
+		
+			if ( typeof config.ondisconnect == 'function' ) this.disconnect = config.ondisconnect
+		
+			// connect.
+			this.connect()	
+		}
+		
+		else {
+		
+			throw new Error('The Api configuration does not implement the required methods.')
+		}
 	}
 	
-	EventEmitter.augment(Api.prototype)
-
 	/**
-	 * reconnect
-	 * @description Attempt to reconnect to the Vibe server.
+	 * connects to the vibe server.
 	 */
 	Api.prototype.connect = function() {
 	
 		var self = this
-		
 		this.connection = null
 		
 		// check for a missing host setting.
-		if ( ! this.settings.get('host') ) {
+		if ( ! this.settings.get('host') || ! this.settings.get('port') ) {
 		
-			// cheat to avoid the race condition.
-			setTimeout(function(){
-			
-				// emit the error after the listener has been bound.
-				self.emit('firstrun')
-			
-			}, 0)
+			// call the first run event.
+			this.firstrun()
 			
 			// prevent a connection attempt.
 			return
@@ -47,37 +57,30 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 		this.connection = io.connect('http://' + this.settings.get('host')  + ':' + this.settings.get('port'))
 
 		// create an error dialogue on error.
-		this.connection.on('error',function() {
+		this.connection.on('error', function() {
 
-			self.emit('error')
-
+			self.error()
 		})
 		
 		this.connection.on('reconnect_failed', function() {
 		
-			self.emit('error')
-		
+			self.error()
 		})
 
 		// emit ready event on connection.
-		this.connection.on('connect',function() {
+		this.connection.on('connect', function() {
 
-			self.ready = true
-		
-			self.emit('connected')
+			self.connected()
 		
 			// Api is now ready.
 			self.ready = true
-		
 		})
 	
 		// disconnect event.
-		this.connection.on('disconnect',function() {
+		this.connection.on('disconnect', function() {
 			
-			self.emit('disconnected')
-			
+			if ( typeof self.disconnect == 'function' ) self.disconnect()
 		})
-
 	}
 
 	/**
@@ -94,13 +97,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
 				if (a.name.toLowerCase() > b.name.toLowerCase())  return 1
 				return 0
-			
 			})
 		
 			callback(artists)
-		
 		})
-	
 	}
 
 	/**
@@ -120,13 +120,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
 				if (a.name.toLowerCase() > b.name.toLowerCase())  return 1
 				return 0
-			
 			})
 		
 			callback(artists)
-		
 		})
-	
 	}
 
 	/**
@@ -141,9 +138,7 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 			if ( err ) throw err
 		
 			callback(albums)
-		
 		})
-	
 	}
 	
 	/**
@@ -159,7 +154,6 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 			albums.forEach(function(album) {
 			
 				album.title = album.title || "Unknown Album."
-			
 			})
 			
 			albums.sort(function(a,b) {
@@ -169,13 +163,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				if (a.title.toLowerCase() > b.title.toLowerCase())  return 1
 				
 				return 0
-			
 			})
 		
 			callback(albums)
-		
 		})
-	
 	}
 	
 	/**
@@ -188,9 +179,7 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 		this.connection.emit('getTracks',function(err,tracks) {
 		
 			callback(tracks)
-		
 		})
-	
 	}
 	
 	Api.prototype.getTracksInGenre = function(genre,callback) {
@@ -208,13 +197,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				track.trackname = track.trackname || 'Unknown Track'
 			
 				track.trackno = track.trackno || '0'
-			
 			})
 			
 			callback(tracks)
-		
 		})
-	
 	}
 	
 	Api.prototype.getTracksByArtist = function(id,callback) {
@@ -230,13 +216,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				track.trackname = track.trackname || 'Unknown Track'
 			
 				track.trackno = track.trackno || '0'
-			
 			})
 		
 			callback(tracks)
-		
 		})
-	
 	}
 	
 	/**
@@ -245,26 +228,46 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 	 * @param id (string) - The unique identifier for the album.
 	 * @param callback (function) - Function that will be sent the results.
 	 */
-	Api.prototype.getTracksInAlbum = function(id,callback,minimal ){
+	Api.prototype.getTracksInAlbum = function(id,callback ){
 	
-		this.connection.emit('getTracksInAlbum', id, minimal, function(err,tracks) {
+		this.connection.emit('getTracksInAlbum', id, function(err, tracks) {
 		
-			tracks.forEach(function(track) {
+			tracks.map(function(track) {
 			
 				track.albumname = track.albumname || 'Unknown Album'
-			
+					
 				track.artistname = track.artistname || 'Unknown Artist'
-			
+					
 				track.trackname = track.trackname || 'Unknown Track'
-			
+				
 				track.trackno = track.trackno || '0'
-			
 			})
 		
 			callback(tracks)
-		
 		})
+	}
 	
+	/**
+	 * getTracksInAlbum
+	 * @description Get a list of tracks in a given album.
+	 * @param id (string) - The unique identifier for the album.
+	 * @param callback (function) - Function that will be sent the results.
+	 */
+	Api.prototype.getTracksInAlbumShort = function(id,callback ){
+	
+		this.connection.emit('getTracksInAlbumShort', id, function(tracks) {
+		
+			tracks.map(function(track) {
+			
+				track.id = track.trackid
+				
+				track.name = track.trackname || "Unknown Track"
+				
+				track.trackno = track.trackno || null
+			})
+		
+			callback(tracks)
+		})
 	}
 	
 	Api.prototype.getTrack = function(id,callback) {
@@ -279,10 +282,8 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 		
 			track.trackno = track.trackno || '0'
 		
-			callback(track)	
-		
+			callback(track)
 		})
-	
 	}
 	
 	/**
@@ -301,13 +302,10 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 				if (a.genre.toLowerCase() > b.genre.toLowerCase())  return 1
 				
 				return 0
-			
 			})
 		
 			callback(genres)
-		
 		})
-	
 	}
 	
 	/**
@@ -319,7 +317,7 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 	Api.prototype.search = function(query,callback) {
 	
 		// to be implemented.
-	
+		return false
 	}
 	
 	/**
@@ -337,27 +335,25 @@ define(['dependencies/EventEmitter','util/methods','dependencies/socket.io'],fun
 		if ( type in types ) return types[type]
 		
 		else return false
-	
 	}
 
 	/**
-	 * getMethod
-	 * @description returns the corresponding Api method for a given type.
+	 * returns the corresponding Api method for a given type.
+	 * @param type {String} type of item we're fetching.
+	 * @param short {Bool} short or long method.
 	 */
-	Api.prototype.getMethod = function(type) {
+	Api.prototype.getMethod = function(type, short) {
 	
 		var types = {
 			'genre' : 'getArtistsInGenre',
 			'artist' : 'getAlbumsByArtist',
-			'album' : 'getTracksInAlbum'
+			'album' : (short) ? 'getTracksInAlbumShort' : 'getTracksInAlbum'
 		}
 		
 		if ( type in types ) return types[type]
 		
 		else return false
-	
 	}
 
 	return Api
-
 })

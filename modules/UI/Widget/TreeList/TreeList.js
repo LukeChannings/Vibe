@@ -43,7 +43,7 @@ define(['require','util/methods','dependencies/EventEmitter', 'Model/DragAndDrop
 		
 			var item = document.createElement('li')
 			
-			var itemInner = util.htmlEntities(itemObj.name || itemObj.title || 'Item ' + index)
+			var itemInner = util.htmlEntities(itemObj.trackname || itemObj.name || itemObj.title || 'Item ' + index)
 			
 			if ( options.wrapItemsIn instanceof Array && options.wrapItemsIn.length == 2 ) {
 			
