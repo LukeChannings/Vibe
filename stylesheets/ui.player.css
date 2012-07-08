@@ -38,7 +38,7 @@
 #UIPlayer #UIPlayerSlider .dragdealer{
 	width: 100%;
 	height: 100%;
-	background: #ececec;
+	background: #eee;
 	border: 1px solid #ddd;
 }
 
@@ -75,55 +75,171 @@
 	z-index: 2;
 }
 
-#UIPlayer #UIPlayerControls{
-	width: 22%;
-	height: 100%;
-	float: left;
-}
-
-#UIPlayer #UIPlayerControls .UIButtonBarWidget{
-	padding: 0;
-	margin: auto;
-	margin-top: 20px;
-	width: 170px;
-}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{
-	height: 54px;
-	width: 54px;
-	background: url('../images/ui.player.playPauseButton.png') no-repeat;
-}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev, #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{
-	height: 32px;
-	width: 32px;
-}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause:hover{background-position: -54px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause{background-position: -108px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause.pause:hover{background-position: -162px 0}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background: url('../images/ui.player.BackButton.png') no-repeat}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background: url('../images/ui.player.forwardButton.png') no-repeat}
-
-body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.play_pause{background-image: url('../images/ui.player.playPauseButton.svg')}
-body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev{background-image: url('../images/ui.player.BackButton.svg')}
-body.svg #UIPlayer #UIPlayerControls .UIButtonWidget.icon.next{background-image: url('../images/ui.player.forwardButton.svg')}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover{background-position: -32px 0}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover{background-position: -32px 0}
-
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.prev:hover:active{-ms-background-position: -31px 1px;
-}
-#UIPlayer #UIPlayerControls .UIButtonWidget.icon.next:hover:active{-ms-background-position: -31px 1px}
-
 .dragdealer {
 	position: relative;
 	height: 20px;
-	background: #eee;
 }
 
 .dragdealer .handle {
 	position: absolute;
 	cursor: pointer;
 }
+
+/* @group Player Controls */
+
+#UIPlayer #UIPlayerControls{
+	width: 22%;
+	height: 100%;
+	float: left;
+}
+
+#UIPlayer #UIPlayerControls > ol{
+	width: 128px;
+	height: 54px;
+	list-style: none;
+	margin: auto;
+	margin-top: 13px;
+}
+
+#UIPlayer #UIPlayerControls > ol > li{
+	display: block;
+	float: left;
+	height: 32px;
+	width: 32px;
+}
+
+#UIPlayer #UIPlayerControls button{
+	border: none;
+	outline: none;
+	height: 100%;
+	width: 100%;
+}
+
+#UIPlayer #UIPlayerControls > ol > li.play_pause{
+	height: 54px;
+	width: 54px;
+	margin: 0 5px;
+}
+
+#UIPlayer #UIPlayerControls > ol > li.prev, #UIPlayer #UIPlayerControls > ol > li.next{
+	margin-top: 11px;
+}
+
+#UIPlayer #UIPlayerControls > ol > li.play_pause button{
+	background: url('../images/ui.player.playPauseButton.png') no-repeat;;
+}
+
+body.svg #UIPlayer #UIPlayerControls > ol > li.play_pause button{
+	background-image: url('../images/ui.player.playPauseButton.svg')
+}
+
+#UIPlayer #UIPlayerControls > ol > li.play_pause button:hover{
+	background-position: -54px 0
+}
+
+#UIPlayer #UIPlayerControls > ol > li.play_pause button.pause{
+	background-position: -108px 0
+}
+
+#UIPlayer #UIPlayerControls > ol > li.play_pause button.pause:hover{
+	background-position: -162px 0
+}
+
+#UIPlayer #UIPlayerControls > ol > li.prev button{
+	background: url('../images/ui.player.BackButton.png') no-repeat
+}
+
+body.svg #UIPlayer #UIPlayerControls > ol > li.prev button{
+	background-image: url('../images/ui.player.BackButton.svg')
+}
+
+#UIPlayer #UIPlayerControls > ol > li.prev button:hover{
+	background-position: -32px 0
+}
+
+#UIPlayer #UIPlayerControls > ol > li.next button{
+	background: url('../images/ui.player.forwardButton.png') no-repeat
+}
+
+body.svg #UIPlayer #UIPlayerControls > ol > li.next button{
+	background-image: url('../images/ui.player.forwardButton.svg')
+}
+
+#UIPlayer #UIPlayerControls > ol > li.next button:hover{
+	background-position: -32px 0
+}
+
+/* @end */
+
+/* @group Volume Control */
+
+#UIPlayer #UIPlayerVolumeControl{
+	float: right;
+	width: 22%;
+	height: 100%;
+	margin-top: -80px;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol{
+	display: inline-block;
+	width: 100%;
+	height: 20px;
+	margin-top: 30px;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li{
+	display: inline-block;
+	float: left;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.slider{
+	width: 70%;
+	height: 100%;
+}
+
+#UIPlayer #UIPlayerVolumeControl .dragdealer{
+	height: 20px;
+	width: 100%;
+	background: #aaa;
+	border-radius: 20px;
+}
+
+#UIPlayer #UIPlayerVolumeControl .dragdealer .handle{
+	height: 16px;
+	width: 16px;
+	margin-top: 2px;
+	background: #eee;
+	border-radius: 50%;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.mute, #UIPlayer #UIPlayerVolumeControl ol > li.max{
+	width: 20px;
+	height: 20px;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.mute{
+	margin-right: 5px;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.max{
+	margin-left: 5px;
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.mute button, #UIPlayer #UIPlayerVolumeControl ol > li.max button{
+	height: 16px;
+	width: 18px;
+	background: url('../images/ui.player.volumeControl.png') no-repeat;
+	border: none;
+	outline: none;
+	margin-top: 2px;
+}
+
+body.svg #UIPlayer #UIPlayerVolumeControl ol > li.mute button, body.svg #UIPlayer #UIPlayerVolumeControl ol > li.max button{
+	background-image: url('../images/ui.player.volumeControl.svg');
+}
+
+#UIPlayer #UIPlayerVolumeControl ol > li.mute button{
+	background-position: -18px 0;
+}
+
+/* @end */

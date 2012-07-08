@@ -224,22 +224,26 @@ define(function(require) {
 	
 			for ( var i = group.length - 1; i >= 0; i-- ) {
 			
-				this.onbeforemove(
-					util.indexOfNode(group[i]),
-					util.indexOfNode(moveTo),
-					'after'
-				)
+				if ( this.onbeforemove ) {
+					this.onbeforemove(
+						util.indexOfNode(group[i]),
+						util.indexOfNode(moveTo),
+						'after'
+					)
+				}
 			
 				this.node.insertBefore(
 					group[i],
 					moveTo.nextSibling
 				)
 				
-				this.onaftermove(
-					util.indexOfNode(group[i]),
-					util.indexOfNode(moveTo),
-					'after'
-				)
+				if ( this.onaftermove ) {
+					this.onaftermove(
+						util.indexOfNode(group[i]),
+						util.indexOfNode(moveTo),
+						'after'
+					)
+				}
 			}
 		} else {
 		

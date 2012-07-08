@@ -53,6 +53,11 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 			self.seek(position)
 		}
 		
+		this.playerInterface.onvolumechange = function(n) {
+		
+			self.setVolume(n)
+		}
+		
 		options.onload && options.onload(self)
 	}
 	

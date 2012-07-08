@@ -14,7 +14,8 @@ define(['util', 'ui.widget.buttonBar'], function(util, UIButtonBarWidget) {
 		
 		var buttons = this.buttons = new UIButtonBarWidget({
 			appendTo : node,
-			buttons : buttons
+			buttons : buttons,
+			noClass : true
 		})
 	}
 	
