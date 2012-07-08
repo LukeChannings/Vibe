@@ -455,6 +455,45 @@ define({
 	
 	},
 	
+	// expands a time in seconds to time in hours, minutes and seconds.
+	// @param seconds {number} number of seconds.
+	expandTime : function(duration) {
+	
+		// determine the units of time to describe the playlist duration.
+		var seconds = Math.ceil(duration) % 60,
+			minutes = Math.ceil(duration / 60),
+			hours = Math.floor(minutes / 60),
+			info = '' // string to contain the human-readable duration.
+		
+		if ( hours > 0 ) {
+			minutes = minutes % 60
+		}
+		
+		// determine the presentation of hours.
+		if ( hours !== 0 ) {
+			hours = ( hours == 1 ) ? hours + ' hour, ' : hours + ' hours, '
+		} else {
+			hours = ''
+		}
+		
+		// determine the presentation of minutes.
+		if ( minutes !== 0 ) {
+			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : minutes + ' minutes and '
+		} else {
+			minutes = ''
+		}
+		
+		// determine the presentation of seconds.
+		if ( seconds !== 0 ) {
+			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
+		} else {
+			seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
+		}
+		
+		// concatenate the playlist durations.
+		return hours + minutes + seconds
+	},
+	
 	// doubleClick
 	// handles simultaneous click events allowing for separate functions
 	// to be used for a single click and a double click. Standard timeout 

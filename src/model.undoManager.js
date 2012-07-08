@@ -183,7 +183,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 		// if there are versions ahead of the current version remove them.
 		if ( this.versions.length > this.currentVersion ) this.versions.splice(this.currentVersion + 1)
 	
-		if ( ! this.disabled ) {
+		if ( ! this.anonymousMutation ) {
 			// create a new version.
 			this.newVersion()
 		}

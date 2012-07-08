@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Vibe Notification</title>
+		<meta charset="utf-8" />
+		<style>
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	background: #eee;
+}
+
+#notification{
+	width: 300px;
+	height: 100%;
+}
+
+#notification #albumArt{
+	height: 74px;
+	width: 74px;
+	background: url('images/shared.albumArt.png') no-repeat;
+	float: left;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#notification #info{
+	padding-top: 5px;
+}
+
+#notification #albumArt img{
+	height: 64px;
+	width: 64px;
+	margin: 3.5px;
+}
+
+#notification h1, h2, h3{
+	font-family: 'Lucida Grande', Helvetica, sans-serif;
+	font-weight: 100;
+	width: 215px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+#notification h1{
+	font-size: 13pt;
+	color: #000;
+}
+
+#notification h2{
+	font-size: 11.5pt;
+	color: #666;
+}
+
+#notification h3{
+	font-size: 9.2pt;
+	color: #999;
+}
+
+#notification h3#trackNo:before{
+	content: "Track ";
+}
+
+#notification h3#trackDuration:before{
+	content: "Duration ";
+}
+		</style>
+	</head>
+	<body>
+		<div id="notification">
+			<div id="albumArt"></div>
+			<div id="info">
+				<h1 id="track">Unknown Track</h1>
+				<h2 id="artist">Unknown Artist</h2>
+				<h3 id="trackNo">0 of 0</h3>
+				<h3 id="trackDuration">0 hours, 0 minutes and 0 seconds.</h3>
+			</div>
+		</div>
+		<script type="text/javascript">
+void function() {
+
+	//
+	// method for getting the value of a GET parameter.
+	// @param name {string} the name of the parameter to get the value for.
+	var _GET = function(name) {
+	
+		var url = window.location.href
+		
+		var match = url.match(new RegExp('(&|\\?)' + name + '=(.+?)($|&)'))
+		
+		if ( match ) {
+		
+			return match[2]
+		} else {
+		
+			return undefined
+		}
+	}
+
+	// get the metadata.
+	var track = _GET("track"),
+		artist = _GET("artist"),
+		trackNo = _GET("trackNo"),
+		trackDuration = _GET("trackDuration"),
+		albumArt = _GET("albumArt")
+	
+	if ( track ) {
+	
+		document.getElementById("track").innerHTML = decodeURIComponent(track)
+	}
+	
+	if ( artist ) {
+	
+		document.getElementById("artist").innerHTML = decodeURIComponent(artist)
+	}
+	
+	if ( trackNo ) {
+	
+		document.getElementById("trackNo").innerHTML = decodeURIComponent(trackNo)
+	}
+	
+	if ( trackDuration ) {
+	
+		document.getElementById("trackDuration").innerHTML = decodeURIComponent(trackDuration)
+	}
+	
+	if ( albumArt ) {
+	
+		var node = document.getElementById("albumArt")
+		
+		node.innerHTML = '<img src="' + albumArt + '" alt />'
+	}
+
+}()
+		</script>
+	</body>
+</html>

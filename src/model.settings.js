@@ -139,6 +139,11 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						'type' : 'select',
 						'options' : ['Genre', 'Artist', 'Album', 'Track'],
 						'placeholder' : self.get('collectionRootType') || 'Genre'
+					},{
+						'name' : 'notifications',
+						'title' : 'Desktop Notifications',
+						'type' : 'checkbox',
+						'checked' : self.get('notifications')
 					}],
 					callback : function(inputs) {
 					
@@ -148,7 +153,24 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						
 							self.set('collectionRootType', inputs.collectionRootType.value)
 						
-							this.MDD.form.inputs[0].placeholder = inputs.collectionRootType.value
+						}
+						
+						if ( inputs.notifications.checked ) {
+						
+							if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
+								
+								window.webkitNotifications.requestPermission(function() {
+								
+									self.set('notifications', true)
+								})
+								
+							} else {
+							
+								self.set('notifications', true)
+							}
+							
+						} else {
+							self.set('notifications', false)
 						}
 					}
 				}

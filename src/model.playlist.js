@@ -56,41 +56,9 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 			// increment the playlist by the duration of the current playlist item.
 			self.duration += track.tracklength
 		})
-	
-		// determine the units of time to describe the playlist duration.
-		var seconds = Math.ceil(this.duration) % 60,
-			minutes = Math.ceil(this.duration / 60),
-			hours = Math.floor(minutes / 60),
-			info = '' // string to contain the human-readable duration.
-		
-		if ( hours > 0 ) minutes = minutes % 60
-		
-		// determine the presentation of hours.
-		if ( hours !== 0 ) {
-			hours = ( hours == 1 ) ? hours + ' hour, ' : hours + ' hours, '
-		}
-		
-		else hours = ''
-		
-		// determine the presentation of minutes.
-		if ( minutes !== 0 ) {
-			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : minutes + ' minutes and '
-		}
-		
-		else minutes = ''
-		
-		// determine the presentation of seconds.
-		if ( seconds !== 0 ) {
-			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
-		}
-		
-		else seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
-		
-		// concatenate the playlist durations.
-		var info = hours + minutes + seconds
 		
 		// update the info bar.
-		this.ui.infoBar.update(info)
+		this.ui.infoBar.update(util.expandTime(this.duration))
 	}
 	
 	/**

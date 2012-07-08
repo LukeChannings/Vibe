@@ -1,4 +1,4 @@
-define(['util'], function(util) {
+define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) {
 
 	// control variables.
 	var currentSound = null
@@ -111,6 +111,12 @@ define(['util'], function(util) {
 				'pause'
 			)
 			
+			if ( this.settings.get('notifications') ) {
+				webkitNotifications.showNotificationWithMetadata(
+					this.playlistModel.model[this.playlistModel.index]
+				)
+			}
+			
 			this.onplay && this.onplay()
 		}
 	
@@ -129,8 +135,6 @@ define(['util'], function(util) {
 		}
 	
 		this.onstop = function() {
-		
-			console.log('stop')
 		
 			this.isPlaying = false
 			
