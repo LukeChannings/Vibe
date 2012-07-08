@@ -55,7 +55,6 @@ List:
 - Volume Control
 - Visualiser
 - Track info in top centre where the Vibe logo presently is.
-- Webkit Notifications
 - Flexible stylesheets
 - Plugin Interface
 

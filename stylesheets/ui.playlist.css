@@ -3,6 +3,7 @@
 	height: 580px;
 	overflow: hidden;
 	position: relative;
+	background: #fff;
 }
 
 #UIPlaylist.dragentered{
@@ -24,9 +25,12 @@
 #UIPlaylist > .listContainer{
 	width: 100%;
 	height: 100%;
-	background: #fff;
 	position: relative;
 	overflow: auto;
+}
+
+#UIPlaylist > .listContainer.noItems{
+	background: url('../images/ui.playlist.dropGuide.png');
 }
 
 #UIPlaylist > .listContainer > ol{

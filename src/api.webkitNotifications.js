@@ -37,8 +37,8 @@ define(function(require) {
 			
 				notification = window.webkitNotifications.createNotification(
 					metadata.albumart,
-					metadata.trackname,
-					"By " + metadata.artistname
+					"Playing " + metadata.trackname + " by " + metadata.artistname,
+					"Track " + metadata.trackno + " of " + metadata.trackof + ". Duration " + util.expandTime(metadata.tracklength)
 				)
 				
 			}
