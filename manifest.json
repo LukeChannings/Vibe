@@ -1,0 +1,19 @@
+{
+  "name": "Vibe",
+  "description": "Good vibrations.",
+  "version": "0.0.3",
+  "app": {
+    "launch": {
+      "local_path": "app.html"
+    }
+  },
+  "icons": {
+    "16": "images/shared.icon_16.png",
+    "32": "images/shared.icon_32.png",
+    "64": "images/shared.icon_64.png",
+    "128": "images/shared.icon.png"
+  },
+  "permissions" : [
+  	"notifications"
+  ]
+}

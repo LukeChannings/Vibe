@@ -1,0 +1,1 @@
+require.config({baseUrl:"../src",paths:{tests:"../testing/tests",lib:"../lib"}}),require(["tests/util","tests/api"],function(){QUnit.start()})

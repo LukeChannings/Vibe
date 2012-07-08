@@ -1,0 +1,51 @@
+/**
+ *  UITreeListWidget
+ * @description stylesheet for the TreeList widget.
+ */
+.UITreeListWidget{
+	width: 100%;
+	overflow: auto;
+	background: #fff url('../images/shared.zebraStripes.png');
+	margin: 0;
+	padding: 0;
+}
+
+.UITreeListWidget *{
+	margin: 0;
+	padding: 0;
+}
+
+.UITreeListWidget li{
+	line-height: 25px;
+	font-size: 12px;
+	padding-left: 25px;
+	white-space: nowrap;
+	cursor: default;
+	background: url('../images/ui.widget.treeList.rightArrow.png') no-repeat 8.5px 8.5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+body.svg .UITreeListWidget li{
+	background-image: url('../images/ui.widget.treeList.rightArrow.svg');
+	background-size: 8px 8px
+}
+
+.UITreeListWidget li.expanded{
+	background-image: url('../images/ui.widget.treeList.downArrow.png');
+	background-position: 6px 8.5px;
+	background-size: 8px 8px
+}
+
+.UITreeListWidget ol.finalNode > li{
+	background: none;
+	padding-left: 0;
+	list-style: inside decimal;
+}
+
+body.svg .UITreeListWidget li.expanded{background-image: url('../images/ui.widget.treeList.downArrow.svg')}
+
+.UITreeListWidget li > ol{display: none}
+
+.UITreeListWidget li.expanded > ol{display: block}
