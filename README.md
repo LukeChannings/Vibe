@@ -1,6 +1,6 @@
 #Vibe Player#
 
-![Logo](https://github.com/TheFuzzball/Vibe/raw/master/images/shared.icon_256.png)
+![Logo](https://github.com/TheFuzzball/Vibe/raw/master/images/shared.icon_alt.png)
 
 Vibe is a next-generation Web Application that will stream music from a Vibe Server
 and allow it to be played on the browser. Vibe aims to provide an intuitive and fast
