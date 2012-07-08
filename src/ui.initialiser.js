@@ -123,6 +123,8 @@ define(function(require) {
 				
 					self.playlist = playlist = PlaylistInstance
 				
+					playlist.super = self
+				
 					new PlaylistModel({
 						withUI : playlist,
 						withApi : api,

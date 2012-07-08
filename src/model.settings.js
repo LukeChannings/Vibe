@@ -179,10 +179,10 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 					}],
 					callback : function(input) {
 					
-						if ( input.debug.checked ) {
+						if ( input.debug.checked != self.get('debug') ) {
 						
-							self.set('debug', true)
-						
+							self.set('debug', input.debug.checked)
+							
 							location.reload(true)
 						}
 					}

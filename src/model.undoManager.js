@@ -159,6 +159,14 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 	
 		var newValue = self.persistence ? self.replaceKeysWithValues(self.versions[self.currentVersion]) : self.versions[self.currentVersion]
 	
+		if ( self.persistence ) {
+			self.persistence.save({
+				'versions' : self.versions,
+				'currentVersion' : self.currentVersion,
+				'store' : self.store
+			})
+		}
+	
 		// push the new version onto the array instance.
 		return Array.prototype.push.apply(this, newValue)
 	}
@@ -175,8 +183,10 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 		// if there are versions ahead of the current version remove them.
 		if ( this.versions.length > this.currentVersion ) this.versions.splice(this.currentVersion + 1)
 	
-		// create a new version.
-		this.newVersion()
+		if ( ! this.disabled ) {
+			// create a new version.
+			this.newVersion()
+		}
 		
 		// apply the mutator to the value.
 		if ( method != 'sort' ) Array.prototype[method].apply(context, arguments)

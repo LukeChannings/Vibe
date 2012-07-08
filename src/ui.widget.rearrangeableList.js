@@ -20,8 +20,8 @@ define(function(require) {
 			appendTo : (options.appendTo instanceof Element) ? options.appendTo : document.body
 		})
 		
-		this.onmoved = options.onmoved
-		this.onnoderemoved = options.onnoderemoved
+		this.onmove = options.onmove
+		this.onremove = options.onremove
 		
 		// list of selected nodes.
 		this.selectedNodes = []
@@ -137,8 +137,6 @@ define(function(require) {
 				group = [draggedNode]
 			}
 			
-			this.onmoved(index)
-			
 			moveTo.call(this, group, item, window.dropRegion)
 			
 			window.dropRegion = undefined
@@ -212,11 +210,21 @@ define(function(require) {
 	
 			for ( var i = group.length - 1; i >= 0; i-- ) {
 			
+				this.onmove(
+					indexOfNode(group[i]),
+					indexOfNode(moveTo.nextSibling)
+				)
+			
 				this.node.insertBefore(group[i], moveTo.nextSibling)
 			}
 		} else {
 		
 			for ( var i = 0; i < group.length; i++ ) {
+				
+				this.onmove(
+					indexOfNode(group[i]),
+					indexOfNode(moveTo)
+				)
 				
 				this.node.insertBefore(group[i], moveTo)
 			}
@@ -361,6 +369,23 @@ define(function(require) {
 		
 		// clear the selected nodes array.
 		this.selectedNodes.splice(0, this.selectedNodes.length)
+	}
+
+	//
+	// returns the index of a given node.
+	function indexOfNode(node) {
+	
+		var list = node.parentNode
+		
+		for ( var i = 0; i < list.childNodes.length; i++ ) {
+		
+			if ( node == list.childNodes[i] ) {
+			
+				return i
+				
+				break
+			}
+		}
 	}
 
 	return RearrangeableList
