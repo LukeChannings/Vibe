@@ -146,11 +146,11 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.play_pause button{
 }
 
 #UIPlayer #UIPlayerControls > ol > li.prev button{
-	background: url('../images/ui.player.BackButton.png') no-repeat
+	background: url('../images/ui.player.backButton.png') no-repeat
 }
 
 body.svg #UIPlayer #UIPlayerControls > ol > li.prev button{
-	background-image: url('../images/ui.player.BackButton.svg')
+	background-image: url('../images/ui.player.backButton.svg')
 }
 
 #UIPlayer #UIPlayerControls > ol > li.prev button:hover{
