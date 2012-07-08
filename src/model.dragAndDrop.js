@@ -38,6 +38,7 @@ define(['util'], function(util) {
 		
 		util.addListener(options.node, 'selectstart', function(e) {
 		
+		
 			if ( !e.shiftKey && !e.ctrlKey && !e.metaKey ) {
 			
 				if ( e.preventDefault ) {
@@ -70,23 +71,17 @@ define(['util'], function(util) {
 		
 			var target = e.target || e.srcElement
 		
-			if ( ( options.dropZone && window.dropZone == options.dropZone ) || ! options.dropZone ) {
+			if ( typeof options.zoneClass == 'string' ) {
 			
-				if ( typeof options.zoneClass == 'string' ) {
-				
-					var classNode = options.zoneHighlightNode || target
-				
-					util.addClass(classNode, options.zoneClass) 
-				}
+				var classNode = options.zoneHighlightNode || target
 			
-				e.dataTransfer.effectAllowed = 'all'
-				
-				if ( e.preventDefault ) {
-					e.preventDefault()
-				}
+				util.addClass(classNode, options.zoneClass) 
+			}
+		
+			e.dataTransfer.effectAllowed = 'all'
 			
-			} else {
-				e.dataTransfer.effectAllowed = 'none'
+			if ( e.preventDefault ) {
+				e.preventDefault()
 			}
 			
 			if ( typeof options.whileentered == 'function' ) {

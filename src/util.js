@@ -368,7 +368,6 @@ define({
 				
 					var message = ( loaded ) ? "Loaded resource: " + url + " successfully" : "Failed to load " + url
 					
-					console.log(message) 
 				}
 			
 			link.setAttribute('href', url)
