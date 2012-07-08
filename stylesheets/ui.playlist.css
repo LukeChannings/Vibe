@@ -30,7 +30,7 @@
 }
 
 #UIPlaylist > .listContainer.noItems{
-	background: url('../images/ui.playlist.dropGuide.png');
+	background: url('../images/ui.playlist.dropGuide.png') no-repeat center;
 }
 
 #UIPlaylist > .listContainer > ol{

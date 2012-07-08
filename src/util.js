@@ -610,6 +610,23 @@ define({
 		return true
 	},
 	
+	//
+	// returns the index of a given node.
+	indexOfNode : function(node) {
+	
+		var list = node.parentNode
+		
+		for ( var i = 0; i < list.childNodes.length; i++ ) {
+		
+			if ( node == list.childNodes[i] ) {
+			
+				return i
+				
+				break
+			}
+		}
+	},
+	
 	// browser tests
 	browser : {
 	

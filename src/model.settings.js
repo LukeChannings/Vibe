@@ -102,12 +102,16 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 					inputs : [{
 						name : 'host',
 						title : 'Host',
-						placeholder : self.get('host') || 'localhost'
+						placeholder : function() {
+							self.get('host') || 'localhost'
+						}
 					},{
 						name : 'port',
 						type : 'number',
 						title : 'Port',
-						placeholder : self.get('port') || 6232
+						placeholder : function() {
+							return self.get('port') || 6232
+						}
 					}],
 					callback : function(input, callback) {
 					
@@ -138,12 +142,17 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						'title' : 'Order Collection By ',
 						'type' : 'select',
 						'options' : ['Genre', 'Artist', 'Album', 'Track'],
-						'placeholder' : self.get('collectionRootType') || 'Genre'
+						'placeholder' : function() {
+							self.get('collectionRootType') || 'Genre'
+						}
 					},{
 						'name' : 'notifications',
 						'title' : 'Desktop Notifications',
 						'type' : 'checkbox',
-						'checked' : self.get('notifications')
+						'checked' : function() {
+							return self.get('notifications')
+						},
+						'support' : /Webkit/i
 					}],
 					callback : function(inputs) {
 					
@@ -186,7 +195,9 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						'name' : 'debug',
 						'title' : 'Debugging',
 						'type' : 'checkbox',
-						'checked' : self.get('debug')
+						'checked' : function() {
+							self.get('debug')
+						}
 					},{
 						'name' : 'Clear Settings',
 						'type' : 'button',
@@ -197,6 +208,15 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 							
 							location.reload(true)
 						
+						}
+					},{
+						name : "Clear playlist",
+						type : "button",
+						callback : function() {
+						
+							localStorage.ModelPlaylist = undefined
+							
+							location.reload()
 						}
 					}],
 					callback : function(input) {

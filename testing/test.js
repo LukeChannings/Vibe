@@ -6,7 +6,7 @@ require.config({
 	}
 })
 
-require(['tests/util', 'tests/api', 'tests/undomanager'], function() {
+require(['tests/util', 'tests/api', 'tests/undomanager', 'tests/rearrangeablelist'], function() {
 
 	QUnit.start()
 })

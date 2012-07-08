@@ -20,8 +20,17 @@ define(function(require) {
 			appendTo : (options.appendTo instanceof Element) ? options.appendTo : document.body
 		})
 		
-		this.onmove = options.onmove
-		this.onremove = options.onremove
+		if ( options.onbeforemove ) {
+			this.onbeforemove = options.onbeforemove
+		}
+		
+		if ( options.onaftermove ) {
+			this.onaftermove = options.onaftermove
+		}
+		
+		if ( options.onremove ) {
+			this.onremove = options.onremove
+		}
 		
 		// list of selected nodes.
 		this.selectedNodes = []
@@ -62,7 +71,7 @@ define(function(require) {
 				},
 				drop : function(target, e, index) {
 				
-					dragDrop.call(self, item, index)
+					self.dragDrop.call(self, item, index)
 				}
 			})
 		
@@ -122,7 +131,7 @@ define(function(require) {
 	 * @param item {Element} the item to move the selected node to.
 	 * @param index {number} index of the selected node.
 	 */
-	function dragDrop(item, index) {
+	RearrangeableList.prototype.dragDrop = function(item, index) {
 	
 		if ( window.dropZone == 'rearrangeablelist' ) {
 		
@@ -137,14 +146,19 @@ define(function(require) {
 				group = [draggedNode]
 			}
 			
-			moveTo.call(this, group, item, window.dropRegion)
+			moveTo.call(
+				this,
+				group,
+				item,
+				window.dropRegion
+			)
 			
 			window.dropRegion = undefined
 		}
 		
 		util.removeNode(document.getElementById('dropIndicator'))
 	}
-	 
+	
 	/**
 	 * updates the drag indicator based on the position of the cursor within the current list item.
 	 * @param item {Element} target html element.
@@ -210,23 +224,46 @@ define(function(require) {
 	
 			for ( var i = group.length - 1; i >= 0; i-- ) {
 			
-				this.onmove(
-					indexOfNode(group[i]),
-					indexOfNode(moveTo.nextSibling)
+				this.onbeforemove(
+					util.indexOfNode(group[i]),
+					util.indexOfNode(moveTo),
+					'after'
 				)
 			
-				this.node.insertBefore(group[i], moveTo.nextSibling)
+				this.node.insertBefore(
+					group[i],
+					moveTo.nextSibling
+				)
+				
+				this.onaftermove(
+					util.indexOfNode(group[i]),
+					util.indexOfNode(moveTo),
+					'after'
+				)
 			}
 		} else {
 		
 			for ( var i = 0; i < group.length; i++ ) {
 				
-				this.onmove(
-					indexOfNode(group[i]),
-					indexOfNode(moveTo)
+				if ( this.onbeforemove ) {
+					this.onbeforemove(
+						util.indexOfNode(group[i]),
+						util.indexOfNode(moveTo)
+					)
+				}
+				
+				this.node.insertBefore(
+					group[i],
+					moveTo,
+					'before'
 				)
 				
-				this.node.insertBefore(group[i], moveTo)
+				if ( this.onaftermove ) {
+					this.onaftermove(
+						util.indexOfNode(group[i]),
+						util.indexOfNode(moveTo)
+					)
+				}
 			}
 		}
 	}
@@ -369,23 +406,6 @@ define(function(require) {
 		
 		// clear the selected nodes array.
 		this.selectedNodes.splice(0, this.selectedNodes.length)
-	}
-
-	//
-	// returns the index of a given node.
-	function indexOfNode(node) {
-	
-		var list = node.parentNode
-		
-		for ( var i = 0; i < list.childNodes.length; i++ ) {
-		
-			if ( node == list.childNodes[i] ) {
-			
-				return i
-				
-				break
-			}
-		}
 	}
 
 	return RearrangeableList

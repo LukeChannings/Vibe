@@ -49,23 +49,39 @@ define(function(require) {
 			
 			var list = self.list = new RearrangeableList({
 				appendTo : listContainer,
-				onmove : playlistItemDidMove,
+				onbeforemove : playlistItemWillMove,
+				onaftermove : playlistItemDidMove,
 				onremove : playlistItemWasRemoved
 			})
 			
 			// make an info bar instance.
 			self.infoBar = new PlaylistInfoBar(self.node)
 			
-			function playlistItemDidMove(from, to) {
+			function playlistItemWillMove(from, to, insertDirection) {
 
-				// disable the undo/redo tracking on the UndoManager instance.
-				self.super.playlistModel.model.anonymousMutation = true
+				var model = self.super.playlistModel.model
 
-				var item = self.super.playlistModel.model.splice(from, 1)[0]
+				model.anonymousMutation = true
+
+				if ( insertDirection == 'before' ) {
 				
-				self.super.playlistModel.model.splice(to - 1, 0, item)
+					model.splice(to - 1, 0, model.splice(from, 1)[0])
+				} else {
 				
-				self.super.playlistModel.model.anonymousMutation = undefined
+					model.splice(to, 0, model.splice(from, 1)[0])
+				}
+				
+				delete model.anonymousMutation
+			}
+			
+			function playlistItemDidMove() {
+			
+				if ( self.playingNode ) {
+				
+					self.super.playlistModel.index = util.indexOfNode(
+						self.playingNode
+					)
+				}
 			}
 			
 			function playlistItemWasRemoved() {

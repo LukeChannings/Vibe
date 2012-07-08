@@ -67,6 +67,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 	 * will become disabled.
 	 */
 	ModelPlaylist.prototype.updateButtons = function() {
+	
 		if ( this.model.canUndo() ) {
 		
 			util.removeClass(
@@ -106,6 +107,19 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 			util.removeClass(
 				this.ui.buttons.buttons.clear.node,
 				'disabled'
+			)
+		}
+		
+		if ( this.model.length == 0 ) {
+		
+			util.addClass(
+				this.ui.listContainer,
+				"noItems"
+			)
+		} else {
+			util.removeClass(
+				this.ui.listContainer,
+				"noItems"
 			)
 		}
 	}

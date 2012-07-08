@@ -166,8 +166,7 @@ define(['util'], function(util) {
 			tag : 'form',
 			appendTo : this.dialogue,
 			attributes : {
-				name : form.name,
-				method : 'post'
+				name : form.name
 			}
 		})
 	
@@ -176,6 +175,13 @@ define(['util'], function(util) {
 	
 		// iterate the inputs.
 		util.forEach(form.inputs, function(input, index) {
+		
+			// if the support parameter is specified in the input declaration
+			// then test it's a regular expression and compare it agains the
+			// user agent. If the test fails then skip this input.
+			if ( input.support && input.support instanceof RegExp && ! input.support.test(navigator.userAgent)) {
+				return
+			}
 		
 			// check if the input has a title.
 			if ( input.title ) var label = util.createElement({'tag' : 'label', 'inner' : input.title})
@@ -203,8 +209,11 @@ define(['util'], function(util) {
 							value : option
 						}
 					})
-
-					if ( input.placeholder && option == input.placeholder ) {
+					
+					if ( input.placeholder && typeof input.placeholder == 'function' && option == input.placeholder() ) {
+						optionNode.setAttribute('selected', 'selected')
+						
+					} else if ( input.placeholder && option == input.placeholder ) {
 						optionNode.setAttribute('selected', 'selected')
 					}
 				})
@@ -238,6 +247,10 @@ define(['util'], function(util) {
 			
 			// check for a placeholder.
 			if ( input.placeholder && input.type !== 'select' ) {
+			
+				if ( typeof input.placeholder == 'function' ) {
+					input.placeholder = input.placeholder()
+				}
 			
 				// check for native placeholder support.
 				if ( 'placeholder' in element ) {
