@@ -123,7 +123,7 @@ define(function(require) {
 				
 					self.playlist = playlist = PlaylistInstance
 				
-					playlist.super = self
+					playlist._super = self
 				
 					new PlaylistModel({
 						withUI : playlist,
@@ -190,7 +190,7 @@ define(function(require) {
 			settings = self.settings
 		
 			// give settings a reference to the root Vibe object.
-			settings.super = self
+			settings._super = self
 		
 			// make an instance of the settings assistant.
 			settingsAssistant = new SettingsAssistant({

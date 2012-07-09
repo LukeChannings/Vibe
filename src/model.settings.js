@@ -158,7 +158,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 					
 						if ( inputs.collectionRootType.value !== inputs.collectionRootType.placeholder ) {
 						
-							self.super.collection.populateWithType(inputs.collectionRootType.value)
+							self._super.collection.populateWithType(inputs.collectionRootType.value)
 						
 							self.set('collectionRootType', inputs.collectionRootType.value)
 						

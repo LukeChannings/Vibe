@@ -69,9 +69,15 @@ define(['util', 'lib/socket.io'], function(util) {
 			XHR.open('get', url + '/crossdomain.xml')
 		} catch (ex) {
 		
+			console.log('caught.')
+		
 			if ( ! hasCalledBack ) {
 			
-				callback(false)
+				if ( /(null|undefined)/.test(url) ) {
+					callback(false)
+				} else {
+					callback(true)
+				}
 				
 				hasCalledBack = true
 			}
@@ -82,7 +88,7 @@ define(['util', 'lib/socket.io'], function(util) {
 		
 			XHR.onload = function() {
 			
-				if ( XHR.responseText.length && !XHR.contentType ) {
+				if ( XHR.responseText.length > 0) {
 					
 					if ( ! hasCalledBack ) {
 					
@@ -163,6 +169,8 @@ define(['util', 'lib/socket.io'], function(util) {
 		var self = this
 	
 		checkForVibeServer('http://' + self.host + ':' + self.port, function(serverExists) {
+		
+			console.log("checkForServer: " + serverExists + " for http://" + self.host + ':' + self.port)
 		
 			if ( serverExists ) {
 			

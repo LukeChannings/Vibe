@@ -8,6 +8,8 @@ void function() {
 		api, // Vibe Api client.
 		settings, // Vibe Settings.
 		interfaceHasBeenInitialised = false,
+		modal = null,
+		initialiser = null,
 		self = this, // reference to the current object.
 
 	// dialogue identifiers.
@@ -35,9 +37,7 @@ void function() {
 			"util", // utility methods.
 			"lib/domReady", // requirejs plugin to wait for the DOM to load.
 			"api.vibe", // Vibe Api.
-			"model.settings", // Application settings.
-			"ui.widget.modalDialogue", // Modal Dialogue
-			"ui.initialiser" // initialises the User Interface.
+			"model.settings" // Application settings.
 		],
 		
 		// call the init function when the dependencies are loaded.
@@ -47,7 +47,7 @@ void function() {
 	// initialisation method
 	// will be run when requirejs has loaded
 	// and basic dependencies are ready.
-	function init(util, domReady, Api, Settings, modal, initialiser) {
+	function init(util, domReady, Api, Settings) {
 	
 		throbber = util.createElement({
 			'tag' : 'div',
@@ -58,31 +58,38 @@ void function() {
 		// instantiate settings.
 		self.settings = settings = new Settings('vibeSettings')
 	
-		// display a loading throbber.
-		throbberID = modal.open(throbber)
-	
 		// wait for the DOM to load before connecting to the Api.
 		domReady(function() {
 		
-			// instantiate the Api.
-			self.api = api = new Api({
+			require(["ui.initialiser", "ui.widget.modalDialogue"], function(interfaceInitialiser, modalDialogue) {
+			
+				modal = modalDialogue
+			
+				initialiser = interfaceInitialiser
+			
+				// display a loading throbber.
+				throbberID = modal.open(throbber)
 				
-				// get the host and port from settings and set them,
-				// if they're undefined then the instance will emit
-				// vibeApiDidThrowError.
-				host : settings.get('host'),
-				port : settings.get('port'),
-				
-				onconnect : vibeApiDidConnect,
-				
-				ondisconnect : vibeApiDidDisconnect,
-				
-				onerror : vibeApiDidThrowError,
-				
-				onreconnect : vibeApiDidReconnect,
-				
-				// automatically invoke the connect method.
-				autoconnect : true
+				// instantiate the Api.
+				self.api = api = new Api({
+					
+					// get the host and port from settings and set them,
+					// if they're undefined then the instance will emit
+					// vibeApiDidThrowError.
+					host : settings.get('host'),
+					port : settings.get('port'),
+					
+					onconnect : vibeApiDidConnect,
+					
+					ondisconnect : vibeApiDidDisconnect,
+					
+					onerror : vibeApiDidThrowError,
+					
+					onreconnect : vibeApiDidReconnect,
+					
+					// automatically invoke the connect method.
+					autoconnect : true
+				})
 			})
 		})
 		

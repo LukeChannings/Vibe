@@ -27,7 +27,7 @@ define(['util'], function(util) {
 		clear = util.createElement({
 			tag : 'button',
 			appendTo : textInput
-		})
+		}),
 		
 		self = this
 

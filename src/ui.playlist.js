@@ -59,7 +59,7 @@ define(function(require) {
 			
 			function playlistItemWillMove(from, to, insertDirection) {
 
-				var model = self.super.playlistModel.model
+				var model = self._super.playlistModel.model
 
 				model.anonymousMutation = true
 
@@ -78,7 +78,7 @@ define(function(require) {
 			
 				if ( self.playingNode ) {
 				
-					self.super.playlistModel.index = util.indexOfNode(
+					self._super.playlistModel.index = util.indexOfNode(
 						self.playingNode
 					)
 				}
