@@ -19,14 +19,14 @@ simplistic but easy to navigate interface.
 
 Set up screen, displayed when Vibe is first run.
 
-![First Run](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/vibe_setup.png)
+![First Run](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/Welcome.png)
 
 Normal Vibe view in Google Chrome on OS X:
 
-![Normal View](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/vibe.png)
+![Normal View](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/Playing.png)
 
 Vibe settings menu in Google Chrome on OS X:
-![Settings](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/vibe_settings.png)
+![Settings](https://github.com/TheFuzzball/Vibe/raw/master/screenshots/Settings.png)
 
 #How It Works#
 

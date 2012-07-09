@@ -54,6 +54,8 @@ define(['util', 'lib/DragDealer'], function(util, DragDealer) {
 			}
 		})
 		
+		dragdealer.setValue(1)
+		
 		var mute = util.createElement({
 			tag : 'button',
 			appendTo : container.childNodes[0]
