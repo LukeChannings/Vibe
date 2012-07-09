@@ -59,6 +59,8 @@ define(function(require) {
 			
 			function playlistItemWillMove(from, to, insertDirection) {
 
+				console.log('will move...')
+
 				var model = self._super.playlistModel.model
 
 				model.anonymousMutation = true
@@ -75,6 +77,8 @@ define(function(require) {
 			}
 			
 			function playlistItemDidMove() {
+			
+				console.log('did move...')
 			
 				if ( self.playingNode ) {
 				

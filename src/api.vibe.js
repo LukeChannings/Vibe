@@ -170,8 +170,6 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		checkForVibeServer('http://' + self.host + ':' + self.port, function(serverExists) {
 		
-			console.log("checkForServer: " + serverExists + " for http://" + self.host + ':' + self.port)
-		
 			if ( serverExists ) {
 			
 				var socket = self.socket = io.connect('http://' + self.host + ':' + self.port, {

@@ -176,7 +176,9 @@ define(function(require) {
 	
 		initialiser = function(callback) {
 		
-			if ( util.browser.hasSupport.svg ) {
+			// enable SVG for all browsers that support it beside 
+			// Internet Explorer due to some rendering issues.
+			if ( util.browser.hasSupport.svg && ! util.browser.isIE ) {
 				util.addClass(document.body, 'svg')
 			}
 		

@@ -87,11 +87,6 @@ define(function(require) {
 				appendTo : self.node
 			})
 			
-			self.populateWithType(self.type)
-			
-			// check for the info bar option.
-			initInfoBar.call(self)
-
 			// check for a drag and drop element.
 			if ( options.dragAndDropElement instanceof Element ) {
 			
@@ -101,6 +96,11 @@ define(function(require) {
 				// initialise DnD methods.
 				initDragAndDrop.call(self)
 			}
+			
+			self.populateWithType(self.type)
+			
+			// check for the info bar option.
+			initInfoBar.call(self)
 
 			if ( typeof options.onload == 'function' ) {
 				options.onload(self)
@@ -156,11 +156,11 @@ define(function(require) {
 			util.removeChildren(self.listContainer)
 			
 			var options = {
-				'appendTo' : self.listContainer,
-				'isRootNode' : true,
-				'isRootListener' : true,
-				'customClass' : type,
-				'setAttributes' : []
+				appendTo : self.listContainer,
+				isRootNode : true,
+				isRootListener : true,
+				customClass : type,
+				setAttributes : []
 			}
 			
 			if ( self.dropTarget ) {
@@ -233,11 +233,11 @@ define(function(require) {
 				
 				// Set the ghost image.
 				e.dataTransfer.setDragImage(DragImage,-10,-10)
-				
-				return {
-					'id' : id,
-					'type' : type
-				}
+			}
+			
+			return {
+				'id' : id,
+				'type' : type
 			}
 		}
 
@@ -251,24 +251,27 @@ define(function(require) {
 				if ( typeof data == 'object' ) {
 				
 					self.onitemselect(data)
+				
 				} else {
 				
 					var data = []
 	
-					for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
-					
-						var reader = new FileReader()
-					
-						var type = e.dataTransfer.files[i].type
-					
-						reader.readAsDataURL(e.dataTransfer.files[i])
-					
-						reader.onloadend = function(e) {
+					if ( e.dataTransfer.files ) {
+						for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
 						
-							data.push({
-								'type' : type,
-								'data' : e.currentTarget.result.replace('data:' + type + 'base64,','')
-							})
+							var reader = new FileReader()
+						
+							var type = e.dataTransfer.files[i].type
+						
+							reader.readAsDataURL(e.dataTransfer.files[i])
+						
+							reader.onloadend = function(e) {
+							
+								data.push({
+									'type' : type,
+									'data' : e.currentTarget.result.replace('data:' + type + 'base64,','')
+								})
+							}
 						}
 					}
 					

@@ -78,7 +78,7 @@ define(function(require) {
 			// add selection support.
 			selectionify.call(self, item)
 		
-			if ( afterItem instanceof Element ) {
+			if ( afterItem && afterItem instanceof Element ) {
 				afterItem.parentNode.insertBefore(item, afterItem)
 			} else {
 				

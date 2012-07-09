@@ -102,16 +102,12 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 					inputs : [{
 						name : 'host',
 						title : 'Host',
-						placeholder : function() {
-							self.get('host') || 'localhost'
-						}
+						placeholder : self.get('host') || 'localhost'
 					},{
 						name : 'port',
 						type : 'number',
 						title : 'Port',
-						placeholder : function() {
-							return self.get('port') || 6232
-						}
+						placeholder : self.get('port') || 6232
 					}],
 					callback : function(input, callback) {
 					
@@ -142,16 +138,12 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						'title' : 'Order Collection By ',
 						'type' : 'select',
 						'options' : ['Genre', 'Artist', 'Album', 'Track'],
-						'placeholder' : function() {
-							self.get('collectionRootType') || 'Genre'
-						}
+						'placeholder' : self.get('collectionRootType') || 'Genre'
 					},{
 						'name' : 'notifications',
 						'title' : 'Desktop Notifications',
 						'type' : 'checkbox',
-						'checked' : function() {
-							return self.get('notifications')
-						},
+						'checked' : self.get('notifications'),
 						'support' : /Webkit/i
 					}],
 					callback : function(inputs) {
@@ -195,16 +187,13 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 						'name' : 'debug',
 						'title' : 'Debugging',
 						'type' : 'checkbox',
-						'checked' : function() {
-							self.get('debug')
-						}
+						'checked' : self.get('debug')
 					},{
 						'name' : 'Clear Settings',
 						'type' : 'button',
 						'callback' : function() {
 						
-							// clear localstorage.
-							localStorage.clear()
+							localStorage.vibeSettings = undefined
 							
 							location.reload(true)
 						

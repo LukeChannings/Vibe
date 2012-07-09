@@ -643,6 +643,13 @@ define({
 		
 		})(),
 		
+		// returns true if the browser is IE 8.
+		isIE8 : (function() {
+		
+			return /MSIE 8\.0/i.test(navigator.userAgent) 
+		
+		})(),
+		
 		// object containing support tests for the browser.
 		hasSupport : {
 		

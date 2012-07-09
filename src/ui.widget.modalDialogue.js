@@ -25,8 +25,6 @@ define(['util'], function(util) {
 		animateIn, // animation with which to open the dialogue.
 		animateOut // animation with which to close the dialogue.
 
-	console.log(document.body)
-
 	/**
 	 * isValidMDD
 	 * @description Check that the Modal Dialogue Definition is valid.
