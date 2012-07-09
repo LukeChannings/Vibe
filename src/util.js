@@ -326,12 +326,10 @@ define({
 		var StylesheetObserver = function(url, callback) {
 		
 			var timeout = 0,
-				self = this
-		
-			this.url = url
-			this.callback = callback
-		
-			void function checker() {
+			
+			self = this,
+			
+			checker = function() {
 			
 				for ( var i = 0; i < document.styleSheets.length; i++ ) {
 				
@@ -347,13 +345,19 @@ define({
 				
 				if ( timeout <= 100 ) {
 				
-					setTimeout(checker, 50)
-				}
-				else {
+					setTimeout(function() {
+						checker()
+					}, 50)
+				} else {
 				
 					callback(false)
 				}
-			}()
+			}
+		
+			this.url = url
+			this.callback = callback
+		
+			checker()
 		}
 	
 		var _registerStylesheet = function(url, callback) {
