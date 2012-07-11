@@ -74,11 +74,10 @@ sed -i~ s/0\.0\.3/$timestamp/g app.html
 rm -rf *~ build* testing images lib src screenshots stylesheets designs index.html
 
 # change the symlink to point to the latest.
-
 if [ -h ../latest ]; then
 	rm ../latest
 fi
 
 cd ..
+
 ln -s $build_dir latest
-echo $build_dir

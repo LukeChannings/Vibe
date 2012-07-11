@@ -58,7 +58,11 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 		})
 		
 		// update the info bar.
-		this.ui.infoBar.update(this.model.length + " tracks (" + util.expandTime(this.duration) + ")")
+		if ( this.model.length == 0 ) {
+			this.ui.infoBar.update("No tracks.")
+		} else {
+			this.ui.infoBar.update(this.model.length + " tracks (" + util.expandTime(this.duration) + ")")
+		}
 	}
 	
 	/**

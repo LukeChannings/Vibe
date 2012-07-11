@@ -490,7 +490,7 @@ define({
 		if ( seconds !== 0 ) {
 			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
 		} else {
-			seconds = ( hours == '' && minutes == '' ) ? 'No tracks.' : '0 seconds.'
+			seconds = ''
 		}
 		
 		// concatenate the playlist durations.
