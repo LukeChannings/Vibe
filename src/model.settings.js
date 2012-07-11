@@ -1,9 +1,8 @@
+/**
+ * Vibe settings.
+ */
 define(['util', 'model.persistence'], function( util, Persistence ) {
 
-	/**
-	 * Settings
-	 * @description MusicMe settings object. (Keeps persistency.)
-	 */
 	var Settings = function(done) {
 	
 		var self = this,
@@ -228,7 +227,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 				
 					if (build) {
 					
-						return "About Vibe (Build " + build +  " )"
+						return "About Vibe (Build " + build +  ")"
 					}
 					else {
 					
