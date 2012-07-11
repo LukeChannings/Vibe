@@ -58,7 +58,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 		})
 		
 		// update the info bar.
-		this.ui.infoBar.update(util.expandTime(this.duration))
+		this.ui.infoBar.update(this.model.length + " tracks (" + util.expandTime(this.duration) + ")")
 	}
 	
 	/**
