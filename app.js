@@ -35,9 +35,9 @@ void function() {
 		// initial callback dependencies.
 		deps : [
 			"util", // utility methods.
-			"lib/domReady", // requirejs plugin to wait for the DOM to load.
 			"api.vibe", // Vibe Api.
-			"model.settings" // Application settings.
+			"model.settings", // Application settings.
+			"lib/domReady!", // requirejs plugin to wait for the DOM to load.
 		],
 		
 		// call the init function when the dependencies are loaded.
@@ -47,59 +47,55 @@ void function() {
 	// initialisation method
 	// will be run when requirejs has loaded
 	// and basic dependencies are ready.
-	function init(util, domReady, Api, Settings) {
+	function init(util, Api, Settings) {
 	
-		throbber = util.createElement({
-			'tag' : 'div',
-			'customClass' : 'loading',
-			'id' : 'LoadingThrobber'
-		})
+		var dependencies = [
+			"ui.initialiser", // bootstraps the UI modules.
+			"ui.widget.modalDialogue" // presents various modal dialogues.
+		]
 	
-		// instantiate settings.
-		self.settings = settings = new Settings('vibeSettings')
+		// compatibility for IE8.
+		if ( util.browser.isIE8 ) {
+			dependencies.push("compatibility.ie8")
+		}
 	
-		// wait for the DOM to load before connecting to the Api.
-		domReady(function() {
+		require(dependencies, function(interfaceInitialiser, modalDialogue) {
 		
-			var dependencies = [
-				"ui.initialiser", // bootstraps the UI modules.
-				"ui.widget.modalDialogue" // presents various modal dialogues.
-			]
+			throbber = util.createElement({
+				'tag' : 'div',
+				'customClass' : 'loading',
+				'id' : 'LoadingThrobber'
+			})
 		
-			// compatibility for IE8.
-			if ( util.browser.isIE8 ) {
-				dependencies.push("compatibility.ie8")
-			}
+			// instantiate settings.
+			self.settings = settings = new Settings('vibeSettings')
 		
-			require(dependencies, function(interfaceInitialiser, modalDialogue) {
+			modal = modalDialogue
+		
+			initialiser = interfaceInitialiser
+		
+			// display a loading throbber.
+			throbberID = modal.open(throbber)
 			
-				modal = modalDialogue
-			
-				initialiser = interfaceInitialiser
-			
-				// display a loading throbber.
-				throbberID = modal.open(throbber)
+			// instantiate the Api.
+			self.api = api = new Api({
 				
-				// instantiate the Api.
-				self.api = api = new Api({
-					
-					// get the host and port from settings and set them,
-					// if they're undefined then the instance will emit
-					// vibeApiDidThrowError.
-					host : settings.get('host'),
-					port : settings.get('port'),
-					
-					onconnect : vibeApiDidConnect,
-					
-					ondisconnect : vibeApiDidDisconnect,
-					
-					onerror : vibeApiDidThrowError,
-					
-					onreconnect : vibeApiDidReconnect,
-					
-					// automatically invoke the connect method.
-					autoconnect : true
-				})
+				// get the host and port from settings and set them,
+				// if they're undefined then the instance will emit
+				// vibeApiDidThrowError.
+				host : settings.get('host'),
+				port : settings.get('port'),
+				
+				onconnect : vibeApiDidConnect,
+				
+				ondisconnect : vibeApiDidDisconnect,
+				
+				onerror : vibeApiDidThrowError,
+				
+				onreconnect : vibeApiDidReconnect,
+				
+				// automatically invoke the connect method.
+				autoconnect : true
 			})
 		})
 	}
