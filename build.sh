@@ -16,7 +16,7 @@ fi
 
 # generate a file timestamp.
 timestamp=`date +%s`
-build_dir=builds/build-$timestamp
+build_dir=../htdocs/vibe-$timestamp
 
 # run the optimiser.
 r.js -o \
@@ -57,8 +57,8 @@ mv stylesheets/* .
 mv api.webkitNotifications.notification.html notification.html
 
 # patch app.js with new paths.
-sed -i~ s/api[.]webkitNotifications[.]//g app.js
-sed -i~ s#src/#\.#g app.js
+sed -i~ s/api\.webkitNotifications[.]//g app.js
+sed -i~ s#src/##g app.js
 sed -i~ s#../lib#.#g app.js
 sed -i~ s#lib/##g app.html
 sed -i~ s#stylesheets/##g app.js
@@ -71,4 +71,14 @@ sed -i~ s/vibe-version/vibe-build/g app.html
 sed -i~ s/0\.0\.3/$timestamp/g app.html
 
 # remove all unnecessary files.
-rm -rf *~ build* testing images lib src screenshots stylesheets designs
+rm -rf *~ build* testing images lib src screenshots stylesheets designs index.html
+
+# change the symlink to point to the latest.
+
+if [ -h ../latest ]; then
+	rm ../latest
+fi
+
+cd ..
+ln -s $build_dir latest
+echo $build_dir
