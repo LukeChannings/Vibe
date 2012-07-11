@@ -71,7 +71,7 @@ sed -i~ s/vibe-version/vibe-build/g app.html
 sed -i~ s/0\.0\.3/$timestamp/g app.html
 
 # remove all unnecessary files.
-rm -rf *~ build* testing images lib src screenshots stylesheets designs
+rm -rf *~ build* testing images lib src screenshots stylesheets designs index.html
 
 # change the symlink to point to the latest.
 
