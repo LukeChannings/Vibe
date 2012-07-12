@@ -139,6 +139,12 @@ body.svg #ModalDialogue.error{background-image: url('../images/ui.widget.modalDi
 
 #ModalDialogue form > label > input[type='checkbox']{border: none}
 
+#ModalDialogue.sidebar > div.views > .view > form button{
+	display: block;
+	margin: 0.4em 0;
+	padding: 0.2em;
+}
+
 /* @end */
 
 /* @group ModalDialogueWithSidebar */

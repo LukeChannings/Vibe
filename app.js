@@ -7,14 +7,14 @@ void function() {
 	var util = this.util, // utility methods.
 		api, // Vibe Api client.
 		settings, // Vibe Settings.
+		settingsAssistant, // settings interface.
 		interfaceHasBeenInitialised = false,
 		modal = null,
 		initialiser = null,
 		self = this, // reference to the current object.
 
-	// dialogue identifiers.
+	// dialogue identifier.
 	throbberId,
-	connnectionAssistantId,
 	
 	// throbber element.
 	throbber
@@ -51,15 +51,21 @@ void function() {
 	
 		var dependencies = [
 			"ui.initialiser", // bootstraps the UI modules.
-			"ui.widget.modalDialogue" // presents various modal dialogues.
+			"ui.widget.modalDialogue", // presents various modal dialogues.
+			"ui.settingsAssistant" // settings interface.
 		]
+	
+		// webkit notifications.
+		if ( /Webkit/i.test(navigator.userAgent) ) {
+			dependencies.push("api.webkitNotifications")
+		}
 	
 		// compatibility for IE8.
 		if ( util.browser.isIE8 ) {
 			dependencies.push("compatibility.ie8")
 		}
 	
-		require(dependencies, function(interfaceInitialiser, modalDialogue) {
+		require(dependencies, function(interfaceInitialiser, modalDialogue, SettingsAssistant, Notifications) {
 		
 			throbber = util.createElement({
 				'tag' : 'div',
@@ -69,6 +75,15 @@ void function() {
 		
 			// instantiate settings.
 			self.settings = settings = new Settings('vibeSettings')
+		
+			self.settingsAssistant = settingsAssistant = new SettingsAssistant({
+				withSettings : settings,
+				_super : self
+			})
+		
+			if ( Notifications ) {
+				Notifications.addPreferenceInput(settingsAssistant)
+			}
 		
 			modal = modalDialogue
 		
@@ -98,40 +113,6 @@ void function() {
 				autoconnect : true
 			})
 		})
-	}
-
-	//
-	// shows a dialogue with the options for specifying a host and port
-	// and allows parameterised configuration of user messages.
-	// @param title {string} the title of the dialogue.
-	// @param body {string} the body text of the dialogue.
-	// @param buttonTitle {string} the text on the submit button. (defaults to 'Submit')
-	//
-	function showConnectionAssistant(title, body, buttonTitle) {
-	
-		// construct a modal dialogue definition for a first-run dialogue.
-		var dialogueDefinition = {
-			title : title,
-			body : body,
-			animate: {
-				animateIn : 'slideInTop',
-				animateOut : 'fadeOut'
-			},
-			form : settings.dialogueDefinitions.connection.form
-		}
-		
-		// refresh the host and port settings.
-		dialogueDefinition.form.inputs[0].placeholder = settings.get('host') || 'localhost'
-		dialogueDefinition.form.inputs[1].placeholder = settings.get('port') || 6232
-		
-		// overload the default callback method.
-		dialogueDefinition.form.callback = connectionAssistantHandler
-		
-		// set the submit button text.
-		dialogueDefinition.form.buttonTitle = buttonTitle
-		
-		// present the dialogue.
-		connectionAssistantId = modal.createSingle(dialogueDefinition)
 	}
 	
 	//
@@ -198,10 +179,12 @@ void function() {
 		// tell interface elements that connection to the server has been lost.
 		initialiser.alertInterfaceToDisconnection()
 		
-		showConnectionAssistant(
+		settingsAssistant.presentConnectionAssistant(
 			"Vibe lost connection to the server.",
 			
 			"<p>Connection to the Vibe Server has been lost, please check your connection to the Internet has not been terminated and that your Vibe Server has not been turned off.</p><p>If your connection settings need to be adjusted, please change them below and press Reconnect.</p><p>Note: Once connection is restored this dialogue will automatically close.</p>",
+			
+			connectionAssistantHandler,
 			
 			"Reconnect"
 		)
@@ -220,10 +203,12 @@ void function() {
 		// for configuring the host and port.
 		if ( ! settings.get('host') && ! settings.get('port') ) {
 
-			showConnectionAssistant(
+			settingsAssistant.presentConnectionAssistant(
 				"Welcome to Vibe!",
 				
 				"<p>Before you can use Vibe, the address of your Vibe Server must be specified.</p><p>You can find the address of your Vibe Server by looking in its main window, where the address will be specified in the format of: hostname:portnumber.</p>",
+				
+				connectionAssistantHandler,
 				
 				"Go"
 			)
@@ -234,10 +219,12 @@ void function() {
 		// the option of changing their host and port.
 		else {
 		
-			showConnectionAssistant(
+			settingsAssistant.presentConnectionAssistant(
 				"Vibe failed to connect.",
 				
 				"<p>We could not connect to the Vibe Server at http://" + settings.get('host') + ':' + settings.get('port') + ", please check that this server is up, or if you have incorrectly entered the details you can change them below. When you're done just press reconnect.</p>",
+				
+				connectionAssistantHandler,
 				
 				"Reconnect"
 			)

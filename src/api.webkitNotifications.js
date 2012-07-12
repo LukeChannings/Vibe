@@ -3,7 +3,11 @@ define(function(require) {
 	var util = require('util')
 
 	return {
-		showNotificationWithMetadata : function(metadata) {
+	
+		//
+		// presents a notification dialogue.
+		// @param metadata {object} the track metadata object.
+		presentNotificationWithMetadata : function(metadata) {
 		
 			var notification
 		
@@ -41,6 +45,8 @@ define(function(require) {
 					"Track " + metadata.trackno + " of " + metadata.trackof + ". Duration " + util.expandTime(metadata.tracklength)
 				)
 				
+			} else {
+				throw new Error("Webkit Notifications are not available.")
 			}
 			
 			notification.show()
@@ -52,6 +58,46 @@ define(function(require) {
 				notification.close && notification.close()
 			
 			}, 7000)
+		},
+		
+		//
+		// adds the webkit notification preference to the User Interface settings pane.
+		// @param settingsAssistant {object} the SettingsAssistant instance.
+		addPreferenceInput : function(settingsAssistant) {
+		
+			settingsAssistant.appendInput(
+				"interface",
+				function() {
+					return {
+						name : 'notifications',
+						title : 'Desktop Notifications',
+						type : 'checkbox',
+						checked : settingsAssistant.settings.get('notifications'),
+						support : /Webkit/i
+					}
+				},
+				
+				function(inputs) {
+				
+					if ( inputs.notifications.checked ) {
+					
+						if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
+							
+							window.webkitNotifications.requestPermission(function() {
+							
+								settingsAssistant.settings.set('notifications', true)
+							})
+							
+						} else {
+							settingsAssistant.settings.set('notifications', true)
+						}
+						
+					} else {
+						settingsAssistant.settings.set('notifications', false)
+					}
+				}
+			
+			)
 		}
 	}
 })

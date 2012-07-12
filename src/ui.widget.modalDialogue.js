@@ -58,6 +58,8 @@ define(['util'], function(util) {
 			}
 			
 			return true
+		} else {
+			return false
 		}
 	}
 
@@ -757,6 +759,9 @@ define(['util'], function(util) {
 			return !!n
 		}
 	}
+	
+	// expose the MDD validation method.
+	ModalDialogue.isValidMDD = isValidMDD
 
 	return ModalDialogue
 })

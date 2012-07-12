@@ -12,8 +12,7 @@ define(function(require) {
 		Playlist = require('ui.playlist'),
 		PlaylistModel = require('model.playlist'),
 		Player = require('ui.player'),
-		PlayerModel = require('model.player'),
-		SettingsAssistant = require('ui.settingsAssistant')
+		PlayerModel = require('model.player')
 	
 	// interfaces.
 	var collection,
@@ -191,13 +190,8 @@ define(function(require) {
 			api = self.api
 			settings = self.settings
 		
-			// give settings a reference to the root Vibe object.
-			settings._super = self
-		
 			// make an instance of the settings assistant.
-			settingsAssistant = new SettingsAssistant({
-				withSettings : settings
-			})
+			settingsAssistant = self.settingsAssistant
 		
 			// user interface element chain loading.
 			// this will load the core interface

@@ -117,7 +117,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 			)
 			
 			if ( this.settings.get('notifications') ) {
-				webkitNotifications.showNotificationWithMetadata(
+				webkitNotifications.presentNotificationWithMetadata(
 					this.playlistModel.model[this.playlistModel.index]
 				)
 			}
