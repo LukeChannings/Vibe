@@ -32,7 +32,7 @@ optimizeCss=standard \
 findNestedDependencies=true \
 removeCombined=true \
 preserveLicenseComments=false \
-include=util,lib/domReady,api.vibe,model.settings,ui.initialiser
+include=util,lib/domReady,api.vibe,model.settings,ui.settingsAssistant,ui.initialiser
 
 # change to the build root.
 cd $build_dir
