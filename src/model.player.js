@@ -35,7 +35,12 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 		this.isMuted = false
 		this.isPlaying = false
 		this.isPaused = false
-		this.volume = typeof this.settings.get('volume') == 'number' ? this.settings.get('volume') : 70
+		this.volume = this.settings.get('volume') || 80
+		
+		// set the volume bar to reflect the volume setting.
+		setTimeout(function() {
+			self.playerInterface.playerVolumeControl.dragdealer.setValue(self.volume / 100)
+		}, 150)
 		
 		// UI Events.
 		this.playerInterface.onplaytoggle = function(button) {
@@ -95,7 +100,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 		currentSound.realDuration = Math.floor(duration * 1000)
 
 		this.playerInterface.playerSlider.updateDuration(duration)
-
+		
 		// return the newly created sound.
 		return currentSound
 	}

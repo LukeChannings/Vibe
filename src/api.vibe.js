@@ -461,7 +461,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	VibeApi.prototype.search = function(query,callback) {
 	
 		// to be implemented.
-		return 
+		return
 	}
 	
 	/**

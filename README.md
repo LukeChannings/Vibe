@@ -52,7 +52,6 @@ List:
 
 #Todo#
 
-- Volume Control
 - Visualiser
 - Track info in top centre where the Vibe logo presently is.
 - Flexible stylesheets

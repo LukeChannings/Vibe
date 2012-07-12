@@ -64,7 +64,7 @@ define(function(require) {
 				})
 			
 			}, 150)
-
+			
 			options.onload && options.onload(self)
 		})
 	}

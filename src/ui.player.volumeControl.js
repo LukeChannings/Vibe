@@ -40,7 +40,7 @@ define(['util', 'lib/DragDealer'], function(util, DragDealer) {
 			appendTo : slider
 		})
 		
-		var dragdealer = new DragDealer(slider, {
+		var dragdealer = this.dragdealer = new DragDealer(slider, {
 			slide : false,
 			speed : 100,
 			left : 2,
@@ -53,8 +53,6 @@ define(['util', 'lib/DragDealer'], function(util, DragDealer) {
 				}
 			}
 		})
-		
-		dragdealer.setValue(1)
 		
 		var mute = util.createElement({
 			tag : 'button',
