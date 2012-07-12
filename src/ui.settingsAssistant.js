@@ -191,6 +191,8 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 		
 		// present the dialogue.
 		this.dialogueId = dialogue.createSingle(dialogueDefinition)
+		
+		return this.dialogueId
 	}
 	
 	// a set of default settings panes.

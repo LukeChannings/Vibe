@@ -179,7 +179,7 @@ void function() {
 		// tell interface elements that connection to the server has been lost.
 		initialiser.alertInterfaceToDisconnection()
 		
-		settingsAssistant.presentConnectionAssistant(
+		connectionAssistantId = settingsAssistant.presentConnectionAssistant(
 			"Vibe lost connection to the server.",
 			
 			"<p>Connection to the Vibe Server has been lost, please check your connection to the Internet has not been terminated and that your Vibe Server has not been turned off.</p><p>If your connection settings need to be adjusted, please change them below and press Reconnect.</p><p>Note: Once connection is restored this dialogue will automatically close.</p>",
@@ -203,7 +203,7 @@ void function() {
 		// for configuring the host and port.
 		if ( ! settings.get('host') && ! settings.get('port') ) {
 
-			settingsAssistant.presentConnectionAssistant(
+			connectionAssistantId = settingsAssistant.presentConnectionAssistant(
 				"Welcome to Vibe!",
 				
 				"<p>Before you can use Vibe, the address of your Vibe Server must be specified.</p><p>You can find the address of your Vibe Server by looking in its main window, where the address will be specified in the format of: hostname:portnumber.</p>",
@@ -219,7 +219,7 @@ void function() {
 		// the option of changing their host and port.
 		else {
 		
-			settingsAssistant.presentConnectionAssistant(
+			connectionAssistantId = settingsAssistant.presentConnectionAssistant(
 				"Vibe failed to connect.",
 				
 				"<p>We could not connect to the Vibe Server at http://" + settings.get('host') + ':' + settings.get('port') + ", please check that this server is up, or if you have incorrectly entered the details you can change them below. When you're done just press reconnect.</p>",
