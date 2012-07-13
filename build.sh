@@ -15,7 +15,7 @@ if [ -z `which r.js` ]; then
 fi
 
 # generate a file timestamp.
-timestamp=`date +%s`
+timestamp=`git rev-parse HEAD`
 build_dir=../htdocs/vibe-$timestamp
 
 # run the optimiser.
