@@ -12,8 +12,7 @@ define(function(require) {
 		Playlist = require('ui.playlist'),
 		PlaylistModel = require('model.playlist'),
 		Player = require('ui.player'),
-		PlayerModel = require('model.player'),
-		ResizeNode = require('model.resizeNode')
+		PlayerModel = require('model.player')
 	
 	// interfaces.
 	var collection,
