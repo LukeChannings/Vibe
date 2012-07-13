@@ -18,17 +18,20 @@ define(function(require) {
 		var buttons = this.buttons = new ButtonBarWidget({
 			'appendTo' : node,
 			'buttons' : [{
-				'isIcon' : true,
-				'customClass' : 'prev',
-				'callback' : options.onprevious
+				isIcon : true,
+				customClass : 'prev',
+				titleText : "Previous Track",
+				callback : options.onprevious
 			},{
-				'isIcon' : true,
-				'customClass' : 'play_pause',
-				'callback' : options.onplaytoggle
+				isIcon : true,
+				customClass : 'play_pause',
+				titleText : "Play or Pause Track",
+				callback : options.onplaytoggle
 			},{
-				'isIcon' : true,
-				'customClass' : 'next',
-				'callback' : options.onnext
+				isIcon : true,
+				customClass : 'next',
+				titleText : "Next Track",
+				callback : options.onnext
 			}]
 		})
 	}

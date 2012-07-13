@@ -75,24 +75,28 @@ define(function(require) {
 				withControlBarButtons : [{
 					isIcon : true,
 					customClass : 'undo',
+					titleText : "Undo",
 					callback : function() {
 						playlistModel.undo()
 					}
 				},{
 					isIcon : true,
 					customClass : 'redo',
+					titleText : "Next",
 					callback : function() {
 						playlistModel.redo()
 					} 
 				},{
 					isIcon : true,
 					customClass : 'clear',
+					titleText : "Clear",
 					callback : function() {
 						playlistModel.clear()
 					}
 				},{
 					isIcon : true,
 					customClass : 'settings',
+					titleText : "Settings",
 					floatRight : true,
 					callback : function () {
 						settingsAssistant.presentDialogue()
