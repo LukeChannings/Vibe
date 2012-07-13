@@ -3,7 +3,8 @@ define(function(require) {
 	var util = require('util'),
 		PlayerControls = require('ui.player.controls'),
 		PlayerSlider = require('ui.player.slider'),
-		PlayerVolumeControl = require('ui.player.volumeControl')
+		PlayerVolumeControl = require('ui.player.volumeControl'),
+		PlayerPlayingInfo = require('ui.player.playingInfo')
 
 	/**
 	 * constructs a player interface instance.
@@ -50,11 +51,21 @@ define(function(require) {
 				}
 			})
 
+			var container = util.createElement({
+				tag : 'div',
+				customClass : 'container',
+				appendTo : node
+			})
+
+			var playingInfo = self.playingInfo = new PlayerPlayingInfo({
+				appendTo : container
+			})
+
 			// delay the UIPlayerSlider instantiation by 150ms to allow for the styles to be computed.
 			setTimeout(function() {
 			
 				self.playerSlider = new PlayerSlider({
-					appendTo : node,
+					appendTo : container,
 					onseek : self.onseek
 				})
 			

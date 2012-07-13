@@ -5,78 +5,6 @@
 	margin-bottom: 10px;
 }
 
-#UIPlayer #UIPlayerSlider{
-	width: 50%;
-	height: 20px;
-	margin: auto;
-	padding-top: 60px;
-}
-
-#UIPlayer #UIPlayerSlider > li{
-	display: inline-block;
-	height: 100%;
-}
-
-#UIPlayer #UIPlayerSlider > li.current_time, #UIPlayer #UIPlayerSlider > li.total_time{
-	width: 10%;
-	text-align: center;
-}
-
-#UIPlayer #UIPlayerSlider > li.slider{
-	width: 80%;
-	height: 10px;
-}
-
-#UIPlayer #UIPlayerSlider li > span{
-	font-weight: bold;
-	vertical-align: middle;
-	font-size: 10px;
-	display: block;
-	margin-top: 3px;
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer{
-	width: 100%;
-	height: 100%;
-	background: url(../images/background.png) repeat-x;
-	border: 2px solid #aaa;
-	border-color: rgba(143,143,143,0.7);
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer, #UIPlayer #UIPlayerSlider .dragdealer .progress, #UIPlayer #UIPlayerSlider .dragdealer .buffer{
-	border-radius: 15px;
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer.disabled *{background: #ddd}
-
-#UIPlayer #UIPlayerSlider .dragdealer .buffer, #UIPlayer #UIPlayerSlider .dragdealer .progress{
-	height: 100%;
-	width: 0%;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer .buffer{
-	background: #aaa;
-	background: rgba(143,143,143,0.7);
-	z-index: 0;
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer .progress{
-	background: url(../images/background.png) repeat-x;
-	border-bottom-right-radius: 15px;
-	border-top-right-radius: 15px;
-	z-index: 1;
-}
-
-#UIPlayer #UIPlayerSlider .dragdealer .handle{
-	height: 100%;
-	width: 5px;
-	background: transparent;
-	z-index: 2;
-}
-
 .dragdealer {
 	position: relative;
 	height: 20px;
@@ -85,6 +13,13 @@
 .dragdealer .handle {
 	position: absolute;
 	cursor: pointer;
+}
+
+#UIPlayer .container{
+	width: 50%;
+	height: 100%;
+	margin: auto;
+	position: relative;
 }
 
 /* @group Player Controls */
@@ -172,6 +107,132 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.next button{
 }
 
 /* @end */
+
+/* @group Playing Info */
+
+#UIPlayer #UIPlayerPlayingInfo{
+	height: 60px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: url('../images/background.png');
+	visibility: hidden;
+}
+
+#UIPlayer #UIPlayerPlayingInfo > div{
+	height: 100%;
+	width: 60%;
+	margin: auto;
+}
+
+#UIPlayer #UIPlayerPlayingInfo.visible{
+	visibility: visible;
+}
+
+#UIPlayer #UIPlayerPlayingInfo #albumArt{
+	float: left;
+	height: 56px;
+	width: 56px;
+	background: url('../images/shared.albumArt_56.png');
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+body.svg #UIPlayer #UIPlayerPlayingInfo #albumArt{
+	background: url('../images/shared.albumArt.svg');
+	background-size: 56px;
+}
+
+body.svg #UIPlayer #UIPlayerPlayingInfo #albumArt > img{
+	height: 49px;
+	width: 49px;
+	margin-top: 3px;
+	margin-left: 2px;
+}
+
+#UIPlayer #UIPlayerPlayingInfo h1, h2, h3{
+	font-family: 'Lucida Grande', Helvetica, sans-serif;
+	font-weight: 100;
+	width: 60%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+/* @end */
+
+#UIPlayer #UIPlayerSlider{
+	height: 20px;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+#UIPlayer #UIPlayerSlider > li{
+	display: inline-block;
+	height: 100%;
+}
+
+#UIPlayer #UIPlayerSlider > li.current_time, #UIPlayer #UIPlayerSlider > li.total_time{
+	width: 10%;
+	text-align: center;
+}
+
+#UIPlayer #UIPlayerSlider > li.slider{
+	width: 79%;
+	height: 10px;
+}
+
+#UIPlayer #UIPlayerSlider li > span{
+	font-weight: bold;
+	vertical-align: middle;
+	font-size: 10px;
+	display: block;
+	margin-top: 3px;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer{
+	width: 100%;
+	height: 100%;
+	background: url(../images/background.png) repeat-x;
+	border: 2px solid #aaa;
+	border-color: rgba(143,143,143,0.7);
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer, #UIPlayer #UIPlayerSlider .dragdealer .progress, #UIPlayer #UIPlayerSlider .dragdealer .buffer{
+	border-radius: 15px;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer.disabled *{background: #ddd}
+
+#UIPlayer #UIPlayerSlider .dragdealer .buffer, #UIPlayer #UIPlayerSlider .dragdealer .progress{
+	height: 100%;
+	width: 0%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .buffer{
+	background: #aaa;
+	background: rgba(143,143,143,0.7);
+	z-index: 0;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .progress{
+	background: url(../images/background.png) repeat-x;
+	border-radius: 15px;
+	z-index: 1;
+}
+
+#UIPlayer #UIPlayerSlider .dragdealer .handle{
+	height: 100%;
+	width: 5px;
+	background: transparent;
+	z-index: 2;
+}
 
 /* @group Volume Control */
 

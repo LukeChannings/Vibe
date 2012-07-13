@@ -464,8 +464,8 @@ define({
 	
 		// determine the units of time to describe the playlist duration.
 		var seconds = Math.ceil(duration) % 60,
-			minutes = Math.ceil(duration / 60),
-			hours = Math.floor(minutes / 60),
+			minutes = Math.round(duration / 60),
+			hours = Math.round(minutes / 60),
 			info = '' // string to contain the human-readable duration.
 		
 		if ( hours > 0 ) {
@@ -481,7 +481,7 @@ define({
 		
 		// determine the presentation of minutes.
 		if ( minutes !== 0 ) {
-			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : minutes + ' minutes and '
+			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : ( minutes - 1 ) + ' minutes and '
 		} else {
 			minutes = ''
 		}

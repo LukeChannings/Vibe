@@ -319,7 +319,7 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 				result += "<p style='font-size:14px'><strong>Version:</strong> " + version + "</p>"
 				
 				if ( build !== 'buildno' ) {
-					result += "<p style='font-size:14px'><strong>Build:</strong> " + build + "</p>"
+					result += "<p style='font-size:14px'><strong>Build:</strong> " + '<a href="https://github.com/TheFuzzball/Vibe/tree/' + build + '">' + build + '</a>' + "</p>"
 				}
 				
 				return result

@@ -53,7 +53,6 @@ List:
 #Todo#
 
 - Visualiser
-- Track info in top centre where the Vibe logo presently is.
 - Flexible stylesheets
 - Plugin Interface
 - Theming

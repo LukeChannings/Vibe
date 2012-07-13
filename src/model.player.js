@@ -1,4 +1,4 @@
-define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) {
+define(['util', 'api.webkitNotifications', 'model.animator'], function(util, webkitNotifications, Animator) {
 
 	// control variables.
 	var currentSound = null
@@ -35,7 +35,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 		this.isMuted = false
 		this.isPlaying = false
 		this.isPaused = false
-		this.volume = this.settings.get('volume') || 80
+		this.volume = ( typeof this.settings.get('volume') == 'number' ) ? this.settings.get('volume') : 80
 		
 		// set the volume bar to reflect the volume setting.
 		setTimeout(function() {
@@ -54,6 +54,8 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 		}
 		
 		this.playerInterface.onseek = function(position) {
+		
+			console.log(position)
 		
 			self.seek(position)
 		}
@@ -127,6 +129,15 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 				)
 			}
 			
+			this.playerInterface.playingInfo.update(
+				this.playlistModel.getItem(this.playlistModel.model[this.playlistModel.index])
+			)
+			
+			util.addClass(
+				this.playerInterface.playingInfo.node,
+				'visible'
+			)
+			
 			this.onplay && this.onplay()
 		}
 	
@@ -160,6 +171,11 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 				this.playerInterface.controls.buttons.buttons.play_pause.node, 
 				'pause'
 			)
+			
+			util.removeClass(
+				this.playerInterface.playingInfo.node,
+				'visible'
+			)
 
 			this.onstop && this.onstop()
 		}
@@ -171,6 +187,11 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 			this.isPaused = false
 		
 			this.skip(1)
+			
+			util.removeClass(
+				this.playerInterface.playingInfo.node,
+				'visible'
+			)
 			
 			this.onend && this.onend()
 		}
@@ -231,7 +252,6 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 			// if the index is out of bounds
 			// then destroy the current sound
 			// and call the stop event.
-			
 			currentSound && currentSound.destruct()
 	
 			currentSound = this.currentSound = undefined
@@ -244,6 +264,8 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	 * plays the current track.
 	 */
 	Player.prototype.play = function() {
+
+		console.log('play.')
 
 		if ( currentSound ) {
 			
@@ -269,7 +291,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	
 		this.isMuted = true
 	
-		currentSound.mute()
+		this.setVolume(0)
 	}
 	
 	/**
@@ -279,7 +301,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	
 		this.isMuted = false
 	
-		currentSound.unmute()
+		this.setVolume(1)
 	}
 	
 	/**
@@ -314,6 +336,8 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	 * @param position {number} position in milliseconds.
 	 */
 	Player.prototype.seek = function(position) {
+	
+		console.log(position)
 	
 		currentSound.setPosition(position * currentSound.realDuration)
 	}
