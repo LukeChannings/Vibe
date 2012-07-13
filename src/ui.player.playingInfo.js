@@ -13,56 +13,27 @@ define(['util'], function(util) {
 				id : 'UIPlayerPlayingInfo',
 				appendTo : options.appendTo
 			}),
-			
-			container = util.createElement({
-				tag : 'div',
-				appendTo : node
-			}),
-			
-			albumArt = util.createElement({
-				tag : 'div',
-				id : 'albumArt',
-				appendTo : container
-			}),
-			
-			info = util.createElement({
-				tag : 'div',
-				id : 'info',
-				appendTo : container
-			}),
-			
+
 			track = util.createElement({
 				tag : 'h1',
 				id : 'track',
-				appendTo : info
+				appendTo : node
 			}),
 			
 			artist = util.createElement({
 				tag : 'h2',
 				id : 'artist',
-				appendTo : info
+				appendTo : node
 			}),
 			
 			trackNo = util.createElement({
 				tag : 'h3',
 				id : 'trackNo',
-				appendTo : info
+				appendTo : node
 			})
 			
 			this.update = function (metadata) {
 			
-				util.removeChildren(albumArt)
-				
-				if ( /^http.*$/.test(metadata.albumart) ) {
-					var img = util.createElement({
-						tag : 'img',
-						attributes : {
-							src : metadata.albumart
-						},
-						appendTo : albumArt
-					})
-				}
-				
 				if ( metadata.trackname ) {
 				
 					track.innerHTML = metadata.trackname
@@ -70,12 +41,12 @@ define(['util'], function(util) {
 				
 				if ( metadata.artistname ) {
 				
-					artist.innerHTML = metadata.artistname
+					artist.innerHTML = "By " + metadata.artistname
 				}
 				
 				if ( metadata.trackno ) {
 				
-					trackNo.innerHTML = metadata.trackno + " of " + metadata.trackof
+					trackNo.innerHTML = "Track " + metadata.trackno + " of " + metadata.trackof
 				}
 			}
 			

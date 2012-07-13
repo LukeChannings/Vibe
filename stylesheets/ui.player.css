@@ -120,42 +120,15 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.next button{
 	visibility: hidden;
 }
 
-#UIPlayer #UIPlayerPlayingInfo > div{
-	height: 100%;
-	width: 60%;
-	margin: auto;
-}
-
 #UIPlayer #UIPlayerPlayingInfo.visible{
 	visibility: visible;
-}
-
-#UIPlayer #UIPlayerPlayingInfo #albumArt{
-	float: left;
-	height: 56px;
-	width: 56px;
-	background: url('../images/shared.albumArt_56.png');
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-body.svg #UIPlayer #UIPlayerPlayingInfo #albumArt{
-	background: url('../images/shared.albumArt.svg');
-	background-size: 56px;
-}
-
-body.svg #UIPlayer #UIPlayerPlayingInfo #albumArt > img{
-	height: 49px;
-	width: 49px;
-	margin-top: 3px;
-	margin-left: 2px;
 }
 
 #UIPlayer #UIPlayerPlayingInfo h1, h2, h3{
 	font-family: 'Lucida Grande', Helvetica, sans-serif;
 	font-weight: 100;
-	width: 60%;
 	text-overflow: ellipsis;
+	text-align: center;
 	overflow: hidden;
 	white-space: nowrap;
 }
