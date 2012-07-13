@@ -318,7 +318,7 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 				
 				result += "<p style='font-size:14px'><strong>Version:</strong> " + version + "</p>"
 				
-				if ( build ) {
+				if ( build !== 'buildno' ) {
 					result += "<p style='font-size:14px'><strong>Build:</strong> " + build + "</p>"
 				}
 				

@@ -67,8 +67,6 @@ sed -i~ s#stylesheets/##g app.js
 sed -i~ s#images/##g app.html app.js
 
 # set build revision.
-sed -i~ 's/<!-- //' app.html
-sed -i~ 's/-->//' app.html
 sed -i~ "s/buildno/$timestamp/" app.html
 
 # remove all unnecessary files.
