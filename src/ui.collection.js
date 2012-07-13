@@ -1,6 +1,5 @@
 /**
- * Collection
- * @description User Interface module to create a collection view.
+ * User Interface module to create a collection view.
  * @docs - https://github.com/TheFuzzball/MusicMe-WebApp/tree/master/modules/UI/Collection
  * @dependencies - util, musicme/api, UI/Widget/TreeList, EventEmitter.
  */
@@ -189,8 +188,7 @@ define(function(require) {
 	}
 
 	/**
-	 * initDragAndDrop
-	 * @description sets drag and drop methods dragstart, dragover, dragenter, dragleave and drop.
+	 * sets drag and drop methods dragstart, dragover, dragenter, dragleave and drop.
 	 */
 	var initDragAndDrop = function() {
 	

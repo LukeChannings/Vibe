@@ -1,6 +1,5 @@
 /**
- * UIWidgetTextInput
- * @description Creates a text input widget that implements a clear button.
+ * Creates a text input widget that implements a clear button.
  */
 define(['util'], function(util) {
 

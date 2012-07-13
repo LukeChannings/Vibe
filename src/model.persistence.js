@@ -1,8 +1,7 @@
 define(['util'], function(util) {
 
 	/**
-	 * Persistence
-	 * @description module to regulate the use of localStorage.
+	 * module to regulate the use of localStorage.
 	 * @param name - Unique identifier for the store.
 	 */
 	var ModelPersistence = function(name) {
@@ -35,6 +34,9 @@ define(['util'], function(util) {
 		}
 	}
 	
+	/**
+	 * parses the localStorage object that contains the given persistent object.
+	 */
 	ModelPersistence.prototype.load = function() {
 		
 		var data = ( this.support === true ) ? localStorage[this.name] : false
@@ -44,20 +46,22 @@ define(['util'], function(util) {
 			try {
 			
 				data = JSON.parse(localStorage[this.name])
-			}
-			catch (ex){
+			} catch (ex){
 			
 				data = false
-			}
-			finally {
+			} finally {
 			
 				return data
 			}
+		} else {
+			return false
 		}
-		
-		else return false
 	}
 	
+	/**
+	 * saves a given object to localStorage.
+	 * @param set {object} the object to be saved to localStorage.
+	 */
 	ModelPersistence.prototype.save = function(set) {
 	
 		if ( typeof set == 'object' && this.support === true ) {
@@ -66,9 +70,14 @@ define(['util'], function(util) {
 		}
 	}
 	
+	/**
+	 * clears the localStorage for the instance.
+	 */
 	ModelPersistence.prototype.clear = function() {
 	
-		if ( this.support === true ) delete localStorage[this.name]
+		if ( this.support === true ) {
+			delete localStorage[this.name]
+		}
 	}
 	
 	ModelPersistence.prototype.hasShownError = false

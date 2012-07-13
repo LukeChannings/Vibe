@@ -1,6 +1,5 @@
 /**
- * UITreeListWidget
- * @description Generates a tree list view that displays a list based on an array of objects.
+ * Generates a tree list view that displays a list based on an array of objects.
  */
 define(function(require) {
 

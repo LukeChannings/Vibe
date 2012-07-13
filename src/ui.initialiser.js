@@ -12,7 +12,8 @@ define(function(require) {
 		Playlist = require('ui.playlist'),
 		PlaylistModel = require('model.playlist'),
 		Player = require('ui.player'),
-		PlayerModel = require('model.player')
+		PlayerModel = require('model.player'),
+		ResizeNode = require('model.resizeNode')
 	
 	// interfaces.
 	var collection,
@@ -228,7 +229,7 @@ define(function(require) {
 								playlist.node
 							])
 						}
-
+						
 						callback && callback()
 					})
 				})

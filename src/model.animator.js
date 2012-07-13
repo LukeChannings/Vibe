@@ -1,14 +1,15 @@
-/**
- * Animator
- * @description module for animating the appearance of elements.
- * @param element - HTML element to animate.
- * @param animation - type of animation to use.
- * @param duration - time the animation takes to complete.
- * @param callback - function to be called when the animation has completed.
- */
+//
+// Animator
+// animates an element on or off the screen.
 define(['util'], function(util) {
 
-	// constructor.
+	/**
+	 * constructs an Animator instance.
+	 * @param element - HTML element to animate.
+	 * @param animation - type of animation to use.
+	 * @param duration - time the animation takes to complete.
+	 * @param callback - function to be called when the animation has completed.
+	 */
 	var Animator = function(element, animation, duration, callback) {
 	
 		var animation = animation.match(/((slide(out|in))(top|bottom|left|right)|fade(in|out))/i)
@@ -48,31 +49,36 @@ define(['util'], function(util) {
 	}
 	
 	/**
-	 * slideIn
-	 * @description animation slides in the element from any direction.
+	 * animation to slide in the element from any direction.
+	 * @param node {Element} the element to slide in.
+	 * @param prefix {string} the vendor prefix for CSS3 animations.
+	 * @param direction {string} the direction from which the node will slide. Options are: top, bottom, left and right.
+	 * @param duration {number} the duration of the animation in seconds.
 	 */
-	Animator.prototype.slideIn = function(element, prefix, direction, duration) {
-	
-		document.body.style.overflow = 'hidden'
+	Animator.prototype.slideIn = function(node, prefix, direction, duration) {
 	
 		var self = this
 	
+		document.body.style.overflow = 'hidden'
+	
 		// start the element off screen.
-		element.style[prefix + 'Transform'] = 'translate(' + this.directions[direction.toLowerCase()] + ')'
+		node.style[prefix + 'Transform'] = 'translate(' + this.directions[direction.toLowerCase()] + ')'
 		
 		// set the transition.
-		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
+		node.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
 	
 		setTimeout(function() {
 		
-			element.style[prefix + 'Transform'] = null
+			node.style[prefix + 'Transform'] = null
 		
 			// cleanup injected attributes.
 			setTimeout(function() {
 			
-				if ( typeof self.callback == 'function' ) self.callback()
-			
-				element.style[prefix + 'Transition'] = document.body.style.overflow = null
+				if ( typeof self.callback == 'function' ) {
+					self.callback()
+				}
+				
+				node.style[prefix + 'Transition'] = document.body.style.overflow = null
 			
 			}, (duration * 1000) || 300 )
 		
@@ -80,28 +86,33 @@ define(['util'], function(util) {
 	}
 	
 	/**
-	 * slideOut
-	 * @description animation slides out the element from any direction.
+	 * animation to slide out the element from any direction.
+	 * @param node {Element} the element to slide out.
+	 * @param prefix {string} the vendor prefix for CSS3 animations.
+	 * @param direction {string} the direction from which the node will slide. Options are: top, bottom, left and right.
+	 * @param duration {number} the duration of the animation in seconds.
 	 */
-	Animator.prototype.slideOut = function(element, prefix, direction, duration) {
+	Animator.prototype.slideOut = function(node, prefix, direction, duration) {
 	
 		var self = this
 	
 		document.body.style.overflow = 'hidden'
 	
 		// set the transition.
-		element.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
+		node.style[prefix + 'Transition'] = '-' + prefix.toLowerCase() + '-transform ' + ( duration || 0.3 )  + 's linear'
 	
 		setTimeout(function() {
 		
-			element.style[prefix + 'Transform'] = 'translate(' + self. directions[direction.toLowerCase()] + ')'
+			node.style[prefix + 'Transform'] = 'translate(' + self.directions[direction.toLowerCase()] + ')'
 		
 			// clean up.
 			setTimeout(function() {
 			
-				if ( typeof self.callback == 'function' ) self.callback()
-			
-				element.style[prefix + 'Transition'] = element.style[prefix + 'Transform'] = null
+				if ( typeof self.callback == 'function' ) {
+					self.callback()
+				}
+				
+				node.style[prefix + 'Transition'] = node.style[prefix + 'Transform'] = null
 				
 			
 			}, (duration * 1000) || 300)
@@ -110,8 +121,10 @@ define(['util'], function(util) {
 	}
 	
 	/**
-	 * fadeIn
-	 * @description animation fades in an element.
+	 * animation to fade in an element.
+	 * @param node {Element} the element to fade in.
+	 * @param prefix {string} the vendor prefix for CSS3 animations.
+	 * @param duration {number} the duration of the animation in seconds.
 	 */
 	Animator.prototype.fadeIn = function(element, prefix, duration) {
 	
@@ -139,25 +152,29 @@ define(['util'], function(util) {
 	}
 	
 	/**
-	 * fadeOut
-	 * @description animation fades out an element.
+	 * animation to fade in an element.
+	 * @param node {Element} the element to fade in.
+	 * @param prefix {string} the vendor prefix for CSS3 animations.
+	 * @param duration {number} the duration of the animation in seconds.
 	 */
-	Animator.prototype.fadeOut = function(element, prefix, duration) {
+	Animator.prototype.fadeOut = function(node, prefix, duration) {
 
 		var self = this
 	
-		element.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear'
+		node.style[prefix + 'Transition'] = 'opacity ' + (duration || 0.3) + 's linear'
 		
 		setTimeout(function() {
 		
-			element.style.opacity = 0
+			node.style.opacity = 0
 		
 			setTimeout(function() {
 			
-				element.style[prefix + 'Transition'] = null
-				element.style.opacity = null
+				node.style[prefix + 'Transition'] = null
+				node.style.opacity = null
 			
-				if ( typeof self.callback == 'function' ) self.callback()
+				if ( typeof self.callback == 'function' ) {
+					self.callback()
+				}
 			
 			}, ( duration * 1000 ) || 300 )
 			

@@ -156,8 +156,6 @@ body.svg #UIPlaylist .UIButtonBarWidget .icon.settings{background-image: url('..
 	bottom: 0;
 	left: 0;
 	border-top: 1px solid #ddd;
-	border-bottom-right-radius: 2px;
-	border-bottom-left-radius: 2px;
 }
 
 #UIPlaylist > .infoBar > span{

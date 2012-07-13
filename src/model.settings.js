@@ -17,8 +17,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 			self = this
 	
 		/**
-		 * readSettings
-		 * @description reads the contents of settings.json into the settings object.
+		 * reads the contents of settings.json into the settings object.
 		 */
 		;(function readSettings() {
 		
@@ -27,8 +26,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 		})()
 		
 		/**
-		 * writeSettings
-		 * @description write the settings object back into settings.json.
+		 * write the settings object back into settings.json.
 		 */
 		var writeSettings = function() {
 		
@@ -37,8 +35,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 		}
 	
 		/**
-		 * set
-		 * @description set a setting.
+		 * set a setting.
 		 * @param key (string) - the setting key.
 		 * @param value (string) - the value for the setting.
 		 */
@@ -52,8 +49,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 		}
 		
 		/**
-		 * unset
-		 * @description Delete a setting.
+		 * delete a setting.
 		 * @param key (string) - the key to unset.
 		 */
 		this.unset = function(key) {
@@ -73,8 +69,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 		}
 		
 		/**
-		 * get
-		 * @description Get a setting.
+		 * get a setting.
 		 * @param key (string) - the name of the setting.
 		 */
 		this.get = function(key) {
@@ -83,7 +78,7 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 			return settings[key]
 		}
 		
-		// alias.
+		// alias to persistence.clear.
 		this.clear = function() {
 			
 			persistence.clear()

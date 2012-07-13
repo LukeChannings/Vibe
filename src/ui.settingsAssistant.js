@@ -309,18 +309,22 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 		
 		// information about Vibe.
 		about : {
-			title : (function() {
-			
-				var build = util.getMetaContent('vibe-build')
-			
-				if (build) {
-					return "About Vibe (Build " + build +  ")"
-				} else {
-					return "About Vibe (Version " + util.getMetaContent('vibe-version') + ")"
+			title : "About Vibe",
+			body : (function() {
+				
+				var build = util.getMetaContent('vibe-build'),
+					version = util.getMetaContent('vibe-version'),
+					result = ""
+				
+				result += "<p style='font-size:14px'><strong>Version:</strong> " + version + "</p>"
+				
+				if ( build ) {
+					result += "<p style='font-size:14px'><strong>Build:</strong> " + build + "</p>"
 				}
-			})(),
-			navTitle : "About Vibe",
-			body : "<p><img src='./images/shared.icon_alt.png' alt style='float:left' />Vibe is a next-generation Web Application that will stream music from a Vibe Server and allow it to be played on the browser. Vibe aims to provide an intuitive and fast User Interface by using the latest Web Technologies available.</p>" + "<p>Although the major components of this program are done, it still requires serious polish and won't be fully ready for some time.</p>",
+				
+				return result
+				
+			})() + "<p style='font-size:14px'><img src='./images/shared.icon_alt.png' alt style='float:left' />Vibe is a next-generation Web Application that will stream music from a Vibe Server and allow it to be played on the browser. Vibe aims to provide an intuitive and fast User Interface by using the latest Web Technologies available.</p>" + "<p style='font-size:14px'>Although the major components of this program are done, it still requires serious polish and won't be fully ready for some time.</p>",
 			alignment : "justify"
 		}
 	}

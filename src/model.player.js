@@ -241,8 +241,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	}
 	
 	/**
-	 * play
-	 * @description plays the current track.
+	 * plays the current track.
 	 */
 	Player.prototype.play = function() {
 
@@ -264,8 +263,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	}
 
 	/**
-	 * mute
-	 * @description mutes the sound.
+	 * mutes the sound.
 	 */
 	Player.prototype.mute = function() {
 	
@@ -275,8 +273,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	}
 	
 	/**
-	 * unMute
-	 * @description un mutes the sound.
+	 * un mutes the sound.
 	 */
 	Player.prototype.unMute = function() {
 	
@@ -286,8 +283,7 @@ define(['util', 'api.webkitNotifications'], function(util, webkitNotifications) 
 	}
 	
 	/**
-	 * setVolume
-	 * @description sets a new volume for the sound.
+	 * sets a new volume for the sound.
 	 * @param n - volume integer between 0 and 100.
 	 */
 	Player.prototype.setVolume = function(n) {

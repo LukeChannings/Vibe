@@ -228,8 +228,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getArtists
-	 * @description Lists all artists within the collection.
+	 * lists all artists within the collection.
 	 * @param callback (function) - The function that will be sent the list of artists.
 	 */
 	VibeApi.prototype.getArtists = function(callback) {
@@ -248,8 +247,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 
 	/**
-	 * getArtistsInGenre
-	 * @description Gets a list of artists that are in a genre.
+	 * gets a list of artists that are in a genre.
 	 * @param genre (string) - The name of genre to list artists for.
 	 * @param callback (function) - Function to be sent the results.
 	 */
@@ -271,8 +269,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 
 	/**
-	 * getAlbums
-	 * @description Lists all albums within the collection.
+	 * lists all albums within the collection.
 	 * @param callback (function) - The function that will be sent the list of albums.
 	 */
 	VibeApi.prototype.getAlbums = function(callback) {
@@ -286,9 +283,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getAlbumsByArtist
-	 * @description Gets a list of albums by a given artist.
-	 * @param id (string) - The unique id of the artist.
+	 * gets a list of albums by a given artist.
+	 * @param id (string) the unique id of the artist.
 	 * @param callback (function) - The function that will be sent the list of albums.
 	 */
 	VibeApi.prototype.getAlbumsByArtist = function(id,callback) {
@@ -314,9 +310,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getTracks
-	 * @description Lists all tracks within the collection.
-	 * @param callback (function) - The function that will be sent the list of tracks.
+	 * lists all tracks within the collection.
+	 * @param callback (function) the function that will be sent the list of tracks.
 	 */
 	VibeApi.prototype.getTracks = function(callback) {
 	
@@ -326,6 +321,11 @@ define(['util', 'lib/socket.io'], function(util) {
 		})
 	}
 	
+	/**
+	 * lists all tracks within a given genre.
+	 * @param genre {string} the genre to list tracks for.
+	 * @param callback {function} the function that will be sent the list of tracks.
+	 */
 	VibeApi.prototype.getTracksInGenre = function(genre,callback) {
 	
 		genre = decodeURIComponent(genre)
@@ -347,6 +347,11 @@ define(['util', 'lib/socket.io'], function(util) {
 		})
 	}
 	
+	/**
+	 * lists all tracks by a given artist.
+	 * @param genre {string} the genre to list tracks for.
+	 * @param callback {function} the function that will be sent the list of tracks.
+	 */
 	VibeApi.prototype.getTracksByArtist = function(id,callback) {
 	
 		this.socket.emit('getTracksByArtist', id, function(err,tracks) {
@@ -367,9 +372,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getTracksInAlbum
-	 * @description Get a list of tracks in a given album.
-	 * @param id (string) - The unique identifier for the album.
+	 * get a list of tracks in a given album.
+	 * @param id (string) the unique id of the artist.
 	 * @param callback (function) - Function that will be sent the results.
 	 */
 	VibeApi.prototype.getTracksInAlbum = function(id,callback ){
@@ -392,8 +396,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getTracksInAlbum
-	 * @description Get a list of tracks in a given album.
+	 * get a list of tracks in a given album.
 	 * @param id (string) - The unique identifier for the album.
 	 * @param callback (function) - Function that will be sent the results.
 	 */
@@ -414,7 +417,12 @@ define(['util', 'lib/socket.io'], function(util) {
 		})
 	}
 	
-	VibeApi.prototype.getTrack = function(id,callback) {
+	/**
+	 * get the metadata for a track.
+	 * @param id (string) the unique identifier for the track.
+	 * @param callback (function) function that will be sent the results.
+	 */
+	VibeApi.prototype.getTrack = function(id, callback) {
 	
 		this.socket.emit('getTrack', id, function(err,track) {
 		
@@ -431,9 +439,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getGenres
-	 * @description Lists all genres within the collection.
-	 * @param callback (function) - The function that will be sent the list of genres.
+	 * lists all genres within the collection.
+	 * @param callback (function) the function that will be sent the list of genres.
 	 */
 	VibeApi.prototype.getGenres = function(callback) {
 	
@@ -453,8 +460,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * search
-	 * @description Queries the collection for a specific result and returns complete TreeList branches.
+	 * queries the collection for a specific result and returns complete TreeList branches.
 	 * @param query (string) - The string to search for in the collection.
 	 * @param callback (function) - The function to be sent the results.
 	 */
@@ -465,8 +471,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	}
 	
 	/**
-	 * getSubtype
-	 * @description Returns type below the specified type in the set hierarchy.
+	 * returns type below the specified type in the set hierarchy.
+	 * @param type {string} the type for which to get the subtype.
 	 */
 	VibeApi.prototype.getSubtype = function(type) {
 	
@@ -476,9 +482,11 @@ define(['util', 'lib/socket.io'], function(util) {
 			'album' : 'track'
 		}
 		
-		if ( type in types ) return types[type]
-		
-		else return false
+		if ( type in types ) {
+			return types[type]
+		} else {
+			return false
+		}
 	}
 
 	/**
@@ -494,9 +502,11 @@ define(['util', 'lib/socket.io'], function(util) {
 			'album' : (short) ? 'getTracksInAlbumShort' : 'getTracksInAlbum'
 		}
 		
-		if ( type in types ) return types[type]
-		
-		else return false
+		if ( type in types ) {
+			return types[type]
+		} else {
+			return false
+		}
 	}
 	
 	// export the module.

@@ -1,6 +1,5 @@
 /**
- * ModelPlaylist
- * @description contains the playlist data and performs Api interactions.
+ * contains the playlist data and performs Api interactions.
  */
 define(['util','model.undoManager'], function(util, UndoManager) {
 
@@ -185,8 +184,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 	}
 	
 	/**
-	 * clear
-	 * @description flushes the model, localStorage and clears the UI.
+	 * flushes the model, localStorage and clears the UI.
 	 */
 	ModelPlaylist.prototype.clear = function() {
 	

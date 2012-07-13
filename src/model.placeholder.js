@@ -1,6 +1,5 @@
 /**
- * Placeholder
- * @description Placeholder shim for non-compliant browsers. (IE.)
+ * Placeholder shim for non-compliant browsers. (IE.)
  */
 define(['util'], function(util) {
 
@@ -14,7 +13,7 @@ define(['util'], function(util) {
 			
 			node.setAttribute('placeholder', placeholder)
 			
-			util.addListener(node,'focus',function(e){
+			util.addListener(node,'focus', function(e) {
 			
 				var target = e.target || e.srcElement
 				
@@ -26,7 +25,7 @@ define(['util'], function(util) {
 				}
 			})
 			
-			util.addListener(node,'blur',function(e) {
+			util.addListener(node,'blur', function(e) {
 			
 				var target = e.target || e.srcElement
 			
@@ -37,9 +36,9 @@ define(['util'], function(util) {
 					util.addClass(target, 'placeholder')
 				}
 			})
+		} else {
+			throw new Error('Invalid Parameters.')
 		}
-		
-		else throw new Error('Invalid Parameters.')
 	}
 	
 	return Placeholder

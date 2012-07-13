@@ -72,8 +72,6 @@ body.svg #UICollection.noResults{background-image: url('../images/ui.collection.
 	background: -ms-linear-gradient(top,  #fff 0%,#ddd 100%);
 	background: linear-gradient(top,  #fff 0%,#ddd 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 );
-	border-bottom-right-radius: 2px;
-	border-bottom-left-radius: 2px;
 }
 
 #UICollection .statusBar > span{
