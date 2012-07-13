@@ -66,7 +66,6 @@
 
 #UIPlaylist > div:first-child{
 	width: 100%;
-	background: #f9f9f9;
 	border-bottom: 1px solid #ddd;
 	position: absolute;
 	top: 0;

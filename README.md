@@ -56,6 +56,7 @@ List:
 - Track info in top centre where the Vibe logo presently is.
 - Flexible stylesheets
 - Plugin Interface
+- Theming
 
 Lots to do.
 

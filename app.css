@@ -35,13 +35,13 @@ body.svg #Vibe{
 	padding: 0;
 }
 
-#Vibe #UICollection,#Vibe #UIPlaylist{
-	border: 1px solid #ddd;
-	border-radius: 2px;
+#Vibe #UICollection, #Vibe #UIPlaylist{
+	border: 1px solid #ccc;
+	border-radius: 6px;
 	box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-#Vibe #UICollection:hover,#Vibe #UIPlaylist:hover{border-color: #ccd4ee}
+#Vibe #UICollection:hover,#Vibe #UIPlaylist:hover{border-color: #C2DEFF}
 
 #Vibe #UIPlaylist.draghighlight{border-color: #4277ef}
 
@@ -55,6 +55,11 @@ body.svg #Vibe{
 	float: right;
 	height: 380px;
 	width: 75%;
+}
+
+#Vibe #UIPlaylist .controlBar{
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
 }
 
 /* UIPlaylist column widths. */

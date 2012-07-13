@@ -27,9 +27,9 @@ define(function(require) {
 			appendTo : element,
 			placeholder : 'Search the collection.',
 			customClass : 'UIWidgetSearchInput search',
-			oninput : function() {
+			oninput : function(query, key) {
 			
-				self.input()
+				self.input(query, key)
 			},
 			onclear : function() {
 			

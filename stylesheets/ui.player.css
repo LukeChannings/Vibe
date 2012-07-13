@@ -39,7 +39,7 @@
 	width: 100%;
 	height: 100%;
 	background: #eee;
-	border: 1px solid #ddd;
+	border: 1px solid #aaa;
 }
 
 #UIPlayer #UIPlayerSlider .dragdealer, #UIPlayer #UIPlayerSlider .dragdealer .progress, #UIPlayer #UIPlayerSlider .dragdealer .buffer{
@@ -57,12 +57,12 @@
 }
 
 #UIPlayer #UIPlayerSlider .dragdealer .buffer{
-	background: #d7eafc;
+	background: #aaa;
 	z-index: 0;
 }
 
 #UIPlayer #UIPlayerSlider .dragdealer .progress{
-	background: #ddd;
+	background: #eee;
 	border-bottom-right-radius: 5px;
 	border-top-right-radius: 5px;
 	z-index: 1;

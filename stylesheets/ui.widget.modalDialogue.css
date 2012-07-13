@@ -135,6 +135,7 @@ body.svg #ModalDialogue.error{background-image: url('../images/ui.widget.modalDi
 	border: 2px solid #aaa;
 	color: #000;
 	padding: 0.2em 0.4em;
+	border-radius: 4px;
 }
 
 #ModalDialogue form > label > input[type='checkbox']{border: none}

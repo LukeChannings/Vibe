@@ -83,7 +83,7 @@ define(['util'], function(util) {
 				clear.style.display = 'block'
 				
 				if ( options.oninput ) {
-					options.oninput(target.value)
+					options.oninput(target.value, key)
 				}
 			}
 			else {

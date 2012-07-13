@@ -458,7 +458,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	 * @param query (string) - The string to search for in the collection.
 	 * @param callback (function) - The function to be sent the results.
 	 */
-	VibeApi.prototype.search = function(query,callback) {
+	VibeApi.prototype.search = function(query, callback) {
 	
 		// to be implemented.
 		return
