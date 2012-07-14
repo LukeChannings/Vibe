@@ -70,7 +70,7 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.play_pause button{
 	background-image: url('../images/ui.player.playPauseButton.svg')
 }
 
-#UIPlayer #UIPlayerControls > ol > li.play_pause button:hover{
+#UIPlayer #UIPlayerControls > ol > li.play_pause button:active{
 	background-position: -54px 0
 }
 
@@ -78,7 +78,7 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.play_pause button{
 	background-position: -108px 0
 }
 
-#UIPlayer #UIPlayerControls > ol > li.play_pause button.pause:hover{
+#UIPlayer #UIPlayerControls > ol > li.play_pause button.pause:active{
 	background-position: -162px 0
 }
 
@@ -90,7 +90,7 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.prev button{
 	background-image: url('../images/ui.player.backButton.svg')
 }
 
-#UIPlayer #UIPlayerControls > ol > li.prev button:hover{
+#UIPlayer #UIPlayerControls > ol > li.prev button:active{
 	background-position: -32px 0
 }
 
@@ -102,7 +102,7 @@ body.svg #UIPlayer #UIPlayerControls > ol > li.next button{
 	background-image: url('../images/ui.player.forwardButton.svg')
 }
 
-#UIPlayer #UIPlayerControls > ol > li.next button:hover{
+#UIPlayer #UIPlayerControls > ol > li.next button:active{
 	background-position: -32px 0
 }
 

@@ -52,6 +52,9 @@ List:
 
 #Todo#
 
+- Shared playlist
+- Remote Events (pause/play/add to playlist, etc.)
+- Last.fm
 - Visualiser
 - Flexible stylesheets
 - Plugin Interface

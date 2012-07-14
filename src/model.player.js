@@ -132,14 +132,9 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			
 			this.playerInterface.playingInfo.update(metadata)
 			
-			document.title = metadata.trackname + " by " + metadata.artistname
+			document.title = "Playing " + metadata.trackname + " by " + metadata.artistname
 			
 			this.icon.setAttribute('href', 'images/shared.status.playing.png')
-			
-			util.addClass(
-				this.playerInterface.playingInfo.node,
-				'visible'
-			)
 			
 			this.onplay && this.onplay()
 		}
@@ -177,10 +172,8 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				'pause'
 			)
 			
-			util.removeClass(
-				this.playerInterface.playingInfo.node,
-				'visible'
-			)
+			// hides the playing info.
+			this.playerInterface.playingInfo.update(null)
 
 			this.icon.setAttribute('href', 'images/shared.icon_16.png')
 
@@ -273,8 +266,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 	 * plays the current track.
 	 */
 	Player.prototype.play = function() {
-
-		console.log('play.')
 
 		if ( currentSound ) {
 			

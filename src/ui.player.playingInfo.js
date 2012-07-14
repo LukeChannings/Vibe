@@ -34,6 +34,17 @@ define(['util'], function(util) {
 			
 			this.update = function (metadata) {
 			
+				if ( metadata ) {
+				
+					util.addClass(node, 'visible')
+				
+				} else {
+				
+					util.removeClass(node, 'visible')
+					
+					return
+				}
+			
 				if ( metadata.trackname ) {
 				
 					track.innerHTML = metadata.trackname
