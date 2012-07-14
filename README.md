@@ -41,27 +41,34 @@ Vibe uses a few HTML5 technologies, so legacy browsers like IE7 and below are no
 have some compatibility mechanisms to ensure that the application will still run in IE8, but it is 
 unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 
-List:
 
 - IE8+
-- Chrome
+- Chrome 
 - Safari
 - Firefox 3.6+
-- Opera (Drag and Drop not supported)
+- Opera 12+
 
 
-#Todo#
+#Roadmap
 
-- Shared playlist
-- Remote Events (pause/play/add to playlist, etc.)
-- Preferences syncing
-- Last.fm
-- Visualiser
-- Flexible stylesheets
-- Plugin Interface
-- Theming
+##v0.0.4 (current):
+- Webkit Notifications
+- Scaleable Layout
+- Rearrangeable Playlist
 
-Lots to do.
+##v0.0.5:
+- Search
+- Server Authentication
+- LastFm Scrobbling
+- Theming Support
+
+##v0.0.6:
+- Shared Playlist
+- Play on Server
+- Remote Events (play/pause/stop)
+- Preferences Syncing
+- Plugin Support
+
 
 #Copyright#
 
