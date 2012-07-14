@@ -4,7 +4,7 @@
 define(function(require) {
 
 	var util = require('util'),
-		DnD = require('model.dragAndDrop')
+		DnD = require('dom.dragAndDrop')
 
 	// include stylesheet.
 	util.registerStylesheet('./stylesheets/ui.widget.treeList.css')

@@ -9,7 +9,8 @@ define(function(require) {
 		PlaylistRow = require('ui.playlist.row'),
 		PlaylistLegend = require('ui.playlist.legend'),
 		PlaylistControlBar = require('ui.playlist.controlBar'),
-		PlaylistInfoBar = require('ui.playlist.infoBar')	
+		PlaylistInfoBar = require('ui.playlist.infoBar'),
+		Dynamic = require('dom.dynamicNode')
 	
 	//
 	// creates an instance of Playlist.
@@ -93,15 +94,17 @@ define(function(require) {
 				self.options.onload(self)
 			}
 			
-			util.addListener(window, 'resize', function() {
+			new Dynamic(node, function() {
 			
 				var windowHeight = window.innerHeight,
 					distanceFromTop = 100,
 					offsetBottom = 20,
 					margin = 54 + 19,
 					height = windowHeight - ( distanceFromTop + offsetBottom + margin )
-			
-				node.setAttribute('style', 'height: ' + height + 'px')
+				
+				return {
+					height : height
+				}
 			})
 		})
 	}

@@ -262,7 +262,7 @@ define(['util'], function(util) {
 				
 				// if there is no native support then shim it.
 				else {
-					require(['model.placeholder'],function(Placeholder) {
+					require(['dom.placeholder'],function(Placeholder) {
 					
 						new Placeholder(element, input.placeholder)
 					})
@@ -726,7 +726,7 @@ define(['util'], function(util) {
 		if ( AnimationPrefix && animateIn ) {
 		
 			if ( ! Animator ) {
-				require(['model.animator'], open)
+				require(['dom.animator'], open)
 			} else {
 				open()
 			}

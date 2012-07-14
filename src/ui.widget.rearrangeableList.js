@@ -2,7 +2,7 @@ define(function(require) {
 
 	// dependencies.
 	var util = require('util'),
-		DnD = require('model.dragAndDrop')
+		DnD = require('dom.dragAndDrop')
 
 	util.registerStylesheet('./stylesheets/ui.widget.rearrangeableList.css')
 

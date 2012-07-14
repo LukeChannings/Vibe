@@ -40,7 +40,7 @@ define(['util'], function(util) {
 				input.setAttribute('placeholder', options.placeholder)
 			} else {
 			
-				require(['model.placeholder'], function(Placeholder) {
+				require(['dom.placeholder'], function(Placeholder) {
 				
 					new Placeholder(input, options.placeholder)
 				})

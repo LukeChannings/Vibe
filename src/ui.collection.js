@@ -8,8 +8,9 @@ define(function(require) {
 	// dependencies.
 	var util = require('util'),
 		TreeList = require('ui.widget.treeList'),
-		DnD = require('model.dragAndDrop'),
-		CollectionSearchBar = require('ui.collection.searchBar')
+		DnD = require('dom.dragAndDrop'),
+		CollectionSearchBar = require('ui.collection.searchBar'),
+		Dynamic = require('dom.dynamicNode')
 
 	/**
 	 * creates a new collection instance.
@@ -105,15 +106,17 @@ define(function(require) {
 				options.onload(self)
 			}
 			
-			util.addListener(window, 'resize', function() {
+			new Dynamic(node, function() {
 			
 				var windowHeight = window.innerHeight,
 					distanceFromTop = 100,
 					offsetBottom = 20,
 					margin = 35 + 19,
 					height = windowHeight - ( distanceFromTop + offsetBottom + margin )
-			
-				node.setAttribute('style', 'height: ' + height + 'px')
+				
+				return {
+					height : height
+				}
 			})
 		})
 	}

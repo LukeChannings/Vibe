@@ -209,7 +209,7 @@ define(function(require) {
 					
 						if ( util.browser.hasSupport.cssTransitions ) {
 						
-							require(['model.animator'], function(Animator) {
+							require(['dom.animator'], function(Animator) {
 							
 								util.appendChildren(vibe, [
 									player.node,

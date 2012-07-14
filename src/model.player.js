@@ -1,4 +1,4 @@
-define(['util', 'api.webkitNotifications', 'model.animator'], function(util, webkitNotifications, Animator) {
+define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webkitNotifications, Animator) {
 
 	// control variables.
 	var currentSound = null
