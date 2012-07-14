@@ -613,7 +613,6 @@ define({
 		return true
 	},
 	
-	//
 	// returns the index of a given node.
 	indexOfNode : function(node) {
 	
@@ -629,6 +628,26 @@ define({
 			}
 		}
 	},
+	
+// updates the browser's favicon.
+updateShortcutIcon : function(url, previousIcon) {
+
+	// if there is no previous node, then get it from the DOM.
+	if ( previousIcon ) {
+		previousIcon.parentNode.removeChild(previousIcon)
+	}
+	
+	// make a new link.
+	return this.createElement({
+		tag : 'link',
+		attributes : {
+			rel : "shortcut icon",
+			href : url,
+			type : "text/png"
+		},
+		appendTo : document.getElementsByTagName('head')[0]
+	})
+},
 	
 	// browser tests
 	browser : {

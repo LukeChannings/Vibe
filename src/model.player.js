@@ -134,7 +134,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			
 			document.title = "Playing " + metadata.trackname + " by " + metadata.artistname
 			
-			this.icon.setAttribute('href', 'images/shared.status.playing.png')
+			this.icon = util.updateShortcutIcon('images/shared.status.playing.png', this.icon)
 			
 			this.onplay && this.onplay()
 		}
@@ -150,7 +150,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				'pause'
 			)
 			
-			this.icon.setAttribute('href', 'images/shared.status.paused.png')
+			this.icon = util.updateShortcutIcon('images/shared.status.paused.png', this.icon)
 		
 			this.onpause && this.onpause()
 		}
@@ -175,7 +175,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			// hides the playing info.
 			this.playerInterface.playingInfo.update(null)
 
-			this.icon.setAttribute('href', 'images/shared.icon_16.png')
+			this.icon = util.updateShortcutIcon('images/shared.icon_16.png', this.icon)
 
 			document.title = "Vibe"
 
