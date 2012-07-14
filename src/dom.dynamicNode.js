@@ -22,6 +22,7 @@ define(['util'], function(util) {
 		}
 	
 		util.addListener(window, 'resize', resize)
+		util.addListener(document, 'resize', resize)
 		
 		resize()
 	}

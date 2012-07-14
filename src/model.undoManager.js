@@ -205,23 +205,18 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 					additions.unshift(startIndex, itemsToRemove)
 					
 					var result = Array.prototype.splice.apply(this.versions[this.currentVersion], additions)
-				} 
-				else {
+				} else {
 				
 					var result = Array.prototype[method].apply(this.versions[this.currentVersion], arguments)
 						
 					result = this.replaceKeysWithValues(result)
 				}
-			}
-			
-			else if ( method == 'reverse' ) {
+			} else if ( method == 'reverse' ) {
 			
 				var result = Array.prototype.reverse.apply(this.versions[this.currentVersion])
 				
 				result = this.replaceKeysWithValues(result)
-			}
-			
-			else if ( method == 'sort' ) {
+			} else if ( method == 'sort' ) {
 			
 				var values = this.replaceKeysWithValues(this.versions[this.currentVersion])
 				
@@ -232,9 +227,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 				Array.prototype.push.apply(context, values)
 				
 				this.versions[this.currentVersion] = this.replaceValuesWithKeys(values)
-			}
-			
-			else {
+			} else {
 			
 				// convert the values to keys and apply the mutator.
 				var result = Array.prototype[method].apply(this.versions[this.currentVersion], this.replaceValuesWithKeys(arguments))
@@ -290,7 +283,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 	
 		for ( var i = 0; i < keys.length; i++ ) {
 		
-			values.push(this.store[keys[i]])
+			values[i] = this.store[keys[i]]
 		}
 		
 		return values
@@ -317,16 +310,17 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 					if ( ! /\[object .*?\]/.test(value.join('')) ) return value.join('')
 					
 					else for ( var i = 0; i < value.length; i++ ) string += i + toString(value[i])
+				
+				} else {
+					for ( var i in value ) string += i + toString(value[i])
 				}
 				
-				else for ( var i in value ) string += i + toString(value[i])
-				
 				return string
+			} else if ( !! value ) {
+				return value.toString()
+			} else {
+				return string + value
 			}
-		
-			else if ( !! value ) return value.toString()
-			
-			else return string + value
 		}
 
 		// return the hashed stringified variable.
