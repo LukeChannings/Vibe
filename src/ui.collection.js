@@ -104,6 +104,17 @@ define(function(require) {
 			if ( typeof options.onload == 'function' ) {
 				options.onload(self)
 			}
+			
+			util.addListener(window, 'resize', function() {
+			
+				var windowHeight = window.innerHeight,
+					distanceFromTop = 100,
+					offsetBottom = 20,
+					margin = 35 + 19,
+					height = windowHeight - ( distanceFromTop + offsetBottom + margin )
+			
+				node.setAttribute('style', 'height: ' + height + 'px')
+			})
 		})
 	}
 

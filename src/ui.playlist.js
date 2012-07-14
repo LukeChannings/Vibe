@@ -92,6 +92,17 @@ define(function(require) {
 			if ( self.options.onload ) {
 				self.options.onload(self)
 			}
+			
+			util.addListener(window, 'resize', function() {
+			
+				var windowHeight = window.innerHeight,
+					distanceFromTop = 100,
+					offsetBottom = 20,
+					margin = 54 + 19,
+					height = windowHeight - ( distanceFromTop + offsetBottom + margin )
+			
+				node.setAttribute('style', 'height: ' + height + 'px')
+			})
 		})
 	}
 	

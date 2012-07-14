@@ -41,12 +41,12 @@ define(['util'], function(util) {
 				
 				if ( metadata.artistname ) {
 				
-					artist.innerHTML = "By " + metadata.artistname
+					artist.innerHTML = metadata.artistname
 				}
 				
 				if ( metadata.trackno ) {
 				
-					trackNo.innerHTML = "Track " + metadata.trackno + " of " + metadata.trackof
+					trackNo.innerHTML = metadata.albumname
 				}
 			}
 			
