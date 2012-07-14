@@ -51,18 +51,18 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 
 #Roadmap
 
-##v0.0.4 (current):
+##v0.1 (current):
 - Webkit Notifications
 - Scaleable Layout
 - Rearrangeable Playlist
 
-##v0.0.5:
+##v0.2:
 - Search
 - Server Authentication
 - LastFm Scrobbling
 - Theming Support
 
-##v0.0.6:
+##v0.3:
 - Shared Playlist
 - Play on Server
 - Remote Events (play/pause/stop)
