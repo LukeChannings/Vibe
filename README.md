@@ -54,6 +54,7 @@ List:
 
 - Shared playlist
 - Remote Events (pause/play/add to playlist, etc.)
+- Preferences syncing
 - Last.fm
 - Visualiser
 - Flexible stylesheets
