@@ -36,6 +36,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 		this.isPlaying = false
 		this.isPaused = false
 		this.volume = ( typeof this.settings.get('volume') == 'number' ) ? this.settings.get('volume') : 80
+		this.icon = document.getElementsByTagName('head')[0].getElementsByTagName('link')[1]
 		
 		// set the volume bar to reflect the volume setting.
 		setTimeout(function() {
@@ -123,15 +124,17 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				'pause'
 			)
 			
+			var metadata = this.playlistModel.model[this.playlistModel.index]
+			
 			if ( this.settings.get('notifications') ) {
-				webkitNotifications.presentNotificationWithMetadata(
-					this.playlistModel.model[this.playlistModel.index]
-				)
+				webkitNotifications.presentNotificationWithMetadata(metadata)
 			}
 			
-			this.playerInterface.playingInfo.update(
-				this.playlistModel.getItem(this.playlistModel.model[this.playlistModel.index])
-			)
+			this.playerInterface.playingInfo.update(metadata)
+			
+			document.title = metadata.trackname + " by " + metadata.artistname
+			
+			this.icon.setAttribute('href', 'images/shared.status.playing.png')
 			
 			util.addClass(
 				this.playerInterface.playingInfo.node,
@@ -151,6 +154,8 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				this.playerInterface.controls.buttons.buttons.play_pause.node, 
 				'pause'
 			)
+			
+			this.icon.setAttribute('href', 'images/shared.status.paused.png')
 		
 			this.onpause && this.onpause()
 		}
@@ -176,6 +181,10 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				this.playerInterface.playingInfo.node,
 				'visible'
 			)
+
+			this.icon.setAttribute('href', 'images/shared.icon_16.png')
+
+			document.title = "Vibe"
 
 			this.onstop && this.onstop()
 		}
