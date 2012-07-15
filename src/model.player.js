@@ -56,8 +56,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 		
 		this.playerInterface.onseek = function(position) {
 		
-			console.log(position)
-		
 			self.seek(position)
 		}
 		
@@ -135,8 +133,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			document.title = "Playing " + metadata.trackname + " by " + metadata.artistname
 			
 			this.icon = util.updateShortcutIcon('images/shared.status.playing.png', this.icon)
-			
-			this.onplay && this.onplay()
 		}
 	
 		this.onpause = function() {
@@ -151,8 +147,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			)
 			
 			this.icon = util.updateShortcutIcon('images/shared.status.paused.png', this.icon)
-		
-			this.onpause && this.onpause()
 		}
 	
 		this.onstop = function() {
@@ -178,8 +172,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			this.icon = util.updateShortcutIcon('images/shared.icon_16.png', this.icon)
 
 			document.title = "Vibe"
-
-			this.onstop && this.onstop()
 		}
 		
 		this.onfinish = function() {
@@ -189,13 +181,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			this.isPaused = false
 		
 			this.skip(1)
-			
-			util.removeClass(
-				this.playerInterface.playingInfo.node,
-				'visible'
-			)
-			
-			this.onend && this.onend()
 		}
 		
 		this.whileplaying = function() {
@@ -336,8 +321,6 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 	 * @param position {number} position in milliseconds.
 	 */
 	Player.prototype.seek = function(position) {
-	
-		console.log(position)
 	
 		currentSound.setPosition(position * currentSound.realDuration)
 	}

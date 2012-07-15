@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   inkscape:export-filename="/Users/Luke/Sites/Vibe/images/shared.status.playing.png"
+   inkscape:export-filename="/Users/Luke/Sites/Vibe/images/shared.status.paused.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    sodipodi:docname="shared.status.paused.svg">
@@ -35,8 +35,8 @@
      showgrid="false"
      inkscape:window-width="825"
      inkscape:window-height="675"
-     inkscape:window-x="191"
-     inkscape:window-y="116"
+     inkscape:window-x="92"
+     inkscape:window-y="153"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">

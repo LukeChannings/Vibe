@@ -61,6 +61,7 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Server Authentication
 - LastFm Scrobbling
 - Theming Support
+- Upload via drag and drop
 
 ##v0.3:
 - Shared Playlist
@@ -68,7 +69,7 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Remote Events (play/pause/stop)
 - Preferences Syncing
 - Plugin Support
-
+- Mobile interface
 
 #Copyright#
 

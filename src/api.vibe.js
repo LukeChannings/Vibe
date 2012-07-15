@@ -69,8 +69,6 @@ define(['util', 'lib/socket.io'], function(util) {
 			XHR.open('get', url + '/crossdomain.xml')
 		} catch (ex) {
 		
-			console.log('caught.')
-		
 			if ( ! hasCalledBack ) {
 			
 				if ( /(null|undefined)/.test(url) ) {
