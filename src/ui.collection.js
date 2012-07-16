@@ -228,7 +228,13 @@ define(function(require) {
 			// set a drag image.
 			if ( e.dataTransfer.setDragImage ) {
 				// Create a new ghost image.
-				var DragImage = new Image()
+				var dragImage = util.createElement({
+					tag : 'img',
+					attributes : {
+						height : '32px',
+						width: '32px'
+					}
+				})
 				
 				var url = ( type == 'artist' || type == 'genre' ) 
 						? './images/ui.collection.genericArtistArt.png'
@@ -241,10 +247,10 @@ define(function(require) {
 				url = ( url == 'null' ) ? './images/ui.collection.genericAlbumArt.png' : url
 				
 				// Set a generic album art.
-				DragImage.src = url
+				dragImage.src = url
 				
 				// Set the ghost image.
-				e.dataTransfer.setDragImage(DragImage,-10,-10)
+				e.dataTransfer.setDragImage(dragImage,-10,-10)
 			}
 			
 			return {
@@ -308,6 +314,8 @@ define(function(require) {
 			customClass : 'statusBar',
 			appendTo : this.node
 		})
+	
+		util.disableUserSelect(statusBar)
 	
 		this.updateStatusBar = function(type,itemCount) {
 		

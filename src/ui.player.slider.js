@@ -80,6 +80,10 @@ define(function(require) {
 			'callback' : options.onseek
 		})
 		
+		// disable selection of time info.
+		util.disableUserSelect(currentTime)
+		util.disableUserSelect(totalTime)
+		
 		/**
 		 * updates the slider progress and time.
 		 * @param position {number} slider position.

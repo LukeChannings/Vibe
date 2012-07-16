@@ -50,9 +50,6 @@ define(['util'], function(util) {
 				self.onplayitem && self.onplayitem(e, self)
 			})
 	
-		} else {
-		
-			throw new Error("Invalid definition - " + definition)
 		}
 	}
 

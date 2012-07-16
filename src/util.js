@@ -579,16 +579,26 @@ define({
 	// @param node {HTMLElement} the element to prevent selection for.
 	disableUserSelect : function(node) {
 	
+		node.setAttribute('unselectable', 'on')
+
+		node.style.cursor = "default"
+
 		this.addListener(node, 'selectstart', function(e) {
 		
-			if ( e.cancelBubble ) e.cancelBubble()
+			if ( e.cancelBubble ) {
+				e.cancelBubble()
+			}
 		
 			e.returnValue = false
 		
-			if ( e.preventDefault ) e.preventDefault()
+			if ( e.preventDefault ) {
+				e.preventDefault()
+			}
 		
-			if ( e.stopPropogation ) e.stopPropogation()
-		
+			if ( e.stopPropogation ) {
+				e.stopPropogation()
+			}
+			
 			return false
 		
 		})

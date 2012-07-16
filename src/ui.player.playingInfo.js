@@ -32,6 +32,11 @@ define(['util'], function(util) {
 				appendTo : node
 			})
 			
+			// disable text selection.
+			util.disableUserSelect(track)
+			util.disableUserSelect(artist)
+			util.disableUserSelect(trackNo)
+			
 			this.update = function (metadata) {
 			
 				if ( metadata ) {

@@ -16,7 +16,10 @@
 	list-style: none;
 }
 
-#UIPlaylist .legend{line-height: 19px}
+#UIPlaylist .legend{
+	line-height: 19px;
+	background: #f9f9f9;
+}
 
 #UIPlaylist > div:first-child{height: 19px}
 
