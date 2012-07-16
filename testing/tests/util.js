@@ -11,6 +11,23 @@ define(['util'], function(util) {
 		equal(util.formatTime(500), "08:20", "Expect 500 seconds to be 08:20")
 	})
 	
+	test("expandTime test", function () {
+	
+		expect(6)
+		
+		equal(util.expandTime(100), "1 minute and 40 seconds.", "100 seconds should be '1 minute and 40 seconds.'")
+		
+		equal(util.expandTime(900), "15 minutes.", "900 seconds should be '15 minutes.'")
+		
+		equal(util.expandTime(72), "1 minute and 12 seconds.", "72 seconds should be '1 minute and 12 seconds.'")
+		
+		equal(util.expandTime(8273), "2 hours, 17 minutes and 53 seconds.", "8273 seconds should be '2 hours, 17 minutes and 13 seconds.'")
+		
+		equal(util.expandTime(262), "4 minutes and 22 seconds.", "262 seconds should be '4 minutes and 22 seconds.'")
+		
+		equal(util.expandTime(3900), "1 hour and 5 minutes.", "3900 seconds should be '1 hour and 5 minutes.'")
+	})
+	
 	test("setArributes test", function() {
 	
 		var node = document.createElement('div')

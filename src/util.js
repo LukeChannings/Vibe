@@ -462,39 +462,60 @@ define({
 	// @param seconds {number} number of seconds.
 	expandTime : function(duration) {
 	
-		// determine the units of time to describe the playlist duration.
-		var seconds = Math.ceil(duration) % 60,
-			minutes = Math.round(duration / 60),
-			hours = Math.round(minutes / 60),
-			info = '' // string to contain the human-readable duration.
-		
+		var seconds = parseInt(duration % 60),
+			minutes = parseInt(duration / 60),
+			hours = ( minutes >= 60 ) ? parseInt(minutes / 60) : 0,
+			stringSeconds,
+			stringMinutes,
+			stringHours,
+			result
+
 		if ( hours > 0 ) {
-			minutes = minutes % 60
+			minutes = parseInt(minutes % 60)
+		}
+
+		if ( hours ) {
+		
+			stringHours = hours + " hour"
+		
+			if ( hours > 1 ) {
+				stringHours += "s"
+			}
 		}
 		
-		// determine the presentation of hours.
-		if ( hours !== 0 ) {
-			hours = ( hours == 1 ) ? hours + ' hour, ' : hours + ' hours, '
-		} else {
-			hours = ''
+		if ( minutes ) {
+			stringMinutes = minutes + " minute"
+		
+			if ( minutes > 1 ) {
+				stringMinutes += "s"
+			}
 		}
 		
-		// determine the presentation of minutes.
-		if ( minutes !== 0 ) {
-			minutes = ( minutes == 1 ) ? minutes + ' minute and ' : ( minutes - 1 ) + ' minutes and '
-		} else {
-			minutes = ''
+		if ( seconds ) {
+			stringSeconds = seconds + " second"
+		
+			if ( seconds > 1 ) {
+				stringSeconds += "s"
+			}
 		}
 		
-		// determine the presentation of seconds.
-		if ( seconds !== 0 ) {
-			seconds = ( seconds == 1) ? seconds + ' second.' : seconds + ' seconds.'
-		} else {
-			seconds = ''
+		if ( stringHours && stringMinutes && stringSeconds ) {
+			result = stringHours + ", " + stringMinutes + " and " + stringSeconds + "."
+		} else if ( stringHours && stringMinutes && ! stringSeconds ) {
+			result = stringHours + " and " + stringMinutes + "."
+		} else if ( stringHours && ! stringMinutes && stringSeconds ) {
+			result = stringHours + " and " + stringSeconds + "."
+		} else if ( stringHours && ! stringMinutes && ! stringSeconds ) {
+			result = stringHours + "."
+		} else if ( ! stringHours && stringMinutes && stringSeconds ) {
+			result = stringMinutes + " and " + stringSeconds + "."
+		} else if ( ! stringHours && stringMinutes && ! stringSeconds ) {
+			result = stringMinutes + "."
+		} else if ( ! stringHours && ! stringMinutes && stringSeconds ) {
+			result = stringSeconds + "."
 		}
 		
-		// concatenate the playlist durations.
-		return hours + minutes + seconds
+		return result
 	},
 	
 	// doubleClick
@@ -629,25 +650,25 @@ define({
 		}
 	},
 	
-// updates the browser's favicon.
-updateShortcutIcon : function(url, previousIcon) {
-
-	// if there is no previous node, then get it from the DOM.
-	if ( previousIcon ) {
-		previousIcon.parentNode.removeChild(previousIcon)
-	}
+	// updates the browser's favicon.
+	updateShortcutIcon : function(url, previousIcon) {
 	
-	// make a new link.
-	return this.createElement({
-		tag : 'link',
-		attributes : {
-			rel : "shortcut icon",
-			href : url,
-			type : "text/png"
-		},
-		appendTo : document.getElementsByTagName('head')[0]
-	})
-},
+		// if there is no previous node, then get it from the DOM.
+		if ( previousIcon ) {
+			this.removeNode(previousIcon)
+		}
+		
+		// make a new link.
+		return this.createElement({
+			tag : 'link',
+			attributes : {
+				rel : "shortcut icon",
+				href : url,
+				type : "text/png"
+			},
+			appendTo : document.getElementsByTagName('head')[0]
+		})
+	},
 	
 	// browser tests
 	browser : {
