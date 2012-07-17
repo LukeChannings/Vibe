@@ -204,9 +204,11 @@ define({
 		
 		else {
 		
-			if ( node.className.length == 0 ) node.className = className
-			
-			else node.className += ' ' + className
+			if ( node.className.length == 0 ) {
+				node.className = className
+			} else {
+				node.className += ' ' + className
+			}
 		}
 	},
 	
@@ -450,9 +452,13 @@ define({
 		
 		var seconds = seconds % 60
 		
-		if ( String(minutes).length == 1 ) minutes = '0' + String(minutes)
+		if ( String(minutes).length == 1 ) {
+			minutes = '0' + String(minutes)
+		}
 		
-		if ( String(seconds).length == 1 ) seconds = '0' + String(seconds)
+		if ( String(seconds).length == 1 ) {
+			seconds = '0' + String(seconds)
+		}
 		
 		return minutes + ':' + seconds
 	
@@ -535,7 +541,9 @@ define({
 				
 					doubleClick.clickTimeout = undefined
 					
-					if ( typeof click == 'function' ) click(target)
+					if ( typeof click == 'function' ) {
+						click(target)
+					}
 				
 				}, clickTimeoutDuration || 170)
 			}
@@ -568,7 +576,9 @@ define({
 	
 		for ( var i = 0; i < metaTags.length; i += 1 ) {
 		
-			if ( metaTags[i].getAttribute('name') == name ) return metaTags[i].getAttribute('content')
+			if ( metaTags[i].getAttribute('name') == name ) {
+				return metaTags[i].getAttribute('content')
+			}
 		}
 		
 		return false
@@ -617,7 +627,9 @@ define({
 	
 		for ( var i = 0; i < protocol.length; i += 1 ) {
 		
-			if ( typeof obj[protocol[i]] !== 'function' ) return false
+			if ( typeof obj[protocol[i]] !== 'function' ) {
+				return false
+			}
 		}
 		
 		return true
@@ -728,7 +740,9 @@ define({
 				var support = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")
 			
 				// disable SVG on Opera due to poor implementation.
-				if ( /opera/i.test(navigator.userAgent) ) support = false
+				if ( /opera/i.test(navigator.userAgent) ) {
+					support = false
+				}
 			
 				return support
 			})(),
@@ -744,7 +758,9 @@ define({
 				for ( var i = 0; i < prefix.length; i += 1 ) {
 				
 					// check if the possibility is present, if so, return the property that was found.
-					if ( prefix[i] in document.createElement('div').style ) return prefix[i].replace('Transition','')
+					if ( prefix[i] in document.createElement('div').style ) {
+						return prefix[i].replace('Transition','')
+					}
 				}
 				
 				// if no possibilities match then transitions are unsupported, return false.

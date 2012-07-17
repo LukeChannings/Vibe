@@ -241,7 +241,9 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 		
 			// compare the current item's trackid with the trackid sent.
 			// if the trackids match, return the index at which they match.
-			if ( tracks[i].trackid == trackid ) return i
+			if ( tracks[i].trackid == trackid ) {
+				return i
+			}
 		}
 	
 		// if no trackids match, return -1 to signal the item is not in the playlist.
@@ -281,7 +283,9 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 			this.api[types[type]](id,function(tracks) {
 			
 				// return the results to the callback.
-				if ( typeof callback == 'function' ) callback(tracks)
+				if ( typeof callback == 'function' ) {
+					callback(tracks)
+				}
 			})
 		}
 		

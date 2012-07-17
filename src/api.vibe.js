@@ -235,8 +235,13 @@ define(['util', 'lib/socket.io'], function(util) {
 		
 			artists.sort(function(a,b) {
 			
-				if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-				if (a.name.toLowerCase() > b.name.toLowerCase())  return 1
+				if (a.name.toLowerCase() < b.name.toLowerCase()) {
+					return -1
+				}
+				
+				if (a.name.toLowerCase() > b.name.toLowerCase()) {
+					return 1
+				}
 				return 0
 			})
 		
@@ -257,8 +262,14 @@ define(['util', 'lib/socket.io'], function(util) {
 		
 			artists.sort(function(a,b) {
 			
-				if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-				if (a.name.toLowerCase() > b.name.toLowerCase())  return 1
+				if (a.name.toLowerCase() < b.name.toLowerCase()) {
+					return -1
+				}
+				
+				if (a.name.toLowerCase() > b.name.toLowerCase()) {
+					return 1
+				}
+				
 				return 0
 			})
 		
@@ -274,7 +285,9 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		this.socket.emit('getAlbums',function(err,albums) {
 		
-			if ( err ) throw err
+			if ( err ) {
+				throw err
+			}
 		
 			callback(albums)
 		})
@@ -296,9 +309,13 @@ define(['util', 'lib/socket.io'], function(util) {
 			
 			albums.sort(function(a,b) {
 			
-				if (a.title.toLowerCase() < b.title.toLowerCase()) return -1
+				if (a.title.toLowerCase() < b.title.toLowerCase()) {
+					return -1
+				}
 				
-				if (a.title.toLowerCase() > b.title.toLowerCase())  return 1
+				if (a.title.toLowerCase() > b.title.toLowerCase()) {
+					return 1
+				}
 				
 				return 0
 			})
@@ -446,9 +463,13 @@ define(['util', 'lib/socket.io'], function(util) {
 		
 			genres.sort(function(a,b) {
 			
-				if (a.genre.toLowerCase() < b.genre.toLowerCase()) return -1
+				if (a.genre.toLowerCase() < b.genre.toLowerCase()) {
+					return -1
+				}
 				
-				if (a.genre.toLowerCase() > b.genre.toLowerCase())  return 1
+				if (a.genre.toLowerCase() > b.genre.toLowerCase()) {
+					return 1
+				}
 				
 				return 0
 			})

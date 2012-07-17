@@ -28,24 +28,29 @@ define(['util'], function(util) {
 			}
 		
 			// handle slideIn animations.
-			if ( /slidein/i.test(animation[2]) ) this.slideIn(element, prefix, animation[4], duration)
+			if ( /slidein/i.test(animation[2]) ) {
+				this.slideIn(element, prefix, animation[4], duration)
+			} else if ( /slideout/i.test(animation[2]) ) {
 			
-			// handle slideOut animations.
-			else if ( /slideout/i.test(animation[2]) ) this.slideOut(element, prefix, animation[4], duration)
-
-			// handle fadeIn animation.
-			else if ( /fadein/i.test(animation[0]) ) this.fadeIn(element, prefix, duration)
-
-			// handle fadeOut animation.
-			else if ( /fadeout/i.test(animation[0]) ) this.fadeOut(element, prefix, duration)
+				// handle slideOut animations.
+				this.slideOut(element, prefix, animation[4], duration)
+			} else if ( /fadein/i.test(animation[0]) ) {
 			
-		}
-		
-		else {
+				// handle fadeIn animation.
+				this.fadeIn(element, prefix, duration)
+			} else if ( /fadeout/i.test(animation[0]) ) {
+			
+				// handle fadeOut animation.
+				this.fadeOut(element, prefix, duration)
+			}
+		} else {
 		
 			throw new Error("Invalid animation option.")
 		
-			if ( typeof callback == 'function' ) callback()		}
+			if ( typeof callback == 'function' ) {
+				callback()
+			}
+		}
 	}
 	
 	/**
@@ -144,7 +149,9 @@ define(['util'], function(util) {
 				element.style[prefix + 'Transition'] = null
 				element.style.opacity = null
 			
-				if ( typeof self.callback == 'function' ) self.callback()
+				if ( typeof self.callback == 'function' ) {
+					self.callback()
+				}
 			
 			}, ( duration * 1000 ) || 300 )
 			

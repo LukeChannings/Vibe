@@ -338,7 +338,9 @@ define(function(require) {
 			else {
 			
 				// add item to selection.
-				if ( !( e.metaKey || e.ctrlKey ) ) clearSelectedItems.call(self)
+				if ( !( e.metaKey || e.ctrlKey ) ) {
+					clearSelectedItems.call(self)
+				}
 			
 				if ( !util.hasClass(node, 'selected') ) {
 				

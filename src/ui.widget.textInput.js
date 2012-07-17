@@ -55,11 +55,18 @@ define(['util'], function(util) {
 			
 				self.onenter(target.value)
 				
-				if ( e.preventDefault ) e.preventDefault()
+				if ( e.preventDefault ) {
 				
-				else if ( e.stopPropogation ) e.stopPropogation()
+					e.preventDefault()
 				
-				else e.returnValue = false
+				} else if ( e.stopPropogation ) {
+				
+					e.stopPropogation()
+					
+				} else {
+				
+					e.returnValue = false
+				}
 				
 				return false
 			}
@@ -69,7 +76,9 @@ define(['util'], function(util) {
 		util.addListener(input, 'keyup', function(e) {
 
 			// don't handle enter or key presses with meta, ctrl, alt or shift.
-			if ( e.keyCode.toString().match(/(1(3|7|8)|91)/) || e.metaKey || e.ctrlKey ) return
+			if ( e.keyCode.toString().match(/(1(3|7|8)|91)/) || e.metaKey || e.ctrlKey ) {
+				return
+			}
 
 			var target = e.target || e.srcElement
 
@@ -77,15 +86,16 @@ define(['util'], function(util) {
 			
 				var key = String.fromCharCode(e.keyCode)
 				
-				if ( ! e.shiftKey ) key = key.toLowerCase()
+				if ( ! e.shiftKey ) {
+					key = key.toLowerCase()
+				}
 			
 				clear.style.display = 'block'
 				
 				if ( options.oninput ) {
 					options.oninput(target.value, key)
 				}
-			}
-			else {
+			} else {
 			
 				clear.style.display = 'none'
 				if ( self.onclear ) {

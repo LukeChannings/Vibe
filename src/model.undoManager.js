@@ -149,7 +149,9 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 	UndoManager.prototype.undoAndRedo = function(n, self, direction) {
 		
 		// if it is not possible to undo or redo then return false.
-		if ( ( direction === true && ! this.canRedo(n) ) || ( direction === false && ! this.canUndo(n) ) ) return false
+		if ( ( direction === true && ! this.canRedo(n) ) || ( direction === false && ! this.canUndo(n) ) ) {
+			return false
+		}
 	
 		// set the new version.
 		self.currentVersion = direction ? self.currentVersion + (n || 1) : self.currentVersion - (n || 1)
@@ -181,7 +183,9 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 	UndoManager.prototype.mutator = function(context, arguments, method) {
 	
 		// if there are versions ahead of the current version remove them.
-		if ( this.versions.length > this.currentVersion ) this.versions.splice(this.currentVersion + 1)
+		if ( this.versions.length > this.currentVersion ) {
+			this.versions.splice(this.currentVersion + 1)
+		}
 	
 		if ( ! this.anonymousMutation ) {
 			// create a new version.
@@ -189,7 +193,9 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 		}
 		
 		// apply the mutator to the value.
-		if ( method != 'sort' ) Array.prototype[method].apply(context, arguments)
+		if ( method != 'sort' ) {
+			Array.prototype[method].apply(context, arguments)
+		}
 		
 		// things to do if we're using persistence.
 		if ( this.persistence ) {

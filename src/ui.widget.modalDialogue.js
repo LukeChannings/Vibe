@@ -36,25 +36,30 @@ define(['util'], function(util) {
 		if ( typeof MDD == 'object' && ! util.isArray(MDD) ) {
 		
 			// check for a title and body.
-			if ( ! MDD.title || ! MDD.body ) return false
+			if ( ! MDD.title || ! MDD.body ) {
+				return false
+			}
 			
 			// check if the MDD is part of a wizard.
 			if ( MDD.isWizardDialogue ) {
 			
 				// check for buttons.
-				if ( ! MDD.buttons ) return false
-				
-				else {
+				if ( ! MDD.buttons ) {
+					return false
+				} else {
 				
 					// if there is no previous button, next button or close button then the user cannot escape.
-					if ( ! MDD.buttons.next && ! MDD.buttons.prev && ! MDD.buttons.close ) return false
+					if ( ! MDD.buttons.next && ! MDD.buttons.prev && ! MDD.buttons.close ) {
+						return false
+					}
 				}
 			}
 			
 			if ( MDD.form ) {
 			
-				if ( ! MDD.form.name || ! MDD.form.inputs ) return false
-			
+				if ( ! MDD.form.name || ! MDD.form.inputs ) {
+					return false
+				}
 			}
 			
 			return true
@@ -149,7 +154,9 @@ define(['util'], function(util) {
 			else if ( typeof bodyPart == 'string' ) {
 			
 				// if the text does not have tags then wrap it in a <p>.
-				if ( !( /\<.+\>.*\<.+\>/.test(bodyPart) ) ) bodyPart = '<p>' + bodyPart + '</p>'
+				if ( !( /\<.+\>.*\<.+\>/.test(bodyPart) ) ) {
+					bodyPart = '<p>' + bodyPart + '</p>'
+				}
 			
 				// if the element is a string then add it directly.
 				self.dialogue.innerHTML += bodyPart
@@ -246,7 +253,9 @@ define(['util'], function(util) {
 					}
 				})
 				
-				if ( input.type == 'checkbox' ) element.checked = input.checked || false
+				if ( input.type == 'checkbox' ) {
+					element.checked = input.checked || false
+				}
 			}
 			
 			// check for a placeholder.
@@ -291,7 +300,9 @@ define(['util'], function(util) {
 				// bind the callback to enter.
 				util.addListener(element, 'keyup', function(e) {
 				
-					if ( e.keyCode === 13 ) form.callback.call(ModalDialogue, inputs)
+					if ( e.keyCode === 13 ) {
+						form.callback.call(ModalDialogue, inputs)
+					}
 				})
 			}
 		})
@@ -352,20 +363,23 @@ define(['util'], function(util) {
 		
 			var self = this
 		
-			// if the value of the object property is a function then set 
-			// the callback that function and the name as the property.
-			if ( typeof buttons[i] == 'function' ) name = i, callback = buttons[i]
+			if ( typeof buttons[i] == 'function' ) {
 			
-			// if the value of the button property is an object then it should
-			// have properties for the title and callback.
-			else if ( typeof buttons[i] == 'object' ) name = buttons[i].title || buttons[i].name, callback = buttons[i].callback
-		
-			// if the value of the button property is a boolean then it is
-			// indicated that the property should be replaced with a template
-			// button definition.
-			else if ( typeof buttons[i] == 'boolean' ) {
+				// if the value of the object property is a function then set 
+				// the callback that function and the name as the property.
+				name = i, callback = buttons[i]
 			
-				// override the close button.
+			} else if ( typeof buttons[i] == 'object' ) }
+			
+				// if the value of the button property is an object then it should
+				// have properties for the title and callback.
+				name = buttons[i].title || buttons[i].name, callback = buttons[i].callback
+			
+			} else if ( typeof buttons[i] == 'boolean' ) {
+			
+				// if the value of the button property is a boolean then it is
+				// indicated that the property should be replaced with a template
+				// button definition.
 				if ( /close/i.test(i) ) {
 				
 					name = 'Close'
@@ -384,7 +398,9 @@ define(['util'], function(util) {
 			var button = ModalDialogueButton(name, callback, context)
 		
 			// append it to the container.
-			if ( button ) buttonContainer.appendChild(button)
+			if ( button ) {
+				buttonContainer.appendChild(button)
+			}
 		}
 	}
 
@@ -437,7 +453,9 @@ define(['util'], function(util) {
 				for ( var j in dialogue.buttons ) {
 					
 					// skip the button if it's not prev or next.
-					if ( ! /(prev|next)/i.test(j) || typeof dialogue.buttons[j] !== 'boolean') continue
+					if ( ! /(prev|next)/i.test(j) || typeof dialogue.buttons[j] !== 'boolean') {
+						continue
+					}
 				
 					// override prev or next.
 					dialogue.buttons[j] = {
@@ -483,7 +501,9 @@ define(['util'], function(util) {
 	ModalDialogue.createMultiView = function(MVD) {
 	
 		// return false if the MVD is invalid.
-		if ( typeof MVD !== 'object' ) return false
+		if ( typeof MVD !== 'object' ) {
+			return false
+		}
 	
 		// set the animate in property.
 		animateIn = ( MVD.animate && typeof MVD.animate.animateIn !== 'undefined' ) ? MVD.animate.animateIn : null
@@ -708,7 +728,9 @@ define(['util'], function(util) {
 		
 		function open(UIAnimator) {
 		
-			if ( UIAnimator ) Animator = UIAnimator
+			if ( UIAnimator ) {
+				Animator = UIAnimator
+			}
 		
 			// add the dialogue to the overlay.
 			overlay.appendChild(dialogue)
