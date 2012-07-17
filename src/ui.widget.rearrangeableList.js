@@ -4,7 +4,7 @@ define(function(require) {
 	var util = require('util'),
 		DnD = require('dom.dragAndDrop')
 
-	util.registerStylesheet('./stylesheets/ui.widget.rearrangeableList.css')
+	util.registerStylesheet(require.toUrl('../stylesheets/ui.widget.rearrangeableList.css'))
 
 	/**
 	 * creates a rearrangeable list instance.
@@ -43,9 +43,16 @@ define(function(require) {
 	 */
 	RearrangeableList.prototype.addNodes = function(items, afterItem) {
 	
-		var self = this
+		var self = this,
+			rows = document.createDocumentFragment()
 	
-		util.forEach(items, function(item) {
+		util.forEach(
+			
+			// the items to add to the list.
+			items,
+			
+			// function applied to each item.
+			function(item) {
 		
 			// make draggable.
 			DnD.draggable({
@@ -83,9 +90,15 @@ define(function(require) {
 			} else {
 				
 				// append the node to the list.
-				self.node.appendChild(item)
+				rows.appendChild(item)
 			}
-		})
+		},
+			
+			// function called when all items have been iterated.
+			function() {
+				self.node.appendChild(rows)
+			}
+		)
 	}
 
 	/**

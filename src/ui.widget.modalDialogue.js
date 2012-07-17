@@ -369,7 +369,7 @@ define(['util'], function(util) {
 				// the callback that function and the name as the property.
 				name = i, callback = buttons[i]
 			
-			} else if ( typeof buttons[i] == 'object' ) }
+			} else if ( typeof buttons[i] == 'object' ) {
 			
 				// if the value of the button property is an object then it should
 				// have properties for the title and callback.

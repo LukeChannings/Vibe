@@ -16,25 +16,28 @@ define(['util'], function(util) {
 			throw new Error('Draggable options invalid.')
 		}
 	
-		// set the draggable attribute.
-		options.node.setAttribute('draggable', 'true')
-	
-		util.addListener(options.node, 'dragstart', function(e) {
+		if ( ! options.disableDraggableAttributes ) {
+			
+			// set the draggable attribute.
+			options.node.setAttribute('draggable', 'true')
 		
-			window.dropZone = options.dropZone
-		
-			var data = options.start(e.target || e.srcElement, e)
-		
-			if ( typeof data == 'object' ) {
-				data = JSON.stringify(data)
-			} else {
-				data = data.toString()
-			}
-		
-			e.dataTransfer.setData('Text', data)
-		
-			e.dataTransfer.dropEffect = 'copy'
-		})
+			util.addListener(options.node, 'dragstart', function(e) {
+			
+				window.dropZone = options.dropZone
+			
+				var data = options.start(e.target || e.srcElement, e)
+			
+				if ( typeof data == 'object' ) {
+					data = JSON.stringify(data)
+				} else {
+					data = data.toString()
+				}
+			
+				e.dataTransfer.setData('Text', data)
+			
+				e.dataTransfer.dropEffect = 'copy'
+			})
+		}
 		
 		util.addListener(options.node, 'selectstart', function(e) {
 		

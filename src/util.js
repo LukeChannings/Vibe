@@ -4,14 +4,19 @@ define({
 
 	// run a callback for each item in an array.
 	// @param array {Array} the array to iterate.
-	// @param callback {function} the callback that will be called with each element.
-	forEach : function(array, callback) {
+	// @param callback {function} called for each element.
+	// @param done {function} called when all elements have been iterated.
+	forEach : function(array, callback, done) {
 	
 		if ( this.isArray(array) && typeof callback == "function" ) {
 		
 			for ( var i = 0; i < array.length; i += 1 ) {
 			
 				callback(array[i], i, array)
+			}
+			
+			if ( typeof done == 'function' ) {
+				done()
 			}
 		}
 	},
