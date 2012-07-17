@@ -6,7 +6,8 @@ require.config({
 	}
 })
 
-require(['tests/util', 'tests/api', 'tests/undomanager'], function() {
+require(['tests/util', 'tests/api', 'tests/undomanager', 'tests/contextmenu'], function() {
 
+	// start QUnit when the tests have been loaded.
 	QUnit.start()
 })

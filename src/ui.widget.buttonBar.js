@@ -14,7 +14,7 @@ define(['util'], function(util) {
 			
 			var buttons = this.buttons = {}
 			
-			if ( options.buttons instanceof Array ) {
+			if ( util.isArray(options.buttons) ) {
 			
 				util.forEach(options.buttons, function(button) {
 				

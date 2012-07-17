@@ -46,7 +46,7 @@ define(['util'], function(util) {
 	
 		var self = this
 	
-		if ( useColumns instanceof Array ) {
+		if ( util.isArray(useColumns) ) {
 		
 			util.removeChildren(self.legend)
 		

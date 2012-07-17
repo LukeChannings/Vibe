@@ -94,11 +94,11 @@ define(function(require) {
 	 */
 	RearrangeableList.prototype.removeNodesByIndex = function(group) {
 	
-		if ( group instanceof Array && /^\d+$/.test(group.join('')) ) {
+		if ( util.isArray(group) && /^\d+$/.test(group.join('')) ) {
 		
 			group = group.sort(function(a,b) { return a + b })
 		
-			for ( var i = 0; i < group.length; i++ ) {
+			for ( var i = 0; i < group.length; i += 1 ) {
 			
 				this.onnoderemoved(i)
 			
@@ -113,7 +113,7 @@ define(function(require) {
 	 */
 	RearrangeableList.prototype.removeNodes = function(group) {
 	
-		for ( var i = 0; i < group.length; i++ ) {
+		for ( var i = 0; i < group.length; i += 1 ) {
 		
 			this.onnoderemoved(Array.prototype.indexOf.call(this.node.childNodes, group[i]))
 		
@@ -247,7 +247,7 @@ define(function(require) {
 			}
 		} else {
 		
-			for ( var i = 0; i < group.length; i++ ) {
+			for ( var i = 0; i < group.length; i += 1 ) {
 				
 				if ( this.onbeforemove ) {
 					this.onbeforemove(
@@ -323,7 +323,7 @@ define(function(require) {
 				})
 
 				// select all items in the range.
-				for ( var i = range[0]; i <= range[1]; i++ ) {
+				for ( var i = range[0]; i <= range[1]; i += 1 ) {
 				
 					util.addClass(self.node.childNodes[i], 'selected')
 					
@@ -383,7 +383,7 @@ define(function(require) {
 		// if nothing is found upward, start looking down.
 		if ( matchedIndex == -1 ) {
 		
-			for ( var i = clickedIndex; i < list.childNodes.length; i++ ) {
+			for ( var i = clickedIndex; i < list.childNodes.length; i += 1 ) {
 			
 				if ( util.hasClass(list.childNodes[i], className) && i !== clickedIndex ) {
 				

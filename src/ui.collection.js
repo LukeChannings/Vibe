@@ -227,14 +227,9 @@ define(function(require) {
 		
 			// set a drag image.
 			if ( e.dataTransfer.setDragImage ) {
+		
 				// Create a new ghost image.
-				var dragImage = util.createElement({
-					tag : 'img',
-					attributes : {
-						height : '32px',
-						width: '32px'
-					}
-				})
+				var dragImage = new Image()
 				
 				var url = ( type == 'artist' || type == 'genre' ) 
 						? './images/ui.collection.genericArtistArt.png'
@@ -275,7 +270,7 @@ define(function(require) {
 					var data = []
 	
 					if ( e.dataTransfer.files ) {
-						for ( var i = 0; i < e.dataTransfer.files.length; i++ ) {
+						for ( var i = 0; i < e.dataTransfer.files.length; i += 1 ) {
 						
 							var reader = new FileReader()
 						

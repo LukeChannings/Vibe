@@ -17,7 +17,7 @@ define(function(require) {
 	var UITreeListWidget = function(list, options, clickTimeout) {
 	
 		// make sure there is a list to work with.
-		if ( ! list || ! list instanceof Array ) {
+		if ( ! list || ! util.isArray(list) ) {
 		
 			console.error("TreeList was instantiated without a list array. This obviously won't work.")
 			
@@ -52,7 +52,7 @@ define(function(require) {
 			
 			var itemInner = util.htmlEntities(itemObj.trackname || itemObj.name || itemObj.title || 'Item ' + index)
 			
-			if ( options.wrapItemsIn instanceof Array && options.wrapItemsIn.length == 2 ) {
+			if ( util.isArray(options.wrapItemsIn) && options.wrapItemsIn.length == 2 ) {
 			
 				if ( options.wrapItemsIn[0] && options.wrapItemsIn[1] ) {
 				
@@ -91,7 +91,7 @@ define(function(require) {
 			}
 			
 			// check for item children.
-			if ( itemObj.children instanceof Array ) {
+			if ( util.isArray(itemObj.children) ) {
 			
 				// if there are no children options...
 				if ( typeof itemObj.options !== 'object' ) itemObj.options = {}

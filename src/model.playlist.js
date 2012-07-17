@@ -237,7 +237,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 		var tracks = this.model
 	
 		// iterate.
-		for ( var i = 0; i < tracks.length; i++ ) {
+		for ( var i = 0; i < tracks.length; i += 1 ) {
 		
 			// compare the current item's trackid with the trackid sent.
 			// if the trackids match, return the index at which they match.

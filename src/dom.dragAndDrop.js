@@ -140,7 +140,7 @@ define(['util'], function(util) {
 				} catch (ex) {
 				
 					if ( /^\d+$/.test(data) ) {
-						data = parseInt(data)
+						data = parseInt(data, 10)
 					} else if ( /^\d+\.\d+$/.test(data) ) {
 						data = parseFloat(data)
 					}

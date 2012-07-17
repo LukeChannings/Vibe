@@ -1,4 +1,4 @@
-define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
+define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence) {
 
 	/**
 	 * undo manager constructor.
@@ -17,7 +17,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 			array = [] // create the array to be the value.
 	
 		// apply mutator methods to the instance.
-		for ( var i = 0; i < mutators.length; i++ ) {
+		for ( var i = 0; i < mutators.length; i += 1 ) {
 		
 			array[mutators[i]] = (function(mutator) {
 			
@@ -259,7 +259,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 	
 		var keys = []
 	
-		for ( var i = 0; i < value.length; i++ ) {
+		for ( var i = 0; i < value.length; i += 1 ) {
 		
 			var key = this.generateHash(value[i])
 		
@@ -279,9 +279,9 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 	UndoManager.prototype.replaceKeysWithValues = function(keys) {
 	
 		var values = [],
-			keys = keys instanceof Array ? keys : [keys]
+			keys = util.isArray(keys) ? keys : [keys]
 	
-		for ( var i = 0; i < keys.length; i++ ) {
+		for ( var i = 0; i < keys.length; i += 1 ) {
 		
 			values[i] = this.store[keys[i]]
 		}
@@ -305,11 +305,16 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 			
 			if ( typeof value == 'object' ) {
 		
-				if ( value instanceof Array ) {
+				if ( util.isArray(value) ) {
 				
-					if ( ! /\[object .*?\]/.test(value.join('')) ) return value.join('')
+					if ( ! /\[object .*?\]/.test(value.join('')) ) {
+						return value.join('')
+					} else {
 					
-					else for ( var i = 0; i < value.length; i++ ) string += i + toString(value[i])
+						for ( var i = 0; i < value.length; i += 1 ) {
+							string += i + toString(value[i])
+						}
+					}
 				
 				} else {
 					for ( var i in value ) string += i + toString(value[i])
@@ -337,7 +342,9 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 		
 			var fork = []
 			
-			for ( var i = 0; i < currentVersion.length; i++ ) fork.push(currentVersion[i])
+			for ( var i = 0; i < currentVersion.length; i += 1 ) {
+				fork.push(currentVersion[i])
+			}
 
 			return fork
 		
@@ -347,7 +354,7 @@ define(['lib/md5', 'model.persistence'], function(MD5, Persistence) {
 		this.versions.push(version)
 		
 		// increment the version pointer.
-		this.currentVersion++
+		this.currentVersion += 1
 	}
 
 	return UndoManager

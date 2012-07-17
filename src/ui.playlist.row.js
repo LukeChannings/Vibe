@@ -61,7 +61,7 @@ define(['util'], function(util) {
 	
 		var self = this
 	
-		if ( columns instanceof Array ) {
+		if ( util.isArray(columns) ) {
 		
 			util.removeChildren(self.columnContainer)
 		

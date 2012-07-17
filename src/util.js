@@ -7,9 +7,9 @@ define({
 	// @param callback {function} the callback that will be called with each element.
 	forEach : function(array, callback) {
 	
-		if ( array instanceof Array && typeof callback == "function" ) {
+		if ( this.isArray(array) && typeof callback == "function" ) {
 		
-			for ( var i = 0; i < array.length; i++ ) {
+			for ( var i = 0; i < array.length; i += 1 ) {
 			
 				callback(array[i], i, array)
 			}
@@ -23,7 +23,7 @@ define({
 	
 		var arr = []
 		
-		for ( var i = 0; i < array.length; i++ ) {
+		for ( var i = 0; i < array.length; i += 1 ) {
 		
 			arr.push(callback(array[i]))
 		}
@@ -38,7 +38,7 @@ define({
 	
 		if ( node && attributes ) {
 		
-			if ( attributes instanceof Array ) {
+			if ( this.isArray(attributes) ) {
 			
 				this.forEach(attributes, function(attribute) {
 					
@@ -96,7 +96,7 @@ define({
 		}
 		
 		// check for children.
-		if ( definition.children && definition.children instanceof Array ) {
+		if ( definition.children && this.isArray(definition.children) ) {
 		
 			this.forEach(definition.children, function(child) {
 			
@@ -243,7 +243,7 @@ define({
 	
 		if ( children.hasOwnProperty('length') && node instanceof Element ) {
 		
-			for ( var i = 0; i < children.length; i++ ) {
+			for ( var i = 0; i < children.length; i += 1 ) {
 			
 				if ( children[i] instanceof Element ) {
 				
@@ -331,7 +331,7 @@ define({
 			
 			checker = function() {
 			
-				for ( var i = 0; i < document.styleSheets.length; i++ ) {
+				for ( var i = 0; i < document.styleSheets.length; i += 1 ) {
 				
 					if ( new RegExp(url + '$').test(document.styleSheets[i].href) ) {
 					
@@ -462,16 +462,16 @@ define({
 	// @param seconds {number} number of seconds.
 	expandTime : function(duration) {
 	
-		var seconds = parseInt(duration % 60),
-			minutes = parseInt(duration / 60),
-			hours = ( minutes >= 60 ) ? parseInt(minutes / 60) : 0,
+		var seconds = parseInt(duration % 60, 10),
+			minutes = parseInt(duration / 60, 10),
+			hours = ( minutes >= 60 ) ? parseInt(minutes / 60, 10) : 0,
 			stringSeconds,
 			stringMinutes,
 			stringHours,
 			result
 
 		if ( hours > 0 ) {
-			minutes = parseInt(minutes % 60)
+			minutes = parseInt(minutes % 60, 10)
 		}
 
 		if ( hours ) {
@@ -566,7 +566,7 @@ define({
 	
 		var metaTags = document.getElementsByTagName('meta')
 	
-		for ( var i = 0; i < metaTags.length; i++ ) {
+		for ( var i = 0; i < metaTags.length; i += 1 ) {
 		
 			if ( metaTags[i].getAttribute('name') == name ) return metaTags[i].getAttribute('content')
 		}
@@ -615,7 +615,7 @@ define({
 			return false
 		}
 	
-		for ( var i = 0; i < protocol.length; i++ ) {
+		for ( var i = 0; i < protocol.length; i += 1 ) {
 		
 			if ( typeof obj[protocol[i]] !== 'function' ) return false
 		}
@@ -633,7 +633,7 @@ define({
 			return false
 		}
 	
-		for ( var i = 0; i < properties.length; i++ ) {
+		for ( var i = 0; i < properties.length; i += 1 ) {
 		
 			if ( typeof properties[i] == 'string' && ! obj.hasOwnProperty(properties[i]) ) {
 			
@@ -649,7 +649,7 @@ define({
 	
 		var list = node.parentNode
 		
-		for ( var i = 0; i < list.childNodes.length; i++ ) {
+		for ( var i = 0; i < list.childNodes.length; i += 1 ) {
 		
 			if ( node == list.childNodes[i] ) {
 			
@@ -678,6 +678,12 @@ define({
 			},
 			appendTo : document.getElementsByTagName('head')[0]
 		})
+	},
+	
+	// returns true if the parameter is an array.
+	isArray : Array.prototype.isArray || function(value) {
+	
+		return Object.prototype.toString.call(value) === '[object Array]'
 	},
 	
 	// browser tests
@@ -735,7 +741,7 @@ define({
 				var prefix = ["transition", "WebkitTransition", "MozTransition", "OTransition", "msTransition"]
 				
 				// loop through possibilities.
-				for ( var i = 0; i < prefix.length; i++ ) {
+				for ( var i = 0; i < prefix.length; i += 1 ) {
 				
 					// check if the possibility is present, if so, return the property that was found.
 					if ( prefix[i] in document.createElement('div').style ) return prefix[i].replace('Transition','')

@@ -7,9 +7,12 @@
 		<link rel="shortcut icon" type="image/png" href="images/shared.icon_16.png" />
 		<meta name="vibe-version" content="0.1.1" />
 		<meta name="vibe-build" content="buildno" />
+	</head>
+	<body>
+		<div id="Vibe"><!-- Main Element. --></div>
 		<!-- sound manager 2 configuration -->
-		<script src="lib/soundmanager2.js" type="text/javascript"></script>
-		<script type="text/javascript">
+		<script src="lib/soundmanager2.js"></script>
+		<script>
 		soundManager.url = 'lib/'
 		soundManager.debugMode = false
 		soundManager.allowScriptAccess = 'always'
@@ -18,9 +21,6 @@
 		soundManager.wmode = 'transparent'
 		</script>
 		<!-- vibe modules. -->
-		<script src="lib/require.js" type="text/javascript" data-main="app"></script>
-	</head>
-	<body>
-		<div id="Vibe"><!-- Main Element. --></div>
+		<script src="lib/require.js" data-main="app"></script>
 	</body>
 </html>

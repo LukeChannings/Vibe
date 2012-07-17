@@ -33,7 +33,7 @@ define(['util'], function(util) {
 	function isValidMDD(MDD) {
 	
 		// make sure the MDD is actually an object.
-		if ( typeof MDD == 'object' && !( MDD instanceof Array) ) {
+		if ( typeof MDD == 'object' && ! util.isArray(MDD) ) {
 		
 			// check for a title and body.
 			if ( ! MDD.title || ! MDD.body ) return false
@@ -131,7 +131,9 @@ define(['util'], function(util) {
 		var self = this
 	
 		// if the parameter is not an array then convert it.
-		if ( !( body instanceof Array ) ) body = [body]
+		if ( ! util.isArray(body) ) {
+			body = [body]
+		}
 		
 		// iterate the body.
 		util.forEach(body, function(bodyPart) {
@@ -583,7 +585,7 @@ define(['util'], function(util) {
 		}
 
 		// set views.
-		if ( MVD.views instanceof Array ) {
+		if ( util.isArray(MVD.views) ) {
 		
 			util.forEach(MVD.views, function(MDD, i) {
 			
@@ -753,7 +755,7 @@ define(['util'], function(util) {
 			var n = 0
 			for ( var i in currentDialogues ) {
 				if ( currentDialogues.hasOwnProperty(i) ) {
-					n++
+					n += 1
 				}
 			}
 			return !!n

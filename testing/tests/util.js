@@ -272,7 +272,7 @@ define(['util'], function(util) {
 		var node = util.createElement({'tag' : 'ol'}),
 			children = []
 		
-		for ( var i = 0; i < 5; i++ ) {
+		for ( var i = 0; i < 5; i += 1 ) {
 			children.push(util.createElement({'tag' : 'li'}))
 		}
 		
