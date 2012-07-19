@@ -10,12 +10,6 @@
 	border-color: #4277ef;
 }
 
-#UIPlaylist ol{
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
 #UIPlaylist .legend{
 	line-height: 19px;
 	background: #f9f9f9;
@@ -34,10 +28,6 @@
 
 #UIPlaylist > .listContainer.noItems{
 	background: url('../images/ui.playlist.dropGuide.png') no-repeat center;
-}
-
-#UIPlaylist > .listContainer > ol{
-	background: url('../images/shared.zebraStripes.png');
 }
 
 #UIPlaylist > .listContainer > ol > li > ol{

@@ -3,8 +3,14 @@ define(function(require) {
 	// dependencies.
 	var util = require('util'),
 		DnD = require('dom.dragAndDrop')
+	
+	// variables to contain the indicator node
+	// and the position of the indicator in the list
+	// item for use in the moveTo function.
+	var dropIndicator, dropRegion
 
-	util.registerStylesheet(require.toUrl('../stylesheets/ui.widget.rearrangeableList.css'))
+	// fetch the stylesheet for this module.
+	util.registerStylesheet('stylesheets/ui.widget.rearrangeableList.css')
 
 	/**
 	 * creates a rearrangeable list instance.
@@ -16,7 +22,7 @@ define(function(require) {
 		// rearrangeable list node.
 		this.node = util.createElement({
 			tag : 'ol',
-			customClass : 'UIRearrangeableListWidget',
+			className : 'UIRearrangeableListWidget',
 			appendTo : (options.appendTo instanceof Element) ? options.appendTo : document.body
 		})
 		
@@ -163,13 +169,16 @@ define(function(require) {
 				this,
 				group,
 				item,
-				window.dropRegion
+				dropRegion
 			)
 			
-			window.dropRegion = undefined
+			dropRegion = undefined
 		}
 		
-		util.removeNode(document.getElementById('dropIndicator'))
+		if ( dropIndicator ) {
+			util.removeNode(dropIndicator)
+			dropIndicator = null
+		}
 	}
 	
 	/**
@@ -178,33 +187,24 @@ define(function(require) {
 	 * @param e {Event} the dragover event.
 	 */
 	function dragWhileEntered(item, e) {
-	
-		clearTimeout(window.dropLeaveTimeout)
 		
+		// get the container list item.
 		item = item.parentNode.parentNode
 		
-		if ( item instanceof HTMLLIElement ) {
+		if ( item.parentNode.className == 'UIRearrangeableListWidget' ) {
 	
-			var region = window.dropRegion = cursorRegion(item, e),
-				indicator = document.getElementById('dropIndicator'),
-				index = Array.prototype.indexOf.call(this.node.childNodes, item)
+			dropRegion = cursorRegion(item, e)
 			
-			if ( !indicator ) {
-			
-				var indicator = util.createElement({
-					tag : 'div',
-					id : 'dropIndicator',
-					appendTo : this.node
-				})
+			if ( dropIndicator ) {
+				util.removeNode(dropIndicator)
+				dropIndicator = null
 			}
 			
-			if ( region == 'top' ) {
-				indicator.style.top = (index * 25) + 'px'
-			} else {
-				indicator.style.top = ((index * 25) + 25) + 'px'
-			}
-			
-			window.dropIndex = ( region == 'bottom' ) ? index + 1 : index
+			dropIndicator = util.createElement({
+				tag : 'div',
+				id : 'dropIndicator' + dropRegion.charAt(0).toUpperCase() + dropRegion.slice(1),
+				appendTo : item
+			})
 		}
 	}
 
@@ -213,16 +213,10 @@ define(function(require) {
 	 */
 	function dragLeave() {
 	
-		window.dropIndex = null
-	
-		window.dropLeaveTimeout = window.setTimeout(function() {
-		
-			var indicator = document.getElementById('dropIndicator')
-		
-			if ( indicator ) {
-				util.removeNode(indicator)
-			}
-		}, 100)
+		if ( dropIndicator ) {
+			util.removeNode(dropIndicator)
+			dropIndicator = null
+		}
 	}
 
 	/**
