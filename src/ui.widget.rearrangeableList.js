@@ -254,6 +254,10 @@ define(function(require) {
 				id : 'dropIndicator' + dropRegion.charAt(0).toUpperCase() + dropRegion.slice(1),
 				appendTo : item
 			})
+			
+			if ( item == this.node.childNodes[this.node.childNodes.length - 1] ) {
+				dropIndicator.style.bottom = "0px"
+			}
 		}
 	}
 
