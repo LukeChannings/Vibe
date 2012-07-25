@@ -1,6 +1,5 @@
 //
 // unit test for UndoManager.
-//
 define(['model.undoManager'], function(UndoManager) {
 
 	module("Undo Manager", {
@@ -69,5 +68,30 @@ define(['model.undoManager'], function(UndoManager) {
 		this.undoManager.redo()
 		
 		deepEqual(this.undoManager, ['1', 1, {'1' : 1}], "array should have previous value.")
+	})
+	
+	test("transaction mutations", function() {
+	
+		this.undoManager.push(1,2,3,4,5,6,7,8,9,10)
+		
+		deepEqual(this.undoManager, [1,2,3,4,5,6,7,8,9,10], "initial value should be [1,2,3,4,5,6,7,8,9,10].")
+		
+		this.undoManager.beginTransaction()
+		
+		for ( var i = this.undoManager.length; i > 5; i-- ) {
+			this.undoManager.splice(i, 1)
+		}
+		
+		this.undoManager.endTransaction()
+		
+		deepEqual(this.undoManager, [1,2,3,4,5,6], "value should be [1,2,3,4,5,6].")
+		
+		this.undoManager.undo()
+		
+		deepEqual(this.undoManager, [1,2,3,4,5,6,7,8,9,10], "value should be [1,2,3,4,5,6,7,8,9,10].")
+		
+		this.undoManager.redo()
+		
+		deepEqual(this.undoManager, [1,2,3,4,5,6], "value should be [1,2,3,4,5,6].")
 	})
 })

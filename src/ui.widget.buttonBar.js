@@ -9,7 +9,7 @@ define(['util'], function(util) {
 			var node = this.node = util.createElement({
 				tag : 'ol',
 				appendTo : options.appendTo || document.body,
-				customClass : ( ! options.noClass ) ? undefined : 'UIButtonBarWidget'
+				className : ( ! options.noClass ) ? undefined : 'UIButtonBarWidget'
 			})
 			
 			var buttons = this.buttons = {}
@@ -36,9 +36,9 @@ define(['util'], function(util) {
 						item.innerHTML = button.text || button.title || ''
 					}
 				
-					if ( button.customClass ) {
-						util.addClass(item, button.customClass)
-						util.addClass(li, button.customClass)
+					if ( button.className ) {
+						util.addClass(item, button.className)
+						util.addClass(li, button.className)
 					}
 				
 					if ( typeof button.titleText == 'string' ) {
@@ -66,7 +66,7 @@ define(['util'], function(util) {
 						util.addClass(item, 'icon')
 					}
 				
-					buttons[button.title || button.customClass] = {
+					buttons[button.title || button.className] = {
 						'node' : item,
 						'item' : li
 					}

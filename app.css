@@ -42,8 +42,6 @@ body.svg #Vibe{
 	box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-#Vibe #UICollection:hover,#Vibe #UIPlaylist:hover{border-color: #C2DEFF}
-
 #Vibe #UIPlaylist.draghighlight{border-color: #4277ef}
 
 #Vibe #UICollection{

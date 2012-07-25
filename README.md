@@ -51,10 +51,19 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 
 #Roadmap
 
-##v0.1 (current):
+##v0.1:
 - Webkit Notifications
 - Scaleable Layout
 - Rearrangeable Playlist
+
+###v0.1.1 (current):
+- Fix Playing Info bug (#11)
+- Fix Opera Drag and Drop (#12)
+- Add context menus to Playlist and Collection
+- Add context menu interface for plugins.
+- Update play/pause favicon status.
+- Fix playlist bugs.
+- Misc optimisations
 
 ##v0.2:
 - Search

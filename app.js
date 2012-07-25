@@ -69,7 +69,7 @@ void function() {
 		
 			throbber = util.createElement({
 				'tag' : 'div',
-				'customClass' : 'loading',
+				'className' : 'loading',
 				'id' : 'LoadingThrobber'
 			})
 		
@@ -151,6 +151,20 @@ void function() {
 				if ( settings.get('debug') ) {
 				
 					window.vibe = self
+				}
+				
+				// expose an interface for adding context menu
+				// items and settings panes.
+				window.vibePluginInterface = {
+					contextMenu : {
+						addContext : self.contextMenu.addContext,
+						addContextItem : self.contextMenu.addContextItem,
+						getContext : self.contextMenu.getContext
+					},
+					settings : {
+						registerDialogue : self.settingsAssistant.registerDialogue,
+						presentDialogue : self.settingsAssistant.presentDialogue
+					}
 				}
 			
 				// stop the throbber.

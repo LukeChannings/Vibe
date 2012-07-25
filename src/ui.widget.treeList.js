@@ -41,8 +41,8 @@ define(function(require) {
 		}
 	
 		// check for custom classes.
-		if ( typeof options.customClass == "string" ) {
-			util.addClass(node, options.customClass)
+		if ( typeof options.className == "string" ) {
+			util.addClass(node, options.className)
 		}
 	
 		// iterate the list.
@@ -66,14 +66,14 @@ define(function(require) {
 			// set attributes specified in the item definition.
 			if ( typeof itemObj.setAttributes == 'object' ) {
 			
-				// check for a customClass within setAttributes.
-				if ( itemObj.setAttributes.hasOwnProperty('customClass') ) {
+				// check for a className within setAttributes.
+				if ( itemObj.setAttributes.hasOwnProperty('className') ) {
 				
 					// add the class to the class list.
-					util.addClass(item, itemObj.setAttributes.customClass)
+					util.addClass(item, itemObj.setAttributes.className)
 					
 					// remove it from the setAttributes object before setting attributes.
-					delete itemObj.setAttributes.customClass
+					delete itemObj.setAttributes.className
 				}
 			
 				// set attributes.
@@ -123,7 +123,9 @@ define(function(require) {
 		
 		if ( options.isRootListener ) {
 		
-			util.doubleClick(node,function(target) {
+			util.addListener(node, 'click', function(e) {
+			
+				var target = e.target || e.srcElement
 			
 				if ( target instanceof HTMLLIElement ) {
 				
@@ -140,14 +142,7 @@ define(function(require) {
 						options.onclick(target, isPopulated)
 					}
 				}
-			
-			}, function(target) {
-			
-				if ( typeof options.ondblclick == 'function') {
-					options.ondblclick(target)
-				}
-			
-			}, options.clickTimeout)
+			})
 		}
 	
 		if ( ! options.isRootNode ) {

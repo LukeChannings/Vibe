@@ -35,14 +35,14 @@ define(['util'], function(util) {
 		util.setAttributes(node, {
 			'data-abc' : 'lalala',
 			'id' : 'someId',
-			'customClass' : 'aClassName'
+			'className' : 'aClassName'
 		})
 	
 		expect(3)
 	
 		ok(node.getAttribute('data-abc') == 'lalala', "Test data attribute.")
 		ok(node.getAttribute('id') == 'someId', "Test id attribute")
-		ok(node.getAttribute('customClass') == 'aClassName', "Test class name.")
+		ok(node.getAttribute('className') == 'aClassName', "Test class name.")
 	})
 	
 	test("createElement test", function() {

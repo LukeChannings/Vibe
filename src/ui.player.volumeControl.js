@@ -17,26 +17,26 @@ define(['util', 'lib/DragDealer'], function(util, DragDealer) {
 			tag : 'ol',
 			children : [{
 				tag : 'li',
-				customClass : 'mute'
+				className : 'mute'
 			},{
 				tag : 'li',
-				customClass : 'slider'
+				className : 'slider'
 			},{
 				tag : 'li',
-				customClass : 'max'
+				className : 'max'
 			}],
 			appendTo : node
 		})
 		
 		var slider = this.slider = util.createElement({
 			tag : 'div',
-			customClass : 'dragdealer',
+			className : 'dragdealer',
 			appendTo : container.childNodes[1]
 		})
 		
 		var handle = util.createElement({
 			tag : 'div',
-			customClass : 'handle',
+			className : 'handle',
 			appendTo : slider
 		})
 		

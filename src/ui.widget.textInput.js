@@ -11,7 +11,7 @@ define(['util'], function(util) {
 		
 		textInput = this.element = util.createElement({
 			tag : 'div',
-			customClass : 'TextInputWidget',
+			className : 'TextInputWidget',
 			appendTo : options.appendTo || document.body
 		}),
 		
@@ -30,8 +30,8 @@ define(['util'], function(util) {
 		
 		self = this
 
-		if ( typeof options.customClass == 'string' ) {
-			util.addClass(textInput, options.customClass)
+		if ( typeof options.className == 'string' ) {
+			util.addClass(textInput, options.className)
 		}
 		
 		if ( options.placeholder ) {

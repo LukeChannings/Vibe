@@ -10,7 +10,7 @@ define(['util'], function(util) {
 		var legend = this.legend = util.createElement({
 			tag : 'ol',
 			appendTo : appendTo,
-			customClass : 'legend'
+			className : 'legend'
 		})
 	
 		var columns = this.columns = {};

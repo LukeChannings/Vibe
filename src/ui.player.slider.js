@@ -22,39 +22,39 @@ define(function(require) {
 			'appendTo' : options.appendTo || document.body,
 			'children' : [{
 				'tag' : 'li',
-				'customClass' : 'current_time'},{
+				'className' : 'current_time'},{
 				'tag' : 'li',
-				'customClass' : 'slider'},{
+				'className' : 'slider'},{
 				'tag' : 'li',
-				'customClass' : 'total_time'
+				'className' : 'total_time'
 			}]
 		}),
 	
 		// contains the slider. (handle, progress and buffer.)
 		slider = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'dragdealer',
+			'className' : 'dragdealer',
 			'appendTo' : node.getElementsByTagName('li')[1]
 		}),
 	
 		// handle for seeking.
 		handle = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'handle',
+			'className' : 'handle',
 			'appendTo' : slider
 		}),
 	
 		// shows the playing progress.
 		progress = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'progress',
+			'className' : 'progress',
 			'appendTo' : slider
 		}),
 		
 		// shows the amount of the track that has buffered.
 		buffer = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'buffer',
+			'className' : 'buffer',
 			'appendTo' : slider
 		}),
 	

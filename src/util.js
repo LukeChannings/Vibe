@@ -89,9 +89,9 @@ define({
 		}
 		
 		// set a class.
-		if ( definition.customClass ) {
+		if ( definition.className ) {
 		
-			node.setAttribute('class', definition.customClass)
+			node.setAttribute('class', definition.className)
 		}
 		
 		// check for attributes.
@@ -221,8 +221,7 @@ define({
 	// @param node {HTMLElement} object reference for the node.
 	removeNode : function(node) {
 	
-		if ( node instanceof Element ) {
-		
+		try {
 			if ( 'removeNode' in node ) {
 				node.removeNode(true)
 				
@@ -230,6 +229,9 @@ define({
 			
 				node.parentNode.removeChild(node)
 			}
+		} catch (ex) {
+		
+			throw ex
 		}
 	},
 	
@@ -528,44 +530,7 @@ define({
 		
 		return result
 	},
-	
-	// doubleClick
-	// handles simultaneous click events allowing for separate functions
-	// to be used for a single click and a double click. Standard timeout 
-	// is 170ms, otherwise the timeout can be set in settings using the 
-	// 'clickTimeout' key.
-	doubleClick : function(element,click,doubleClick, clickTimeoutDuration) {
-	
-		this.addListener(element,'click',function(e) {
-		
-			var target = e.target || e.srcElement
-		
-			if ( typeof doubleClick.clickTimeout == 'undefined' ) {
-			
-				doubleClick.clickTimeout = setTimeout(function() {
-				
-					doubleClick.clickTimeout = undefined
-					
-					if ( typeof click == 'function' ) {
-						click(target)
-					}
-				
-				}, clickTimeoutDuration || 170)
-			}
-			
-			else {
-	
-				clearTimeout(doubleClick.clickTimeout)
-				
-				doubleClick.clickTimeout = undefined
-				
-				doubleClick(target)
-			}
-		
-		});
-	
-	},
-	
+
 	// replaces & < > £ characters with HTML entities.
 	htmlEntities : function(string) {
 
@@ -664,15 +629,17 @@ define({
 	// returns the index of a given node.
 	indexOfNode : function(node) {
 	
-		var list = node.parentNode
-		
-		for ( var i = 0; i < list.childNodes.length; i += 1 ) {
-		
-			if ( node == list.childNodes[i] ) {
+		if ( node ) {
+			var list = node.parentNode
 			
-				return i
+			for ( var i = 0; i < list.childNodes.length; i += 1 ) {
+			
+				if ( node == list.childNodes[i] ) {
 				
-				break
+					return i
+					
+					break
+				}
 			}
 		}
 	},
@@ -701,6 +668,55 @@ define({
 	isArray : Array.prototype.isArray || function(value) {
 	
 		return Object.prototype.toString.call(value) === '[object Array]'
+	},
+	
+	// translates an array's properties into a new position.
+	// @param array {Array} the array to mutate.
+	// @param indexes {Array} a list of indexes within the array to translate.
+	// @param position {Number} the index to translate the indexes to.
+	// @param reverse {Boolean} if true the order of items will be in reverse order.
+	translateObjectProperties : function(array, indexes, position, reverse) {
+	
+		for ( var i = 0; i < indexes.length; i += 1 ) {
+		
+			array.splice(
+				reverse ? position : position + i,
+				0,
+				array.splice(indexes[i], 1)[0]
+			)
+		}
+	},
+	
+	// translates a node's children into a new configuration.
+	// @param parentNode {HTMLOLElement} an ordered list.
+	// @param group {Array} a list of indexes or Elements within the list to translate.
+	// @param reference {Element|Number} the html element or index of an element to be used as an insertion reference.
+	translateNodePositions : function(parentNode, group, reference) {
+	
+		if ( typeof reference == 'number' ) {
+			reference = parentNode.childNodes[reference]
+		}
+	
+		// turn a list of indexes into a list
+		// of nodes. If this is not done the
+		// position of the items in the list
+		// will be inaccurate.
+		group = group.map(function(item) {
+		
+			if ( typeof item == 'number' ) {
+				return parentNode.childNodes[item]
+			} else {
+				return item
+			}
+		})
+	
+		for ( var i = 0; i < group.length; i += 1 ) {
+		
+			parentNode.insertBefore(
+				group[i],
+				reference
+			)
+		}
 	},
 	
 	// browser tests

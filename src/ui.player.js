@@ -53,7 +53,7 @@ define(function(require) {
 
 			var container = util.createElement({
 				tag : 'div',
-				customClass : 'container',
+				className : 'container',
 				appendTo : node
 			})
 

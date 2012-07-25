@@ -83,7 +83,7 @@ define(['util'], function(util) {
 		if ( isValidMDD(MDD) ) {
 		
 			// create the dialogue element.
-			var dialogue = this.dialogue = util.createElement({'tag' : 'div', 'id' : MDD.customId || 'ModalDialogue', 'customClass' : 'visible'})
+			var dialogue = this.dialogue = util.createElement({'tag' : 'div', 'id' : MDD.customId || 'ModalDialogue', 'className' : 'visible'})
 			
 			// check if this is an error dialogue
 			if ( MDD.errorDialogue == true ) {
@@ -114,8 +114,8 @@ define(['util'], function(util) {
 			}
 			
 			// append any custom classes.
-			if ( MDD.customClass ) {
-				util.addClass(dialogue, MDD.customClass)
+			if ( MDD.className ) {
+				util.addClass(dialogue, MDD.className)
 			}
 			
 			// return the constructed element.
@@ -353,7 +353,7 @@ define(['util'], function(util) {
 	dialogueFromMDD.prototype.createButtons = function( buttons, buttonContainer ) {
 	
 		// create a container for the buttons.
-		var buttonContainer = ( ( buttonContainer instanceof Element ) ) ? buttonContainer :  util.createElement({'tag' : 'div', 'customClass' : 'buttons', 'appendTo' : this.dialogue})
+		var buttonContainer = ( ( buttonContainer instanceof Element ) ) ? buttonContainer :  util.createElement({'tag' : 'div', 'className' : 'buttons', 'appendTo' : this.dialogue})
 	
 		// iterate the buttons.
 		for ( var i in buttons ) {
@@ -584,11 +584,11 @@ define(['util'], function(util) {
 			index = 0, // index of the current view.
 			self = this
 
-		dialogue = util.createElement({'tag' : 'div', 'id' : 'ModalDialogue', 'customClass' : 'sidebar'})
+		dialogue = util.createElement({'tag' : 'div', 'id' : 'ModalDialogue', 'className' : 'sidebar'})
 
-		navigation = util.createElement({'tag' : 'div', 'customClass' : 'navigation', 'appendTo' : dialogue})
+		navigation = util.createElement({'tag' : 'div', 'className' : 'navigation', 'appendTo' : dialogue})
 		
-		viewContainer = util.createElement({'tag' : 'div', 'customClass' : 'views', 'appendTo' : dialogue})
+		viewContainer = util.createElement({'tag' : 'div', 'className' : 'views', 'appendTo' : dialogue})
 		
 		if ( typeof MVD.title == 'string' ) title = util.createElement({'tag' : 'h1', 'inner' : MVD.title, 'appendTo' : navigation})
 
@@ -598,7 +598,7 @@ define(['util'], function(util) {
 		if ( typeof MVD.buttons == 'object') {
 		
 			// create a button container element.
-			buttonContainer = util.createElement({'tag' : 'div', 'customClass' : 'buttons', 'appendTo' : viewContainer})
+			buttonContainer = util.createElement({'tag' : 'div', 'className' : 'buttons', 'appendTo' : viewContainer})
 		
 			// hijack the createButtons method used in creating a dialogue.
 			dialogueFromMDD.prototype.createButtons(MVD.buttons, buttonContainer)
@@ -622,7 +622,7 @@ define(['util'], function(util) {
 					MDD.customId = 'ModalView' + (i + 1)
 				
 					// add the view class.
-					MDD.customClass = 'view'
+					MDD.className = 'view'
 				
 					// construct the dialogue.
 					views.push(new dialogueFromMDD(MDD))

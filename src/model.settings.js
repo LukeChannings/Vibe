@@ -7,14 +7,14 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 	
 		var self = this,
 	
-			// settings object.
-			settings = this.settings = {},
+		// settings object.
+		settings = this.settings = {},
 	
-			// persistant storage instance.
-			persistence = new Persistence('vibeSettings'),
+		// persistant storage instance.
+		persistence = new Persistence('vibeSettings'),
 			
-			// reference to this.
-			self = this
+		// reference to this.
+		self = this
 	
 		/**
 		 * reads the contents of settings.json into the settings object.
@@ -59,10 +59,9 @@ define(['util', 'model.persistence'], function( util, Persistence ) {
 				// delete the key.
 				delete settings[key]
 			
-				// write the change to settings.json.
+				// write the change to persistence.
 				writeSettings()
-			}
-			else {
+			} else {
 				// if there is no key then log it.
 				console.error("Unable to unset '" + key + "' as it does not exist.")
 			}

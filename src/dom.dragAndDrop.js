@@ -29,6 +29,8 @@ define(['util'], function(util) {
 			
 				if ( typeof data == 'object' ) {
 					data = JSON.stringify(data)
+				} else if ( typeof data == 'undefined' ) {
+					data = ""
 				} else {
 					data = data.toString()
 				}
@@ -36,6 +38,8 @@ define(['util'], function(util) {
 				e.dataTransfer.setData('Text', data)
 			
 				e.dataTransfer.dropEffect = 'copy'
+				
+				e.stopPropagation && e.stopPropagation()
 			})
 		}
 		
@@ -44,9 +48,9 @@ define(['util'], function(util) {
 		
 			if ( !e.shiftKey && !e.ctrlKey && !e.metaKey ) {
 			
-				if ( e.preventDefault ) {
-					e.preventDefault()
-				}
+				e.preventDefault && e.preventDefault()
+			
+				e.stopPropagation && e.stopPropagation()
 			
 				e.srcElement && e.srcElement.dragDrop && e.srcElement.dragDrop()
 			}
@@ -83,9 +87,9 @@ define(['util'], function(util) {
 		
 			e.dataTransfer.effectAllowed = 'all'
 			
-			if ( e.preventDefault ) {
-				e.preventDefault()
-			}
+			e.preventDefault && e.preventDefault()
+			
+			e.stopPropagation && e.stopPropagation()
 			
 			if ( typeof options.whileentered == 'function' ) {
 				options.whileentered(target, e)
@@ -101,6 +105,8 @@ define(['util'], function(util) {
 			if ( typeof options.enter == 'function' ) {
 				options.enter(target, e)
 			}
+		
+			e.stopPropagation && e.stopPropagation()
 		
 			return false
 		})
@@ -118,6 +124,8 @@ define(['util'], function(util) {
 			if ( typeof options.leave == 'function' ) {
 				options.leave(target, e)
 			}
+		
+			e.stopPropagation && e.stopPropagation()
 		
 			return false
 		})
@@ -154,10 +162,6 @@ define(['util'], function(util) {
 			
 			if ( options.dropZone ) {
 				window.dropZone = undefined
-			}
-
-			if ( e.preventDefault ) {
-				e.preventDefault()
 			}
 		})
 	}

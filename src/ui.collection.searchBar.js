@@ -18,7 +18,7 @@ define(function(require) {
 		// create the search bar element.
 		element = this.node = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'search',
+			'className' : 'search',
 			'appendTo' : options.appendTo
 		}),
 
@@ -26,7 +26,7 @@ define(function(require) {
 		input = new TextInput({
 			appendTo : element,
 			placeholder : 'Search the collection.',
-			customClass : 'UIWidgetSearchInput search',
+			className : 'UIWidgetSearchInput search',
 			oninput : function(query, key) {
 			
 				self.input(query, key)

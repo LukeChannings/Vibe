@@ -7,7 +7,7 @@ define(function(require) {
 	// variables to contain the indicator node
 	// and the position of the indicator in the list
 	// item for use in the moveTo function.
-	var dropIndicator, dropRegion
+	var dropIndicator, dropRegion, dropTarget
 
 	// fetch the stylesheet for this module.
 	util.registerStylesheet('stylesheets/ui.widget.rearrangeableList.css')
@@ -25,17 +25,25 @@ define(function(require) {
 			className : 'UIRearrangeableListWidget',
 			appendTo : (options.appendTo instanceof Element) ? options.appendTo : document.body
 		})
+
+		if ( options.onremove ) {
+			this.onremove = options.onremove
+		}
 		
+		if ( options.onbeforeremove ) {
+			this.onbeforeremove = options.onbeforeremove
+		}
+		
+		if ( options.onaftereremove ) {
+			this.onaftereremove = options.onaftereremove
+		}
+
 		if ( options.onbeforemove ) {
 			this.onbeforemove = options.onbeforemove
 		}
 		
 		if ( options.onaftermove ) {
 			this.onaftermove = options.onaftermove
-		}
-		
-		if ( options.onremove ) {
-			this.onremove = options.onremove
 		}
 		
 		// list of selected nodes.
@@ -84,7 +92,7 @@ define(function(require) {
 				},
 				drop : function(target, e, index) {
 				
-					self.dragDrop.call(self, item, index)
+					self.dragDrop.call(self, e, item, index)
 				}
 			})
 		
@@ -115,13 +123,25 @@ define(function(require) {
 	
 		if ( util.isArray(group) && /^\d+$/.test(group.join('')) ) {
 		
-			group = group.sort(function(a,b) { return a + b })
+			group = group.sort(function(a,b) {
+				return a + b
+			})
+		
+			if ( this.onbeforeremove ) {
+				this.onbeforeremove()
+			}
 		
 			for ( var i = 0; i < group.length; i += 1 ) {
 			
-				this.onnoderemoved(i)
+				if ( this.onremove ) {
+					this.onremove(group[i])
+				}
 			
 				util.removeNode(this.node.childNodes[group[i]])
+			}
+			
+			if ( this.onafterremove ) {
+				this.onafterremove()
 			}
 		}
 	}
@@ -132,11 +152,23 @@ define(function(require) {
 	 */
 	RearrangeableList.prototype.removeNodes = function(group) {
 	
+		if ( this.onbeforeremove ) {
+			this.onbeforeremove()
+		}
+	
 		for ( var i = 0; i < group.length; i += 1 ) {
 		
-			this.onnoderemoved(Array.prototype.indexOf.call(this.node.childNodes, group[i]))
-		
+			if ( this.onremove ) {
+				this.onremove(
+					Array.prototype.indexOf.call(this.node.childNodes, group[i])
+				)
+			}
+			
 			util.removeNode(group[i])
+		}
+		
+		if ( this.onafterremove ) {
+			this.onafterremove()
 		}
 	}
 
@@ -150,22 +182,34 @@ define(function(require) {
 	 * @param item {Element} the item to move the selected node to.
 	 * @param index {number} index of the selected node.
 	 */
-	RearrangeableList.prototype.dragDrop = function(item, index) {
+	RearrangeableList.prototype.dragDrop = function(e, item, index) {
 	
 		if ( window.dropZone == 'rearrangeablelist' ) {
 		
+			// an array of items to be moved.
 			var group,
-				draggedNode = this.node.childNodes[index]
+			
+			// a reference to the node that was dropped onto the item.
+			draggedNode = this.node.childNodes[index]
 			
 			if ( util.hasClass(draggedNode, 'selected') ) {
 			
+				// if the draggedNode was selected then
+				// it's likely that other items were also
+				// selected, so make the group equal all
+				// nodes that are selected.
 				group = this.selectedNodes
 			} else {
 			
+				// if the draggedNode is not selected, then
+				// create a list with only the draggedNode.
 				group = [draggedNode]
 			}
 			
-			moveTo.call(
+			// translate the positions of the selected
+			// items into their new position before or
+			// after the item they were dropped on.
+			translateNodes.call(
 				this,
 				group,
 				item,
@@ -173,6 +217,11 @@ define(function(require) {
 			)
 			
 			dropRegion = undefined
+		
+		} else if ( window.dropZone == 'collection_playlist' ){
+		
+			// set the drop target on the event for the collection drop listener.
+			e.dropTarget = ( dropRegion == 'bottom' ) ? item.nextSibling : item
 		}
 		
 		if ( dropIndicator ) {
@@ -222,60 +271,42 @@ define(function(require) {
 	/**
 	 * moves a node or a series of nodes to before or after a given node.
 	 * @param group {array} list of nodes to be moved.
-	 * @param moveTo {Element} node to be used as an insertion reference.
+	 * @param reference {Element} node to be used as an insertion reference.
 	 * @param direction {string} top or bottom, to insert above or below the reference node.
 	 */
-	function moveTo(group, moveTo, direction) {
+	function translateNodes(group, reference, direction) {
 	
-		if ( direction == 'bottom' ) {
-	
-			for ( var i = group.length - 1; i >= 0; i-- ) {
-			
-				if ( this.onbeforemove ) {
-					this.onbeforemove(
-						util.indexOfNode(group[i]),
-						util.indexOfNode(moveTo),
-						'after'
-					)
-				}
-			
-				this.node.insertBefore(
-					group[i],
-					moveTo.nextSibling
-				)
-				
-				if ( this.onaftermove ) {
-					this.onaftermove(
-						util.indexOfNode(group[i]),
-						util.indexOfNode(moveTo),
-						'after'
-					)
-				}
+		// turn the list of nodes into a list of indexes
+		// that is sorted by value.
+		group = util.map(group, function(item) {
+			return util.indexOfNode(item)
+		}).sort(function(a, b) {
+			if ( a > b ) {
+				return 1
+			} else {
+				return -1
 			}
-		} else {
+		})
 		
-			for ( var i = 0; i < group.length; i += 1 ) {
-				
-				if ( this.onbeforemove ) {
-					this.onbeforemove(
-						util.indexOfNode(group[i]),
-						util.indexOfNode(moveTo)
-					)
-				}
-				
-				this.node.insertBefore(
-					group[i],
-					moveTo,
-					'before'
-				)
-				
-				if ( this.onaftermove ) {
-					this.onaftermove(
-						util.indexOfNode(group[i]),
-						util.indexOfNode(moveTo)
-					)
-				}
-			}
+		if ( direction == 'bottom' ) {
+			reference = reference.nextSibling
+		}
+		
+		if ( this.onbeforemove ) {
+			this.onbeforemove(
+				group,
+				util.indexOfNode(reference)
+			)
+		}
+		
+		util.translateNodePositions(
+			this.node,
+			group,
+			reference
+		)
+		
+		if ( this.onaftermove ) {
+			this.onaftermove()
 		}
 	}
 
@@ -349,14 +380,12 @@ define(function(require) {
 					clearSelectedItems.call(self)
 				}
 			
-				if ( !util.hasClass(node, 'selected') ) {
+				if ( ! util.hasClass(node, 'selected') ) {
 				
 					self.selectedNodes.push(node)
 					
 					util.addClass(node, 'selected')
-				}
-				
-				else if ( util.hasClass(node, 'selected') && (e.metaKey || e.ctrlKey) ) {
+				} else if ( util.hasClass(node, 'selected') && (e.metaKey || e.ctrlKey) ) {
 				
 					util.removeClass(node, 'selected')
 					

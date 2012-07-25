@@ -12,16 +12,19 @@ define(function(require) {
 		Playlist = require('ui.playlist'),
 		PlaylistModel = require('model.playlist'),
 		Player = require('ui.player'),
-		PlayerModel = require('model.player')
+		PlayerModel = require('model.player'),
+		ContextMenuModel = require('model.contextMenu'),
+		ContextMenu = require('ui.widget.contextMenu'),
 	
 	// interfaces.
-	var collection,
-		playlist,
-		player,
+	collection,
+	playlist,
+	player,
 	
 	// data models.
 	playlistModel,
 	playerModel,
+	contextMenuModel = new ContextMenuModel(),
 	
 	// the root element.
 	vibe = document.getElementById('Vibe'),
@@ -42,12 +45,51 @@ define(function(require) {
 	stage = {
 		collection : function (callback) {
 
+			contextMenuModel.addContext(
+				"ui.collection",
+				[{
+					title : "Add to playlist",
+					
+					callback : function(item) {
+					
+						playlistModel.add(
+							item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0],
+							item.getAttribute('data-id')
+						)
+					}
+				},{
+					title : "Play next",
+					
+					// only show this context item if this function returns true.
+					optional : function() {
+						return playerModel.isPlaying || playerModel.isPaused
+					},
+					
+					callback : function(item) {
+					
+						playlistModel.add(
+							item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0],
+							item.getAttribute('data-id'),
+							playlistModel.ui.playingNode.nextSibling
+						)
+					}
+				}]
+			)
+
 			new Collection({
 				withApi : api,
 
-				onitemselect : function(item) {
+				onitemselect : function(item, insertAfter) {
 				
-					playlistModel.add(item.type, item.id)
+					playlistModel.add(item.type, item.id, insertAfter)
+				},
+				
+				oncontextmenu : function(item, e) {
+				
+					ContextMenu(
+						e,
+						contextMenuModel.getContext('ui.collection')
+					)
 				},
 				
 				ondatadrop : function() {
@@ -70,32 +112,51 @@ define(function(require) {
 		
 		playlist : function(callback) {
 		
+			contextMenuModel.addContext(
+				"ui.playlist",
+				[{
+					title : "Remove from Playlist",
+					callback : function(target) {
+					
+						var row = target.parentNode.parentNode
+					
+						if ( util.hasClass(row, "selected") ) {
+						
+							playlistModel.remove(playlist.list.selectedNodes)
+						} else {
+						
+							playlistModel.remove([row])
+						}
+					}
+				}]
+			)
+		
 			// configure the playlist.
 			new Playlist({
 				withControlBarButtons : [{
 					isIcon : true,
-					customClass : 'undo',
+					className : 'undo',
 					titleText : "Undo",
 					callback : function() {
 						playlistModel.undo()
 					}
 				},{
 					isIcon : true,
-					customClass : 'redo',
+					className : 'redo',
 					titleText : "Next",
 					callback : function() {
 						playlistModel.redo()
 					} 
 				},{
 					isIcon : true,
-					customClass : 'clear',
+					className : 'clear',
 					titleText : "Clear",
 					callback : function() {
 						playlistModel.clear()
 					}
 				},{
 					isIcon : true,
-					customClass : 'settings',
+					className : 'settings',
 					titleText : "Settings",
 					floatRight : true,
 					callback : function () {
@@ -121,6 +182,13 @@ define(function(require) {
 						
 						playlistModel.updateButtons()
 					}
+				},
+				oncontextmenu : function(item, e) {
+				
+					ContextMenu(
+						e,
+						contextMenuModel.getContext("ui.playlist")
+					)
 				},
 				onload : function(PlaylistInstance) {
 				
@@ -187,6 +255,8 @@ define(function(require) {
 		
 			// set self to the root Vibe object.
 			self = this
+		
+			self.contextMenu = contextMenuModel
 		
 			// initialiser is called in the context of 
 			// the vibe object, and as such has access

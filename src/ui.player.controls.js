@@ -19,17 +19,17 @@ define(function(require) {
 			'appendTo' : node,
 			'buttons' : [{
 				isIcon : true,
-				customClass : 'prev',
+				className : 'prev',
 				titleText : "Previous Track",
 				callback : options.onprevious
 			},{
 				isIcon : true,
-				customClass : 'play_pause',
+				className : 'play_pause',
 				titleText : "Play or Pause Track",
 				callback : options.onplaytoggle
 			},{
 				isIcon : true,
-				customClass : 'next',
+				className : 'next',
 				titleText : "Next Track",
 				callback : options.onnext
 			}]

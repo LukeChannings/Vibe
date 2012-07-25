@@ -9,7 +9,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 	 */
 	var ModelPlaylist = function(options) {
 	
-		if ( !util.hasProperties(options, ['withApi', 'withUI']) ) {
+		if ( ! util.hasProperties(options, ['withApi', 'withUI']) ) {
 			throw new Error("The playlist model was not properly configured.")
 		}
 
@@ -131,13 +131,13 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 	 * add an item to the Playlist model.
 	 * @param type (string) - the type of item to be added. (e.g. genre, artist, album, etc.)
 	 * @param id (string) - the unique identifier for the item. (Usually an MD5 hash.)
+	 * @param insertAfter {Element} the node to insert after.
 	 * @param callback (function) - call the function when done.
 	 */
-	ModelPlaylist.prototype.add = function(type, id, callback) {
+	ModelPlaylist.prototype.add = function(type, id, insertAfter, callback) {
 	
 		var self = this,
-			index = window.dropIndex,
-			insertAfter = this.ui.list.node.childNodes[index]
+			index = insertAfter ? util.indexOfNode(insertAfter) : undefined
 	
 		getItems.call(this, type, id, function(items) {
 
@@ -149,8 +149,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 				
 				items.splice(0,2)
 				
-			}
-			else {
+			} else {
 			
 				self.model.push.apply(self.model, items)
 			}
@@ -161,6 +160,19 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 				callback()
 			}
 		})
+	}
+	
+	/**
+	 * removes an item or a group of items from the playlist.
+	 * 
+	 */
+	ModelPlaylist.prototype.remove = function(items) {
+	
+		var indexes = util.map(items, function(item) {
+			return util.indexOfNode(item)
+		})
+	
+		this.ui.list.removeNodesByIndex(indexes)
 	}
 	
 	/**

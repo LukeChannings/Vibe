@@ -9,7 +9,7 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 	
 		this.versions = [[]], // initialise the version to a blank array.
 		this.currentVersion = 0 // initially point to the blank version.
-		this.store = {}
+		this.store = {} // object to keep the data.
 		this.persistence = false // persistence is off by default.
 
 		var self = this, // alias the instance.
@@ -134,10 +134,20 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 				this.splice(0, this.length)
 			}
 		}
-	
+		
+		array.beginTransaction = function() {
+		
+			self.newVersion()
+			
+			self.transactionInProgress = true
+		}
+		
+		array.endTransaction = function() {
+			self.transactionInProgress = false
+		}
+		
 		// return the array.
 		return array
-	
 	}
 	
 	/**
@@ -187,7 +197,7 @@ define(['util', 'lib/md5', 'model.persistence'], function(util, MD5, Persistence
 			this.versions.splice(this.currentVersion + 1)
 		}
 	
-		if ( ! this.anonymousMutation ) {
+		if ( ! this.transactionInProgress ) {
 			// create a new version.
 			this.newVersion()
 		}

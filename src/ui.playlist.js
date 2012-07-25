@@ -15,7 +15,6 @@ define(function(require) {
 	//
 	// creates an instance of Playlist.
 	// @param options {object} an object for configuring the instance.
-	//
 	var Playlist = function (options) {
 	
 		var options = this.options = (typeof options == 'object') ? options : {},
@@ -44,50 +43,66 @@ define(function(require) {
 			
 			var listContainer = self.listContainer = util.createElement({
 				'tag' : 'div',
-				'customClass' : 'listContainer',
+				'className' : 'listContainer',
 				'appendTo' : node
 			})
 			
 			var list = self.list = new RearrangeableList({
 				appendTo : listContainer,
-				onbeforemove : playlistItemWillMove,
-				onaftermove : playlistItemDidMove,
-				onremove : playlistItemWasRemoved
+				onbeforemove : playlistItemsWillMove,
+				onaftermove : playlistItemsDidMove,
+				onremove : playlistItemWasRemoved,
+				onbeforeremove : function() {
+				
+					self._super.playlistModel.model.beginTransaction()
+				},
+				onafterremove : function() {
+				
+					self._super.playlistModel.model.endTransaction()
+				}
 			})
 			
 			// make an info bar instance.
 			self.infoBar = new PlaylistInfoBar(self.node)
 			
-			function playlistItemWillMove(from, to, insertDirection) {
+			function playlistItemsWillMove(group, reference) {
 
 				var model = self._super.playlistModel.model
 
-				model.anonymousMutation = true
+				model.beginTransaction()
 
-				if ( insertDirection == 'before' ) {
+				util.translateObjectProperties(
+					model,
+					group,
+					reference
+				)
 				
-					model.splice(to - 1, 0, model.splice(from, 1)[0])
-				} else {
-				
-					model.splice(to, 0, model.splice(from, 1)[0])
-				}
-				
-				delete model.anonymousMutation
+				model.endTransaction()
 			}
 			
-			function playlistItemDidMove() {
+			function playlistItemsDidMove() {
 			
+				var playlistModel = self._super.playlistModel
+			
+				// update the playlist index to point to the new
+				// index of the playing item.
 				if ( self.playingNode ) {
 				
-					self._super.playlistModel.index = util.indexOfNode(
-						self.playingNode
-					)
+					playlistModel.index = util.indexOfNode(self.playingNode)
 				}
 			}
 			
-			function playlistItemWasRemoved() {
+			function playlistItemWasRemoved(index) {
 			
-				console.log("An item was removed.")
+				var playlistModel = self._super.playlistModel
+			
+				playlistModel.model.splice(index, 1)
+			
+				// if the playing item is removed, set the index to the beginning of the playlist.
+				if ( index == playlistModel.index ) {
+					playlistModel.index = 0
+					self._super.playlist.playingNode = undefined
+				} 
 			}
 
 			if ( self.options.onload ) {
@@ -104,6 +119,19 @@ define(function(require) {
 				
 				return {
 					height : height
+				}
+			})
+			
+			// context menu listener.
+			util.addListener(list.node, 'contextmenu', function(e) {
+			
+				var target = e.target || e.srcElement
+				
+				if ( target.parentNode.parentNode.parentNode == list.node ) {
+				
+					if ( self.options.oncontextmenu ) {
+						self.options.oncontextmenu(target, e)
+					}
 				}
 			})
 		})

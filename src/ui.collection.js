@@ -83,7 +83,7 @@ define(function(require) {
 			// create the collection tree list.
 			self.listContainer = util.createElement({
 				tag : 'div',
-				customClass : 'listContainer',
+				className : 'listContainer',
 				appendTo : self.node
 			})
 			
@@ -106,6 +106,18 @@ define(function(require) {
 				options.onload(self)
 			}
 			
+			
+			util.addListener(self.listContainer, 'contextmenu', function(e) {
+			
+				var target = e.target || e.srcElement
+			
+				if ( typeof options.oncontextmenu == 'function' ) {
+				
+					options.oncontextmenu(target, e)
+				}
+			})
+			
+			// resize the collection to the height of the window.
 			new Dynamic(node, function() {
 			
 				var windowHeight = window.innerHeight,
@@ -172,7 +184,7 @@ define(function(require) {
 				appendTo : self.listContainer,
 				isRootNode : true,
 				isRootListener : true,
-				customClass : type,
+				className : type,
 				setAttributes : []
 			}
 			
@@ -253,7 +265,7 @@ define(function(require) {
 				'type' : type
 			}
 		}
-
+		
 		DnD.droppable({
 			node : this.dropTarget,
 			zoneClass : 'draghighlight',
@@ -263,7 +275,7 @@ define(function(require) {
 			
 				if ( typeof data == 'object' ) {
 				
-					self.onitemselect(data)
+					self.onitemselect(data, e.dropTarget)
 				
 				} else {
 				
@@ -306,7 +318,7 @@ define(function(require) {
 			children : [{
 				tag : 'span'
 			}],
-			customClass : 'statusBar',
+			className : 'statusBar',
 			appendTo : this.node
 		})
 	
@@ -344,11 +356,11 @@ define(function(require) {
 		
 			var options = {
 				'appendTo' : item,
-				'customClass' : this.api.getSubtype(type),
+				'className' : this.api.getSubtype(type),
 				'setAttributes' : []
 			}
 		
-			if ( options.customClass == 'track' ) {
+			if ( options.className == 'track' ) {
 				options.isFinalNode = true
 			}
 		

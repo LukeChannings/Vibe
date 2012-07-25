@@ -9,7 +9,7 @@ define(['util'], function(util) {
 		// create the info bar.
 		var node = this.node = util.createElement({
 			tag : 'div',
-			customClass : 'infoBar',
+			className : 'infoBar',
 			appendTo : appendTo
 		})
 	}

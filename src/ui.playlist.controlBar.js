@@ -8,7 +8,7 @@ define(['util', 'ui.widget.buttonBar'], function(util, UIButtonBarWidget) {
 		
 		var node = util.createElement({
 			'tag' : 'div',
-			'customClass' : 'controlBar',
+			'className' : 'controlBar',
 			'appendTo' : this.header
 		})
 		
