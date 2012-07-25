@@ -49,7 +49,7 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Opera 12+
 
 
-#Roadmap
+#Changelog:
 
 ##v0.1:
 - Webkit Notifications
@@ -64,6 +64,8 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Update play/pause favicon status.
 - Fix playlist bugs.
 - Misc optimisations
+
+#Roadmap:
 
 ##v0.2:
 - Search
