@@ -65,11 +65,6 @@ void function() {
 			dependencies.push("compatibility.ie8")
 		}
 
-		// iPad drag and drop support.
-		if ( /iPad/i.test(navigator.userAgent) ) {
-			dependencies.push("lib/ios-drag-drop.js")
-		}
-	
 		require(dependencies, function(interfaceInitialiser, modalDialogue, SettingsAssistant, Notifications) {
 		
 			throbber = util.createElement({
