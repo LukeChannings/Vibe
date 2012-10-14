@@ -295,11 +295,16 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 	 */
 	Player.prototype.setVolume = function(n) {
 	
-		this.volume = n
+		if ( n >= 0 && n <= 100 ) {
+
+			this.volume = n
 	
-		this.settings.set('volume', n)
-	
-		currentSound && currentSound.setVolume(n)
+			this.settings.set('volume', n)
+		
+			currentSound && currentSound.setVolume(n)
+
+			this.playerInterface.playerVolumeControl.dragdealer.setValue(n / 100)
+		}
 	}
 	
 	/**

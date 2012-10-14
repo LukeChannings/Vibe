@@ -56,13 +56,18 @@ void function() {
 		]
 	
 		// webkit notifications.
-		if ( /Webkit/i.test(navigator.userAgent) ) {
+		if ( window.webkitNotifications ) {
 			dependencies.push("api.webkitNotifications")
 		}
 	
 		// compatibility for IE8.
 		if ( util.browser.isIE8 ) {
 			dependencies.push("compatibility.ie8")
+		}
+
+		// iPad drag and drop support.
+		if ( /iPad/i.test(navigator.userAgent) ) {
+			dependencies.push("lib/ios-drag-drop.js")
 		}
 	
 		require(dependencies, function(interfaceInitialiser, modalDialogue, SettingsAssistant, Notifications) {
@@ -151,19 +156,26 @@ void function() {
 				if ( settings.get('debug') ) {
 				
 					window.vibe = self
-				}
-				
-				// expose an interface for adding context menu
-				// items and settings panes.
-				window.vibePluginInterface = {
-					contextMenu : {
-						addContext : self.contextMenu.addContext,
-						addContextItem : self.contextMenu.addContextItem,
-						getContext : self.contextMenu.getContext
-					},
-					settings : {
-						registerDialogue : self.settingsAssistant.registerDialogue,
-						presentDialogue : self.settingsAssistant.presentDialogue
+				} else {
+
+					// expose an interface for plugins.
+					window.vibe = {
+
+						// methods for adding custom context menus.
+						contextMenu : {
+							addContext : self.contextMenu.addContext,
+							addContextItem : self.contextMenu.addContextItem,
+							getContext : self.contextMenu.getContext
+						},
+
+						// methods for adding custom settings panes.
+						settingsAssistant : {
+							registerDialogue : self.settingsAssistant.registerDialogue,
+							presentDialogue : self.settingsAssistant.presentDialogue
+						},
+
+						// methods for adding custom keyboard shortcuts.
+						keyboardShortcutManager : self.keyboardShortcutManager
 					}
 				}
 			

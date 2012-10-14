@@ -36,6 +36,21 @@ define({
 		return arr
 	},
 
+	// map an object.
+	// @param obj {Object} the object to map.
+	// @param callback {Function} the function to be called for each property.
+	mapObject : function(obj, callback) {
+
+		var arr = []
+
+		for ( var i in obj ) {
+
+			arr.push(callback(i, obj[i]))
+		}
+
+		return arr
+	},
+
 	// set attributes on a DOM node.
 	// @param node {HTMLElement} the node on which to add the attributes.
 	// @param attributes {object|Array} the object that defines the attributes.

@@ -56,7 +56,7 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Scaleable Layout
 - Rearrangeable Playlist
 
-###v0.1.1 (current):
+###v0.1.1:
 - Fix Playing Info bug (#11)
 - Fix Opera Drag and Drop (#12)
 - Add context menus to Playlist and Collection
@@ -64,6 +64,10 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - Update play/pause favicon status.
 - Fix playlist bugs.
 - Misc optimisations
+
+###v0.1.2 (current):
+- Keyboard shortcuts
+- Standardised object model for plugins.
 
 #Roadmap:
 

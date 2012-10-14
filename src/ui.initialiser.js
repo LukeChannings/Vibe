@@ -6,25 +6,30 @@
 */
 define(function(require) {
 	
+	var
+
 	// dependencies.
-	var util = require('util'),
-		Collection = require('ui.collection'),
-		Playlist = require('ui.playlist'),
-		PlaylistModel = require('model.playlist'),
-		Player = require('ui.player'),
-		PlayerModel = require('model.player'),
-		ContextMenuModel = require('model.contextMenu'),
-		ContextMenu = require('ui.widget.contextMenu'),
+	util = require('util'),
+	Collection = require('ui.collection'),
+	Playlist = require('ui.playlist'),
+	PlaylistModel = require('model.playlist'),
+	Player = require('ui.player'),
+	PlayerModel = require('model.player'),
+	ContextMenuModel = require('model.contextMenu'),
+	ContextMenu = require('ui.widget.contextMenu'),
+	KeyboardShortcutManager = require('model.keyboardShortcutManager'),
 	
 	// interfaces.
-	collection,
-	playlist,
-	player,
+	collection = null,
+	playlist = null,
+	player = null,
 	
 	// data models.
-	playlistModel,
-	playerModel,
+	playlistModel = null,
+	playerModel = null,
 	contextMenuModel = new ContextMenuModel(),
+	keyboardShortcutManager = null,
+	keyboardShortcuts = require('settings.keyboardShortcuts'),
 	
 	// the root element.
 	vibe = document.getElementById('Vibe'),
@@ -43,6 +48,8 @@ define(function(require) {
 	
 	// initialisation stages.
 	stage = {
+
+		// collection initialisation stage.
 		collection : function (callback) {
 
 			contextMenuModel.addContext(
@@ -110,6 +117,7 @@ define(function(require) {
 			})
 		},
 		
+		// playlist initialisation stage.
 		playlist : function(callback) {
 		
 			contextMenuModel.addContext(
@@ -214,6 +222,7 @@ define(function(require) {
 			})
 		},
 		
+		// player initialisation stage.
 		player : function(callback) {
 		
 			new Player({
@@ -234,6 +243,25 @@ define(function(require) {
 					})
 				}
 			})
+		},
+
+		// post-initialisation stage.
+		postInitialisation : function(callback) {
+
+			// instantiate the keyboard shortcut manager.
+			keyboardShortcutManager = new KeyboardShortcutManager(self)
+
+			// map the default keyboard shortcuts.
+			util.mapObject(keyboardShortcuts, function(shortcut, handler) {
+
+				keyboardShortcutManager.bind(shortcut, handler)
+			})
+
+			// attach the keyboard shortcut manager to the instance.
+			self.keyboardShortcutManager = keyboardShortcutManager
+
+			// continue initialisation.
+			callback && callback()
 		}
 	}
 	
@@ -256,6 +284,7 @@ define(function(require) {
 			// set self to the root Vibe object.
 			self = this
 		
+			// attach the context menu instance to the vibe object.
 			self.contextMenu = contextMenuModel
 		
 			// initialiser is called in the context of 
@@ -277,33 +306,37 @@ define(function(require) {
 				
 					stage.player(function() {
 					
-						if ( util.browser.hasSupport.cssTransitions ) {
+						stage.postInitialisation(function() {
+
+							if ( util.browser.hasSupport.cssTransitions ) {
 						
-							require(['dom.animator'], function(Animator) {
+								require(['dom.animator'], function(Animator) {
+								
+									util.appendChildren(vibe, [
+										player.node,
+										collection.node,
+										playlist.node
+									])
+									
+									new Animator(player.node, 'fadeIn', 0.3)
+								
+									new Animator(collection.node, 'fadeIn', 0.3)
+									
+									new Animator(playlist.node, 'fadeIn', 0.3)
+								})
+							
+							} else {
 							
 								util.appendChildren(vibe, [
 									player.node,
 									collection.node,
 									playlist.node
 								])
-								
-								new Animator(player.node, 'fadeIn', 0.3)
+							}
 							
-								new Animator(collection.node, 'fadeIn', 0.3)
-								
-								new Animator(playlist.node, 'fadeIn', 0.3)
-							})
-						
-						} else {
-						
-							util.appendChildren(vibe, [
-								player.node,
-								collection.node,
-								playlist.node
-							])
-						}
-						
-						callback && callback()
+							callback && callback()
+
+						})
 					})
 				})
 			})
