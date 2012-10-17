@@ -109,6 +109,8 @@ void function() {
 				
 				onreconnect : vibeApiDidReconnect,
 				
+				onexternalevent : vibeExternalEventResponder,
+
 				// automatically invoke the connect method.
 				autoconnect : true
 			})
@@ -249,6 +251,19 @@ void function() {
 				
 				"Reconnect"
 			)
+		}
+	}
+
+	// routes external control events.
+	function vibeExternalEventResponder( event ) {
+
+		switch ( event ) {
+
+			case "playToggle":
+
+				self.playerModel.playToggle()
+
+				break;
 		}
 	}
 

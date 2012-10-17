@@ -30,22 +30,26 @@ define(['util', 'lib/socket.io'], function(util) {
 			this.port = options.port
 		
 			// events.
-			if ( typeof options.onconnect == 'function' ) {
+			if ( typeof options.onconnect === 'function' ) {
 				this.onconnect = options.onconnect
 			}
 			
-			if ( typeof options.ondisconnect == 'function' ) {
+			if ( typeof options.ondisconnect === 'function' ) {
 				this.ondisconnect = options.ondisconnect
 			}
 			
-			if ( typeof options.onerror == 'function' ) {
+			if ( typeof options.onerror === 'function' ) {
 				this.onerror = options.onerror
 			}
 			
-			if ( typeof options.onreconnect == 'function' ) {
+			if ( typeof options.onreconnect === 'function' ) {
 				this.onreconnect = options.onreconnect
 			}
 		
+			if ( typeof options.onexternalevent === 'function' ) {
+				this.onexternalevent = options.onexternalevent
+			}
+
 			// autoconnect.
 			if ( options.autoconnect ) {
 				this.connect()
@@ -66,7 +70,7 @@ define(['util', 'lib/socket.io'], function(util) {
 			hasCalledBack = false
 		
 		try {
-			XHR.open('get', url + '/crossdomain.xml')
+			XHR.open('get', url + 'vibeplayer/crossdomain.xml')
 		} catch (ex) {
 		
 			if ( ! hasCalledBack ) {
@@ -166,15 +170,15 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		var self = this
 	
-		checkForVibeServer('http://' + self.host + ':' + self.port, function(serverExists) {
+		checkForVibeServer('http://' + self.host + ':' + self.port + '/vibeplayer', function(serverExists) {
 		
 			if ( serverExists ) {
 			
-				var socket = self.socket = io.connect('http://' + self.host + ':' + self.port, {
-						'transports' : ['websocket', 'flashsocket', 'jsonp-polling'],
-						'try multiple transports' : false,
-						'connect timeout' : 2000
-					})
+				var socket = self.socket = io.connect('http://' + self.host + ':' + self.port + '/vibeplayer', {
+					'transports' : ['websocket', 'flashsocket', 'jsonp-polling'],
+					'try multiple transports' : false,
+					'connect timeout' : 2000
+				})
 				
 				self.connecting = true
 				
@@ -208,6 +212,11 @@ define(['util', 'lib/socket.io'], function(util) {
 					self.disconnected = true
 				
 					self.onerror && self.onerror()
+				})
+
+				socket.on('externalEvent', function() {
+
+					self.onexternalevent && self.onexternalevent.apply(this, arguments)
 				})
 			} else {
 			
