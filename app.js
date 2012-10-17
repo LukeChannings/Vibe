@@ -255,7 +255,7 @@ void function() {
 	}
 
 	// routes external control events.
-	function vibeExternalEventResponder( event ) {
+	function vibeExternalEventResponder( event, options ) {
 
 		switch ( event ) {
 
@@ -264,6 +264,22 @@ void function() {
 				self.playerModel.playToggle()
 
 				break;
+
+			case "setVolume":
+
+				self.playerModel.setVolume(options.volume)
+
+				break;
+
+			case "skipTrack":
+
+				self.playerModel.skip(options.direction)
+
+				break;
+
+			case "showMessage":
+
+				modal.createSingle(options)
 		}
 	}
 
