@@ -636,6 +636,11 @@ define({
 			
 				return false
 			}
+
+			if ( typeof obj[properties[i]] === "undefined" ) {
+
+				return false
+			}
 		}
 		
 		return true

@@ -4,20 +4,18 @@
  */
 void function() {
 
-	var util = this.util, // utility methods.
-		api, // Vibe Api client.
-		settings, // Vibe Settings.
-		settingsAssistant, // settings interface.
-		interfaceHasBeenInitialised = false,
-		modal = null,
-		initialiser = null,
-		self = this, // reference to the current object.
+	var util = this.util // utility methods.
+	  , api // Vibe Api client.
+	  , settings // Vibe Settings.
+	  , settingsAssistant // settings interface.
+	  , interfaceHasBeenInitialised = false
+	  , modal = null
+	  , initialiser = null
+	  , sha256  = null
+	  , self = this // reference to the current object.
 
-	// dialogue identifier.
-	throbberId,
-	
-	// throbber element.
-	throbber
+	  , throbberId // dialogue identifier.
+	  , throbber // throbber element.
 	
 	// configure require.js
 	require.config({
@@ -34,10 +32,10 @@ void function() {
 		
 		// initial callback dependencies.
 		deps : [
-			"util", // utility methods.
-			"api.vibe", // Vibe Api.
-			"model.settings", // Application settings.
-			"lib/domReady!", // requirejs plugin to wait for the DOM to load.
+			  "util" // utility methods.
+			, "api.vibe" // Vibe Api.
+			, "model.settings" // Application settings.
+			, "lib/domReady!" // requirejs plugin to wait for the DOM to load.
 		],
 		
 		// call the init function when the dependencies are loaded.
@@ -50,9 +48,10 @@ void function() {
 	function init(util, Api, Settings) {
 	
 		var dependencies = [
-			"ui.initialiser", // bootstraps the UI modules.
-			"ui.widget.modalDialogue", // presents various modal dialogues.
-			"ui.settingsAssistant" // settings interface.
+			  "ui.initialiser" // bootstraps the UI modules.
+			, "ui.widget.modalDialogue" // presents various modal dialogues.
+			, "ui.settingsAssistant" // settings interface.
+			, "lib/sha-256" // sha-256 utility to calculate digest hash.
 		]
 	
 		// webkit notifications.
@@ -65,7 +64,7 @@ void function() {
 			dependencies.push("compatibility.ie8")
 		}
 
-		require(dependencies, function(interfaceInitialiser, modalDialogue, SettingsAssistant, Notifications) {
+		require(dependencies, function(interfaceInitialiser, modalDialogue, SettingsAssistant, _sha256, Notifications) {
 		
 			throbber = util.createElement({
 				'tag' : 'div',
@@ -89,6 +88,8 @@ void function() {
 		
 			initialiser = interfaceInitialiser
 		
+			sha256 = _sha256
+
 			// display a loading throbber.
 			throbberID = modal.open(throbber)
 			
@@ -98,21 +99,24 @@ void function() {
 				// get the host and port from settings and set them,
 				// if they're undefined then the instance will emit
 				// vibeApiDidThrowError.
-				host : settings.get('host'),
-				port : settings.get('port'),
+				  host : settings.get('host')
+				, port : settings.get('port')
+				, username : settings.get('username')
+				, digest : settings.get('digest')
+				, token : settings.get('token')
 				
-				onconnect : vibeApiDidConnect,
+				, onconnect : vibeApiDidConnect
 				
-				ondisconnect : vibeApiDidDisconnect,
+				, ondisconnect : vibeApiDidDisconnect
 				
-				onerror : vibeApiDidThrowError,
+				, onerror : vibeApiDidThrowError
 				
-				onreconnect : vibeApiDidReconnect,
+				, onreconnect : vibeApiDidReconnect
 				
-				onexternalevent : vibeExternalEventResponder,
+				, onexternalevent : vibeExternalEventResponder
 
 				// automatically invoke the connect method.
-				autoconnect : true
+				, autoconnect : true
 			})
 		})
 	}
@@ -125,23 +129,43 @@ void function() {
 	//
 	function connectionAssistantHandler(inputs) {
 	
-		var host = ( inputs[0].value ) ? inputs[0].value : 'localhost',
-			port = ( inputs[1].value ) ? inputs[1].value : 6232
+		var host = ( inputs[0].value ) ? inputs[0].value : 'localhost'
+		  , port = ( inputs[1].value ) ? inputs[1].value : 6232
+		  , username = inputs[2].value
+		  , password = inputs[3].value
 		
-		settings.set('host', host)
-		settings.set('port', port)
-	
-		api.host = host
-		api.port = port
-	
-		// close the dialogue.
-		if ( modal.hasDialogue(connectionAssistantId) ) {
-			modal.close(connectionAssistantId)
-		}
-		
-		throbberID = modal.open(throbber)
-		
-		api.connect()
+		api.getToken("http://" + host + ":" + port, function(err, token) {
+
+			if ( ! err ) {
+
+				settings.set('host', host)
+				settings.set('port', port)
+
+				// get a token from the server.
+
+				settings.set('username', username)
+				settings.set('digest', sha256.hash( sha256.hash(username + token) + sha256.hash(username + password) ))
+				settings.set('token', token)
+
+				api.host = host
+				api.port = port
+				api.username = username
+				api.digest = settings.get('digest')
+				api.token = token
+			
+				// close the dialogue.
+				if ( modal.hasDialogue(connectionAssistantId) ) {
+					modal.close(connectionAssistantId)
+				}
+				
+				throbberID = modal.open(throbber)
+				
+				api.connect()
+			} else {
+
+				vibeApiDidThrowError()
+			}
+		})
 	}
 	
 	// called when the Api connects.
@@ -224,7 +248,7 @@ void function() {
 		// if this is the first time Vibe has been run
 		// then show a welcome dialogue with options
 		// for configuring the host and port.
-		if ( ! settings.get('host') && ! settings.get('port') ) {
+		if ( ! settings.get('host') || ! settings.get('port') || ! settings.get('username') || !settings.get('digest') ) {
 
 			connectionAssistantId = settingsAssistant.presentConnectionAssistant(
 				"Welcome to Vibe!",

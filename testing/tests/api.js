@@ -13,8 +13,10 @@ define(['api.vibe'], function(VibeApi) {
 	
 	asyncTest("Create an instance with valid options", function() {
 	
+		expect(11)
+
 		var api = new VibeApi({
-			host : "192.168.0.99",
+			host : "channings.me",
 			port : 6232,
 			onconnect : function() {
 			

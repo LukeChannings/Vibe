@@ -9,16 +9,18 @@ define(['util', 'lib/socket.io'], function(util) {
 
 	// constructor function exposed as the module.
 	// @param options {Object} object that defines the configuration of the instance.
-	// @options host {string} the host ip or domain.
-	// @options port {number} the server port.
-	// @options autoconnect {boolean} automatically connect to the vibe server.
-	// @options onconnect {function} (optional) called when the api is connected.
-	// @options ondisconnect {function} (optional) called when the api disconnects.
-	// @options onerror {function} (optional) called on connection error.
-	// @return {bool} true for valid options, false for invalid options.
+	// @options host {String} the host ip or domain.
+	// @options port {Number} the server port.
+	// @options username {String} name of the user to connect to the server as.
+	// @options digest {String} the sha-256 hash to identify the user.
+	// @options autoconnect {Boolean} automatically connect to the vibe server.
+	// @options onconnect {Function} (optional) called when the api is connected.
+	// @options ondisconnect {Function} (optional) called when the api disconnects.
+	// @options onerror {Function} (optional) called on connection error.
+	// @return {Boolean} true for valid options, false for invalid options.
 	var VibeApi = function(options) {
-	
-		if ( util.hasProperties(options, ['host', 'port']) ) {
+
+		if ( util.hasProperties(options, ['host', 'port', 'username', 'digest']) ) {
 		
 			// state.
 			this.connected = false
@@ -26,63 +28,47 @@ define(['util', 'lib/socket.io'], function(util) {
 			this.connecting = false
 		
 			// options.
-			this.host = options.host
-			this.port = options.port
-		
-			// events.
-			if ( typeof options.onconnect === 'function' ) {
-				this.onconnect = options.onconnect
-			}
-			
-			if ( typeof options.ondisconnect === 'function' ) {
-				this.ondisconnect = options.ondisconnect
-			}
-			
-			if ( typeof options.onerror === 'function' ) {
-				this.onerror = options.onerror
-			}
-			
-			if ( typeof options.onreconnect === 'function' ) {
-				this.onreconnect = options.onreconnect
-			}
-		
-			if ( typeof options.onexternalevent === 'function' ) {
-				this.onexternalevent = options.onexternalevent
-			}
+			util.augment(this, options)
 
 			// autoconnect.
 			if ( options.autoconnect ) {
 				this.connect()
 			}
+
 		} else {
 		
-			throw new Error("VibeApi was instantiated without proper options.")
+			if ( typeof options.onerror === "function" ) {
+
+				options.onerror()
+			} else {
+
+				throw new Error("VibeApi was instantiated without proper options.")
+			}
 		}
 	}
 	
-	// test that a Vibe Server exists on the given host.
-	// @param url {string} location of the server.
-	// @param callback {function} executed once the test is complete.
-	var checkForVibeServer = function(url, callback) {
+	// gets a connection token from a vibe server.
+	// @param url {String} location of the server.
+	// @param callback {Function} error as first parameter, token as second.
+	VibeApi.prototype.getToken = function(url, callback) {
 	
-		var isIE8 = !!window.XDomainRequest,
-			XHR = ( isIE8 ) ? new window.XDomainRequest() : new XMLHttpRequest(),
-			hasCalledBack = false
+		var isIE8 = !!window.XDomainRequest
+		  , XHR = isIE8 ? new window.XDomainRequest : new XMLHttpRequest
+		  , hasCalledBack = false
 		
 		try {
-			XHR.open('get', url + 'vibeplayer/crossdomain.xml')
+
+			XHR.open('get', url + '/token')
+
 		} catch (ex) {
 		
 			if ( ! hasCalledBack ) {
 			
-				if ( /(null|undefined)/.test(url) ) {
-					callback(false)
-				} else {
-					callback(true)
-				}
+				callback(true, false)
 				
 				hasCalledBack = true
 			}
+
 			return
 		}
 		
@@ -94,7 +80,7 @@ define(['util', 'lib/socket.io'], function(util) {
 					
 					if ( ! hasCalledBack ) {
 					
-						callback(true)
+						callback(false, XHR.responseText)
 						
 						hasCalledBack = true
 					}
@@ -102,7 +88,7 @@ define(['util', 'lib/socket.io'], function(util) {
 				
 					if ( ! hasCalledBack ) {
 					
-						callback(false)
+						callback(true)
 						
 						hasCalledBack = true
 					}
@@ -113,7 +99,7 @@ define(['util', 'lib/socket.io'], function(util) {
 			
 				if ( ! hasCalledBack ) {
 				
-					callback(false)
+					callback(true)
 					
 					hasCalledBack = true
 				}
@@ -128,7 +114,7 @@ define(['util', 'lib/socket.io'], function(util) {
 					
 						if ( ! hasCalledBack ) {
 						
-							callback(true)
+							callback(false, XHR.responseText)
 							
 							hasCalledBack = true
 						}
@@ -136,7 +122,7 @@ define(['util', 'lib/socket.io'], function(util) {
 					
 						if ( ! hasCalledBack ) {
 						
-							callback(false)
+							callback(true)
 							
 							hasCalledBack = true
 						}
@@ -153,7 +139,7 @@ define(['util', 'lib/socket.io'], function(util) {
 		
 			if ( ! hasCalledBack ) {
 			
-				callback(false)
+				callback(true)
 				
 				hasCalledBack = true
 			}
@@ -169,59 +155,52 @@ define(['util', 'lib/socket.io'], function(util) {
 	VibeApi.prototype.connect = function() {
 	
 		var self = this
-	
-		checkForVibeServer('http://' + self.host + ':' + self.port + '/vibeplayer', function(serverExists) {
+		  , connectionString = '?u=' + self.username + '&c=' + self.digest + "&tk=" + self.token
+
+		var socket = self.socket = io.connect('http://' + self.host + ':' + self.port + connectionString, {
+			  'transports' : ['websocket', 'flashsocket', 'jsonp-polling']
+			, 'try multiple transports' : false
+			, 'connect timeout' : 2000
+			, 'force new connection' : true
+		})
 		
-			if ( serverExists ) {
+		self.connecting = true
+		
+		socket.on('connect', function() {
+		
+			self.connecting = self.disconnected = false
+			self.connected = true
+		
+			self.onconnect && self.onconnect()
+		})
+		
+		socket.on('disconnect', function() {
+		
+			self.connecting = self.connected = false
+			self.disconnected = true
+		
+			self.ondisconnect && self.ondisconnect()
+		})
+		
+		socket.on('reconnect', function() {
+		
+			self.connecting = self.disconnected = false
+			self.connected = true
 			
-				var socket = self.socket = io.connect('http://' + self.host + ':' + self.port + '/vibeplayer', {
-					'transports' : ['websocket', 'flashsocket', 'jsonp-polling'],
-					'try multiple transports' : false,
-					'connect timeout' : 2000
-				})
-				
-				self.connecting = true
-				
-				socket.on('connect', function() {
-				
-					self.connecting = self.disconnected = false
-					self.connected = true
-				
-					self.onconnect && self.onconnect()
-				})
-				
-				socket.on('disconnect', function() {
-				
-					self.connecting = self.connected = false
-					self.disconnected = true
-				
-					self.ondisconnect && self.ondisconnect()
-				})
-				
-				socket.on('reconnect', function() {
-				
-					self.connecting = self.disconnected = false
-					self.connected = true
-					
-					self.onreconnect && self.onreconnect()
-				})
-				
-				socket.on('connect_failed', function() {
-				
-					self.connecting = self.connected = false
-					self.disconnected = true
-				
-					self.onerror && self.onerror()
-				})
+			self.onreconnect && self.onreconnect()
+		})
+		
+		socket.on('connect_failed', function() {
+		
+			self.connecting = self.connected = false
+			self.disconnected = true
+		
+			self.onerror && self.onerror()
+		})
 
-				socket.on('externalEvent', function() {
+		socket.on('externalEvent', function() {
 
-					self.onexternalevent && self.onexternalevent.apply(this, arguments)
-				})
-			} else {
-			
-				self.onerror && self.onerror()
-			}
+			self.onexternalevent && self.onexternalevent.apply(this, arguments)
 		})
 	}
 	

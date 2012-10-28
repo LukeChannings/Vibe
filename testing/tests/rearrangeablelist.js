@@ -91,32 +91,4 @@ define(['util'], function(util) {
 		equal(this.node.childNodes[3].innerHTML, "item 8", "fourth item should be item 8.")
 		equal(this.node.childNodes[4].innerHTML, "item 1", "fifth item should be item 1.")
 	})
-
-	test("translate four random nodes", function() {
-	
-		var random = [],
-			index = Math.round(Math.random() * 9)
-		
-		for ( var i = 0; i < 4; i += 1 ) {
-		
-			var item
-		
-			do {
-			
-				item = Math.round(Math.random() * 9)
-				
-			} while ( random.indexOf(item) !== -1 && item !== index )
-		
-			random.push(item)
-		}
-		
-		util.translateNodePositions(
-			this.node,
-			random,
-			index
-		)
-		
-		equal(this.node.childNodes[index].innerHTML, "item " + (random[0] - 1), "item " + index + " should equal " + (random[0] - 1))
-		equal(this.node.childNodes[index + 1].innerHTML, "item " + (random[1] - 1), "item " + (index + 1) + " should equal " + (random[1] - 1))
-	})
 })

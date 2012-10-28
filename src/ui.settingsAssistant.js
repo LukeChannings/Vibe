@@ -216,6 +216,16 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 						type : 'number',
 						title : 'Port',
 						placeholder : this.settings.get('port') || 6232
+					},{
+						name : 'username',
+						type : 'text',
+						title : 'Username',
+						placeholder : this.settings.get('username') || ""
+					},{
+						name : 'password',
+						type : 'text',
+						title : 'Password',
+						placeholder : ""
 					}],
 					callback : function(input, callback) {
 					
