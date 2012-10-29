@@ -7,7 +7,7 @@ define(['util'], function(util) {
 	var DynamicNode = function(node, dimensions) {
 	
 		function resize() {
-		
+
 			var a = dimensions()
 			
 			if ( a.height ) {

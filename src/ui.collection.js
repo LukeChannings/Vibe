@@ -120,7 +120,7 @@ define(function(require) {
 			// resize the collection to the height of the window.
 			new Dynamic(node, function() {
 			
-				var windowHeight = window.innerHeight,
+				var windowHeight = window.innerHeight || document.body.clientHeight,
 					distanceFromTop = 100,
 					offsetBottom = 20,
 					margin = 35 + 19,

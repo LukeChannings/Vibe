@@ -111,7 +111,7 @@ define(function(require) {
 			
 			new Dynamic(node, function() {
 			
-				var windowHeight = window.innerHeight,
+				var windowHeight = window.innerHeight || document.body.clientHeight,
 					distanceFromTop = 100,
 					offsetBottom = 20,
 					margin = 54 + 19,

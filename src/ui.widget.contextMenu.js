@@ -19,6 +19,8 @@ define(['util'], function(util) {
 	// @param items {Array} a list of context menu items compliant with the ContextMenuItem template.
 	var ContextMenu = function(e, items) {
 	
+		var target = e.target || e.srcElement
+
 		// close any existing context menus.
 		close()
 	
@@ -53,8 +55,7 @@ define(['util'], function(util) {
 			
 			util.addListener(li, 'click', function(event) {
 			
-				var target = e.target || e.srcElement,
-					contextTarget = event.target || event.srcElement
+				var contextTarget = event.target || event.srcElement
 			
 				item.callback(target, contextTarget, e, event)
 				
@@ -66,14 +67,8 @@ define(['util'], function(util) {
 		document.body.appendChild(node)
 		
 		// closes the context menu when an area outside of the menu is clicked.
-		util.addListener(window, 'click', function (e) {
-		
-			var target = e.target || e.srcElement
-			
-			if ( node && target.parentNode !== node ) {
-				close()
-			}
-		})
+		util.addListener(window, 'click', close)
+		util.addListener(document, 'click', close)
 		
 		// make the close method available.
 		this.close = close
@@ -84,6 +79,6 @@ define(['util'], function(util) {
 		e.stopPropagation && e.stopPropagation()
 		e.returnValue = false
 	}
-	
+
 	return ContextMenu
 })

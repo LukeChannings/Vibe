@@ -57,11 +57,13 @@ define(function(require) {
 				[{
 					title : "Add to playlist",
 					
-					callback : function(item) {
+					callback : function(collectionItem, contextItem, collectionEvent, contextEvent) {
 					
+						console.log(collectionItem.innerHTML)
+
 						playlistModel.add(
-							item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0],
-							item.getAttribute('data-id')
+							collectionItem.parentNode.className.match(/(genre|artist|album|track)/)[0],
+							collectionItem.getAttribute('data-id')
 						)
 					}
 				},{
@@ -72,13 +74,20 @@ define(function(require) {
 						return playerModel.isPlaying || playerModel.isPaused
 					},
 					
-					callback : function(item) {
-					
-						playlistModel.add(
-							item.parentNode.getAttribute('class').match(/(genre|artist|album|track)/)[0],
-							item.getAttribute('data-id'),
-							playlistModel.ui.playingNode.nextSibling
-						)
+					callback : function(collectionItem, contextItem, collectionEvent, contextEvent) {
+
+						var parent = collectionItem.parentNode
+						  , id = collectionItem.getAttribute('data-id')
+						  , type = parent.className.match(/(genre|artist|album|track)/)
+
+						if ( type && type[0] ) {
+
+							playlistModel.add(
+								  type[0]
+								, id
+								, playlistModel.ui.playingNode.nextSibling
+							)
+						}
 					}
 				}]
 			)
