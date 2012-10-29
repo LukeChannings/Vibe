@@ -1,7 +1,7 @@
 {
   "name": "Vibe",
   "description": "Good vibrations.",
-  "version": "0.0.3",
+  "version": "0.1.2",
   "app": {
     "launch": {
       "local_path": "app.html"

@@ -3,21 +3,22 @@
 // Provides methods for getting data and getting a stream url.
 // @author Luke Channings
 // @license MIT License
-// @comment For implementation in Objective-C, see https://github.com/TheFuzzball/VibeApi-Objc
 //
-define(['util', 'lib/socket.io'], function(util) {
+define(['util', 'lib/socket.io'], function( util ) {
 
-	// constructor function exposed as the module.
-	// @param options {Object} object that defines the configuration of the instance.
-	// @options host {String} the host ip or domain.
-	// @options port {Number} the server port.
-	// @options username {String} name of the user to connect to the server as.
-	// @options digest {String} the sha-256 hash to identify the user.
-	// @options autoconnect {Boolean} automatically connect to the vibe server.
-	// @options onconnect {Function} (optional) called when the api is connected.
-	// @options ondisconnect {Function} (optional) called when the api disconnects.
-	// @options onerror {Function} (optional) called on connection error.
-	// @return {Boolean} true for valid options, false for invalid options.
+	/**
+	 * constructor function exposed as the module.
+	 * @param options {Object} object that defines the configuration of the instance.
+	 * @options host {String} the host ip or domain.
+	 * @options port {Number} the server port.
+	 * @options username {String} name of the user to connect to the server as.
+	 * @options digest {String} the sha-256 hash to identify the user.
+	 * @options autoconnect {Boolean} automatically connect to the vibe server.
+	 * @options onconnect {Function} (optional) called when the api is connected.
+	 * @options ondisconnect {Function} (optional) called when the api disconnects.
+	 * @options onerror {Function} (optional) called on connection error.
+	 * @return {Boolean} true for valid options, false for invalid options.
+	 */
 	var VibeApi = function(options) {
 
 		if ( util.hasProperties(options, ['host', 'port', 'username', 'digest']) ) {
@@ -47,9 +48,11 @@ define(['util', 'lib/socket.io'], function(util) {
 		}
 	}
 	
-	// gets a connection token from a vibe server.
-	// @param url {String} location of the server.
-	// @param callback {Function} error as first parameter, token as second.
+	/**
+	 * gets a connection token from a vibe server.
+	 * @param url {String} location of the server.
+	 * @param callback {Function} error as first parameter, token as second.
+	 */
 	VibeApi.prototype.getToken = function(url, callback) {
 	
 		var isIE8 = !!window.XDomainRequest
@@ -148,10 +151,12 @@ define(['util', 'lib/socket.io'], function(util) {
 		}
 	}
 	
-	// method for connecting to the Vibe Server.
-	// when connected, the onconnect callback will
-	// be executed. If connection fails then the
-	// onerror callback will be executed.
+	/**
+	 * method for connecting to the Vibe Server.
+	 * when connected, the onconnect callback will
+	 * be executed. If connection fails then the
+	 * onerror callback will be executed.
+	 */
 	VibeApi.prototype.connect = function() {
 
 		var self = this
@@ -204,7 +209,9 @@ define(['util', 'lib/socket.io'], function(util) {
 		})
 	}
 	
-	// method for disconnecting from the Vibe Server.
+	/**
+	 * method for disconnecting from the Vibe Server.
+	 */
 	VibeApi.prototype.disconnect = function() {
 	
 		this.socket.disconnect()
@@ -212,214 +219,39 @@ define(['util', 'lib/socket.io'], function(util) {
 		this.disconnected = true
 		this.connected = this.connecting = false
 	}
-	
-	/**
-	 * lists all artists within the collection.
-	 * @param callback (function) - The function that will be sent the list of artists.
-	 */
-	VibeApi.prototype.getArtists = function(callback) {
-	
-		this.socket.emit('metadata', 'getArtists', function(err, artists) {
-
-			callback(artists)
-		})
-	}
 
 	/**
-	 * gets a list of artists that are in a genre.
-	 * @param genre (string) - The name of genre to list artists for.
-	 * @param callback (function) - Function to be sent the results.
+	 * query the Vibe Server.
+	 * @param method {String} the name of the query method. See Server Api Documentation if uncertain.
+	 * @param _id {String} (optional) the unique identifier for the current item.
+	 * @param callback {Function} the callback function, recieves err and result.
 	 */
-	VibeApi.prototype.getArtistsInGenre = function(genre,callback) {
-	
-		var genre = decodeURIComponent(genre)
-	
-		this.socket.emit('metadata', 'getArtistsInGenre', genre, function(err, artists) {
-		
-			callback(artists)
-		})
-	}
+	VibeApi.prototype.query = function() {
 
-	/**
-	 * lists all albums within the collection.
-	 * @param callback (function) - The function that will be sent the list of albums.
-	 */
-	VibeApi.prototype.getAlbums = function(callback) {
-	
-		this.socket.emit('metadata', 'getAlbums',function(err,albums) {
-		
-			if ( err ) {
-				throw err
+		var _args = Array.prototype.slice.call(arguments, 0)
+		  , sock = this.socket
+
+		// ensure the metadata event is emitted.
+		_args.unshift('metadata')
+
+		// ensure strings are encoded for transport.
+		util.map (
+
+			_args,
+
+			function(arg) {
+
+				if ( typeof arg === "string" ) {
+
+					return encodeURIComponent(arg)
+				}
 			}
+		)
 
-			callback(albums)
-		})
+		// make the query.
+		sock.emit.apply(sock, _args)
 	}
-	
-	/**
-	 * gets a list of albums by a given artist.
-	 * @param id (string) the unique id of the artist.
-	 * @param callback (function) - The function that will be sent the list of albums.
-	 */
-	VibeApi.prototype.getAlbumsByArtist = function(id,callback) {
-	
-		this.socket.emit('metadata', 'getAlbumsByArtist', id, function(err,albums) {
-		
-			util.forEach(albums, function(album) {
-			
-				album.title = album.title || "Unknown Album."
-			})
-			
-			albums.sort(function(a,b) {
-			
-				if (a.title.toLowerCase() < b.title.toLowerCase()) {
-					return -1
-				}
-				
-				if (a.title.toLowerCase() > b.title.toLowerCase()) {
-					return 1
-				}
-				
-				return 0
-			})
-		
-			callback(albums)
-		})
-	}
-	
-	/**
-	 * lists all tracks within the collection.
-	 * @param callback (function) the function that will be sent the list of tracks.
-	 */
-	VibeApi.prototype.getTracks = function(callback) {
-	
-		this.socket.emit('getTracks',function(err,tracks) {
-		
-			callback(tracks)
-		})
-	}
-	
-	/**
-	 * lists all tracks within a given genre.
-	 * @param genre {string} the genre to list tracks for.
-	 * @param callback {function} the function that will be sent the list of tracks.
-	 */
-	VibeApi.prototype.getTracksInGenre = function(genre,callback) {
-	
-		genre = decodeURIComponent(genre)
-	
-		this.socket.emit('getTracksInGenre', genre, function(err,tracks) {
-		
-			util.forEach(tracks, function(track) {
-			
-				track.albumname = track.albumname || 'Unknown Album'
-			
-				track.artistname = track.artistname || 'Unknown Artist'
-			
-				track.trackname = track.trackname || 'Unknown Track'
-			
-				track.trackno = track.trackno || '0'
-			})
-			
-			callback(tracks)
-		})
-	}
-	
-	/**
-	 * lists all tracks by a given artist.
-	 * @param genre {string} the genre to list tracks for.
-	 * @param callback {function} the function that will be sent the list of tracks.
-	 */
-	VibeApi.prototype.getTracksByArtist = function(id,callback) {
-	
-		this.socket.emit('getTracksByArtist', id, function(err,tracks) {
-		
-			util.forEach(tracks, function(track) {
-			
-				track.albumname = track.albumname || 'Unknown Album'
-			
-				track.artistname = track.artistname || 'Unknown Artist'
-			
-				track.trackname = track.trackname || 'Unknown Track'
-			
-				track.trackno = track.trackno || '0'
-			})
-		
-			callback(tracks)
-		})
-	}
-	
-	/**
-	 * get a list of tracks in a given album.
-	 * @param id (string) the unique id of the artist.
-	 * @param callback (function) - Function that will be sent the results.
-	 */
-	VibeApi.prototype.getTracksInAlbum = function(id,callback ){
-	
-		this.socket.emit('metadata', 'getTracksInAlbum', id, function(err, tracks) {
-		
-			callback(tracks)
-		})
-	}
-	
-	/**
-	 * get a list of tracks in a given album.
-	 * @param id (string) - The unique identifier for the album.
-	 * @param callback (function) - Function that will be sent the results.
-	 */
-	VibeApi.prototype.getTracksInAlbumShort = function(id,callback ){
-	
-		this.socket.emit('metadata', 'getTracksInAlbumShort', id, function(err, tracks) {
-		
-			util.map(tracks, function(track) {
-			
-				track.id = track._id
-				
-				track.name = track.title
-				
-				track.trackno = track.track
-			})
-		
-			callback(tracks)
-		})
-	}
-	
-	/**
-	 * get the metadata for a track.
-	 * @param id (string) the unique identifier for the track.
-	 * @param callback (function) function that will be sent the results.
-	 */
-	VibeApi.prototype.getTrack = function(id, callback) {
-	
-		this.socket.emit('getTrack', id, function(err,track) {
-		
-			callback(track)
-		})
-	}
-	
-	/**
-	 * lists all genres within the collection.
-	 * @param callback (function) the function that will be sent the list of genres.
-	 */
-	VibeApi.prototype.getGenres = function(callback) {
-	
-		this.socket.emit('metadata', 'getGenres', function(err, genres) {
-		
-			callback(genres)
-		})
-	}
-	
-	/**
-	 * queries the collection for a specific result and returns complete TreeList branches.
-	 * @param query (string) - The string to search for in the collection.
-	 * @param callback (function) - The function to be sent the results.
-	 */
-	VibeApi.prototype.search = function(query, callback) {
-	
-		// to be implemented.
-		return
-	}
-	
+
 	/**
 	 * returns type below the specified type in the set hierarchy.
 	 * @param type {string} the type for which to get the subtype.
@@ -458,7 +290,6 @@ define(['util', 'lib/socket.io'], function(util) {
 			return false
 		}
 	}
-	
-	// export the module.
+
 	return VibeApi
 })

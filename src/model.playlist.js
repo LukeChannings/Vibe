@@ -277,6 +277,7 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 	 * fetches the items for the corresponding type and id.
 	 * @param type (string) - The type of items to get.
 	 * @param id (string) - The unique identifier for the type.
+	 * @param callback {Function} called with the results of the query.
 	 */
 	var getItems = function(type, id, callback) {
 	
@@ -291,17 +292,26 @@ define(['util','model.undoManager'], function(util, UndoManager) {
 		// check that there is a corresponding method to the specified type.
 		if ( types[type] ) {
 		
-			// call the Api method.
-			this.api[types[type]](id,function(tracks) {
-			
-				// return the results to the callback.
-				if ( typeof callback == 'function' ) {
-					callback(tracks)
+			this.api.query (
+
+				types[type],
+
+				id,
+
+				function( err, tracks ) {
+
+					if ( ! ( Object.prototype.toString.call(tracks) === "[object Array]" ) ) {
+
+						tracks = [tracks]
+					}
+
+					! err && callback( tracks )
 				}
-			})
+			)
+		} else {
+
+			console && console.error && console.error("Unable to query " + type)
 		}
-		
-		else throw new Error("Invalid type used in getItems.","REF_ERR")
 	}
 	
 	return ModelPlaylist

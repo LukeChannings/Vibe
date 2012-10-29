@@ -68,15 +68,15 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 ###v0.1.2 (current):
 - Keyboard shortcuts
 - Standardised object model for plugins.
-- Authentication support
+- Server Authentication support
 - new Vibe Server support
 - External events support
+- User support
 
 #Roadmap:
 
 ##v0.2:
 - Search
-- Server Authentication
 - LastFm Scrobbling
 - Theming Support
 - Upload via drag and drop

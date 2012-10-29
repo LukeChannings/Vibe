@@ -714,11 +714,11 @@ define({
 	},
 
 	// returns true if a given node is in the DOM tree.
-	inDOMTree : function(element) {
+	inDOMTree : function(node) {
 
-	    while (element = element.parentNode) {
+	    while (node = node.parentNode) {
 
-	        if (element === document) {
+	        if (node === document) {
 
 	            return true
 	        }

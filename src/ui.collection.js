@@ -147,7 +147,7 @@ define(function(require) {
 		}
 		
 		// get the top level data..
-		this.api['get' + type[0].toUpperCase() + type.slice(1) + 's'](function(data) {
+		this.api.query('get' + type[0].toUpperCase() + type.slice(1) + 's', function(err, data) {
 		
 			// normalise type option.
 			type = type.toLowerCase()
@@ -374,26 +374,36 @@ define(function(require) {
 			
 			if ( this.api.getMethod(type, true) ) {
 			
-				this.api[this.api.getMethod(type, true)](id,function(items) {
-				
-					if ( type == 'artist' ) {
-					
-						util.forEach(items, function(album) {
-						
-							album.title = album.title || "Unknown Album"
-						
-							if ( album.art && album.art.medium ) {
+				this.api.query (
 
-								album.setAttributes = { 'data-albumart' : album.art.medium }
+					this.api.getMethod(type, true),
+
+					id,
+
+					function(err, items) {
+					
+						if ( err ) {
+							console && console.error && console.error(err)
+						}
+
+						if ( type == 'artist' ) {
+						
+							util.forEach(items, function(album) {
 							
-								util.cacheImage(album.art.medium)
-							}
-						})
+								if ( album.art && album.art.medium ) {
+
+									album.setAttributes = { 'data-albumart' : album.art.medium }
+								
+									util.cacheImage(album.art.medium)
+								}
+							})
+						}
+					
+						new TreeList(items, options, self.clickTimeout)
 					}
-				
-					new TreeList(items,options, self.clickTimeout)
-				
-				},true)
+
+				)
+
 			} else {
 				this.onitemselected({
 					type : type,
