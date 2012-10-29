@@ -236,17 +236,20 @@ define({
 	// @param node {HTMLElement} object reference for the node.
 	removeNode : function(node) {
 	
-		try {
-			if ( 'removeNode' in node ) {
-				node.removeNode(true)
+		if ( node && this.inDOMTree(node) ) {
+
+			try {
+				if ( 'removeNode' in node ) {
+					node.removeNode(true)
+					
+				} else {
 				
-			} else {
+					node.parentNode.removeChild(node)
+				}
+			} catch (ex) {
 			
-				node.parentNode.removeChild(node)
+				throw ex
 			}
-		} catch (ex) {
-		
-			throw ex
 		}
 	},
 	
@@ -254,9 +257,12 @@ define({
 	// @param node {HTMLElement} object reference for the node that we're removing the children of.
 	removeChildren : function(node) {
 	
-		while ( node.firstChild ) {
-		
-			this.removeNode(node.firstChild)
+		if ( node && node.firstChild ) {
+
+			while ( node.firstChild ) {
+			
+				this.removeNode(node.firstChild)
+			}
 		}
 	},
 	
@@ -706,6 +712,20 @@ define({
 			)
 		}
 	},
+
+	// returns true if a given node is in the DOM tree.
+	inDOMTree : function(element) {
+
+	    while (element = element.parentNode) {
+
+	        if (element === document) {
+
+	            return true
+	        }
+	    }
+
+	    return false
+	},
 	
 	// translates a node's children into a new configuration.
 	// @param parentNode {HTMLOLElement} an ordered list.
@@ -780,8 +800,8 @@ define({
 				// check for SVG support.
 				var support = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")
 			
-				// disable SVG on Opera due to poor implementation.
-				if ( /opera/i.test(navigator.userAgent) ) {
+				// disable SVG on Opera and IE due to poor implementation.
+				if ( /opera/i.test(navigator.userAgent) || /MSIE/i.test(navigator.userAgent) ) {
 					support = false
 				}
 			

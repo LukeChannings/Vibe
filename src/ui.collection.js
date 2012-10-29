@@ -167,13 +167,15 @@ define(function(require) {
 			} else if ( type == 'album' ) {
 				
 				util.forEach(data, function(album){
-				
-					album.setAttributes = {
-						'data-albumart' : album.art_medium
+
+					if ( album.art && album.art.medium ) {
+
+						album.setAttributes = {
+							'data-albumart' : album.art.medium
+						}
+						
+						util.cacheImage(album.art.medium)
 					}
-					
-					util.cacheImage(album.art_medium)
-					
 				})
 			}
 		
@@ -380,9 +382,12 @@ define(function(require) {
 						
 							album.title = album.title || "Unknown Album"
 						
-							album.setAttributes = { 'data-albumart' : album.art_medium }
+							if ( album.art && album.art.medium ) {
+
+								album.setAttributes = { 'data-albumart' : album.art.medium }
 							
-							util.cacheImage(album.art_medium)
+								util.cacheImage(album.art.medium)
+							}
 						})
 					}
 				

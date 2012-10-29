@@ -84,10 +84,11 @@ define(function(require) {
 			if ( typeof options.setAttributes == 'object' ) {
 				util.setAttributes(item, options.setAttributes)
 			}
-		
+
 			// set data-id.
-			if ( typeof itemObj.id == 'string' ) {
-				item.setAttribute('data-id', itemObj.id)
+			if ( typeof itemObj.id == 'string' || typeof itemObj._id == 'string' ) {
+
+				item.setAttribute('data-id', itemObj.id || itemObj._id)
 			}
 			
 			// check for item children.

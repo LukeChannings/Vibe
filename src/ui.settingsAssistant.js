@@ -257,7 +257,7 @@ define(['util', 'ui.widget.modalDialogue'], function (util, dialogue) {
 						name : 'collectionRootType',
 						title : 'Order Collection By ',
 						type : 'select',
-						options : ['Genre', 'Artist', 'Album', 'Track'],
+						options : ['Genre', 'Artist', 'Album'],
 						placeholder : this.settings.get('collectionRootType') || 'Genre'
 					}],
 					callback : function(inputs) {

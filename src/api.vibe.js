@@ -153,7 +153,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	// be executed. If connection fails then the
 	// onerror callback will be executed.
 	VibeApi.prototype.connect = function() {
-	
+
 		var self = this
 		  , connectionString = '?u=' + self.username + '&c=' + self.digest + "&tk=" + self.token
 
@@ -219,20 +219,8 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getArtists = function(callback) {
 	
-		this.socket.emit('getArtists',function(err,artists) {
-		
-			artists.sort(function(a,b) {
-			
-				if (a.name.toLowerCase() < b.name.toLowerCase()) {
-					return -1
-				}
-				
-				if (a.name.toLowerCase() > b.name.toLowerCase()) {
-					return 1
-				}
-				return 0
-			})
-		
+		this.socket.emit('metadata', 'getArtists', function(err, artists) {
+
 			callback(artists)
 		})
 	}
@@ -246,20 +234,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		var genre = decodeURIComponent(genre)
 	
-		this.socket.emit('getArtistsInGenre', genre, function(err,artists) {
-		
-			artists.sort(function(a,b) {
-			
-				if (a.name.toLowerCase() < b.name.toLowerCase()) {
-					return -1
-				}
-				
-				if (a.name.toLowerCase() > b.name.toLowerCase()) {
-					return 1
-				}
-				
-				return 0
-			})
+		this.socket.emit('metadata', 'getArtistsInGenre', genre, function(err, artists) {
 		
 			callback(artists)
 		})
@@ -271,12 +246,12 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getAlbums = function(callback) {
 	
-		this.socket.emit('getAlbums',function(err,albums) {
+		this.socket.emit('metadata', 'getAlbums',function(err,albums) {
 		
 			if ( err ) {
 				throw err
 			}
-		
+
 			callback(albums)
 		})
 	}
@@ -288,7 +263,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getAlbumsByArtist = function(id,callback) {
 	
-		this.socket.emit('getAlbumsByArtist', id, function(err,albums) {
+		this.socket.emit('metadata', 'getAlbumsByArtist', id, function(err,albums) {
 		
 			util.forEach(albums, function(album) {
 			
@@ -359,7 +334,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		this.socket.emit('getTracksByArtist', id, function(err,tracks) {
 		
-			util.forEach(tracks, function(track){
+			util.forEach(tracks, function(track) {
 			
 				track.albumname = track.albumname || 'Unknown Album'
 			
@@ -381,18 +356,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getTracksInAlbum = function(id,callback ){
 	
-		this.socket.emit('getTracksInAlbum', id, function(err, tracks) {
-		
-			util.map(tracks, function(track) {
-			
-				track.albumname = track.albumname || 'Unknown Album'
-					
-				track.artistname = track.artistname || 'Unknown Artist'
-					
-				track.trackname = track.trackname || 'Unknown Track'
-				
-				track.trackno = track.trackno || '0'
-			})
+		this.socket.emit('metadata', 'getTracksInAlbum', id, function(err, tracks) {
 		
 			callback(tracks)
 		})
@@ -405,15 +369,15 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getTracksInAlbumShort = function(id,callback ){
 	
-		this.socket.emit('getTracksInAlbumShort', id, function(tracks) {
+		this.socket.emit('metadata', 'getTracksInAlbumShort', id, function(err, tracks) {
 		
 			util.map(tracks, function(track) {
 			
-				track.id = track.trackid
+				track.id = track._id
 				
-				track.name = track.trackname || "Unknown Track"
+				track.name = track.title
 				
-				track.trackno = track.trackno || null
+				track.trackno = track.track
 			})
 		
 			callback(tracks)
@@ -429,14 +393,6 @@ define(['util', 'lib/socket.io'], function(util) {
 	
 		this.socket.emit('getTrack', id, function(err,track) {
 		
-			track.albumname = track.albumname || 'Unknown Album'
-			
-			track.artistname = track.artistname || 'Unknown Artist'
-			
-			track.trackname = track.trackname || 'Unknown Track'
-		
-			track.trackno = track.trackno || '0'
-		
 			callback(track)
 		})
 	}
@@ -447,20 +403,7 @@ define(['util', 'lib/socket.io'], function(util) {
 	 */
 	VibeApi.prototype.getGenres = function(callback) {
 	
-		this.socket.emit('getGenres',function(err,genres) {
-		
-			genres.sort(function(a,b) {
-			
-				if (a.genre.toLowerCase() < b.genre.toLowerCase()) {
-					return -1
-				}
-				
-				if (a.genre.toLowerCase() > b.genre.toLowerCase()) {
-					return 1
-				}
-				
-				return 0
-			})
+		this.socket.emit('metadata', 'getGenres', function(err, genres) {
 		
 			callback(genres)
 		})

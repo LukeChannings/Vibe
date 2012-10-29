@@ -68,6 +68,9 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 ###v0.1.2 (current):
 - Keyboard shortcuts
 - Standardised object model for plugins.
+- Authentication support
+- new Vibe Server support
+- External events support
 
 #Roadmap:
 

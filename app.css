@@ -62,7 +62,13 @@ body.svg #Vibe{
 }
 
 /* UIPlaylist column widths. */
-#Vibe #UIPlaylist li.trackno{width: 3%; text-align: center}
+#Vibe #UIPlaylist li.trackno{
+	width: 3%;
+	text-align: center
+}
+
 #Vibe #UIPlaylist li.trackname{width: 25%}
-#Vibe #UIPlaylist li.albumname,#Vibe #UIPlaylist li.artistname{width: 22%}
+
+#Vibe #UIPlaylist li.albumname, #Vibe #UIPlaylist li.artistname{width: 22%}
+
 #Vibe #UIPlaylist li.tracklength{width: 7%}
