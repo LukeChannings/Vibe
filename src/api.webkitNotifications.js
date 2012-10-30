@@ -30,9 +30,9 @@ define(function(require) {
 				if ( metadata.tracklength ) {
 					url += "trackDuration=" + encodeURIComponent(util.expandTime(metadata.tracklength)) + "&"
 				}
-				
-				if ( metadata.albumart ) {
-					url += "albumArt=" + metadata.albumart
+
+				if ( metadata.art ) {
+					url += "albumArt=" + metadata.art.medium
 				}
 				
 				notification = window.webkitNotifications.createHTMLNotification(url)
@@ -40,9 +40,9 @@ define(function(require) {
 			} else if ( window.webkitNotifications.createNotification ) {
 			
 				notification = window.webkitNotifications.createNotification(
-					metadata.albumart,
-					"Playing " + metadata.trackname + " by " + metadata.artistname,
-					"Track " + metadata.trackno + " of " + metadata.trackof + ". Duration " + util.expandTime(metadata.tracklength)
+					  metadata.art ? metadata.art.medium : ""
+					, "Playing " + metadata.trackname + " by " + metadata.artistname
+					, "Track " + metadata.trackno + " of " + metadata.trackof
 				)
 				
 			} else {
