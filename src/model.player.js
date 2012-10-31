@@ -30,13 +30,19 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 		} else {
 			this.playerInterface = options.withUI
 		}
-		
+
+		if ( options.api ) {
+
+			this.api = options.api
+		}
+
 		// properties.
 		this.isMuted = false
 		this.isPlaying = false
 		this.isPaused = false
 		this.volume = ( typeof this.settings.get('volume') == 'number' ) ? this.settings.get('volume') : 80
 		this.icon = document.getElementsByTagName('head')[0].getElementsByTagName('link')[1]
+		this.trackid = ""
 		
 		// set the volume bar to reflect the volume setting.
 		setTimeout(function() {
@@ -89,6 +95,9 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			'volume' : this.volume,
 		}
 		
+		// set the new track id.
+		this.trackid = id
+
 		// add the player events to the sound.
 		util.augment(sound, this.Events, this)
 	
@@ -121,7 +130,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 				this.playerInterface.controls.buttons.buttons.play_pause.node,
 				'pause'
 			)
-			
+
 			var metadata = this.playlistModel.model[this.playlistModel.index]
 			
 			if ( this.settings.get('notifications') ) {
@@ -132,6 +141,8 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			
 			document.title = "Playing " + metadata.trackname + " by " + metadata.artistname
 			
+			this.api && this.api.socket.emit("playstatechanged", "playing", this.trackid)
+
 			this.icon = util.updateShortcutIcon('images/shared.status.playing.png', this.icon)
 		}
 	
@@ -140,6 +151,8 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			this.isPaused = true
 				
 			this.isPlaying = false
+
+			this.api && this.api.socket.emit("playstatechanged", "paused", this.trackid)
 
 			util.removeClass(
 				this.playerInterface.controls.buttons.buttons.play_pause.node, 
@@ -155,6 +168,8 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 			
 			this.isPaused = false
 		
+			this.api && this.api.socket.emit("playstatechanged", "stopped")
+
 			this.playerInterface.playerSlider.updateDuration(0)
 			
 			this.playerInterface.playerSlider.updateProgress(0,0)

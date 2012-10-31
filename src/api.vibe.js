@@ -160,9 +160,9 @@ define(['util', 'lib/socket.io'], function( util ) {
 	VibeApi.prototype.connect = function() {
 
 		var self = this
-		  , connectionString = '?u=' + self.username + '&c=' + self.digest + "&tk=" + self.token
+		  , connectionString = '?u=' + encodeURIComponent(self.username) + '&c=' + encodeURIComponent(self.digest) + "&tk=" + encodeURIComponent(self.token)
 
-		var socket = self.socket = io.connect('http://' + self.host + ':' + self.port + connectionString, {
+		var socket = self.socket = io.connect('http://' + self.host + ':' + self.port + connectionString + "&role=player", {
 			  'transports' : ['websocket', 'flashsocket', 'jsonp-polling']
 			, 'try multiple transports' : false
 			, 'connect timeout' : 2000

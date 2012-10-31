@@ -233,7 +233,7 @@ define(function(require) {
 		
 		// player initialisation stage.
 		player : function(callback) {
-		
+
 			new Player({
 				onload : function(PlayerInstance) {
 				
@@ -243,6 +243,7 @@ define(function(require) {
 						withSettings : settings,
 						withPlaylistModel : playlistModel,
 						withUI : player,
+						api : api,
 						onload : function(PlayerModelInstance) {
 						
 							playerModel = self.playerModel = PlayerModelInstance

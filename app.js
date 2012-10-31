@@ -285,7 +285,10 @@ void function() {
 
 			case "playToggle":
 
-				self.playerModel.playToggle()
+				if ( self.playlistModel.model.length !== 0 ) {
+
+					self.playerModel.playToggle()
+				}
 
 				break;
 
