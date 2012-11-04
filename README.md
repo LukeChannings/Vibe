@@ -72,6 +72,7 @@ unlikely to be as intuitive and glossy as a more W3C-compliant alternative.
 - new Vibe Server support
 - External events support
 - User support
+- fixes flash9-supported formats in SoundManager2.
 
 #Roadmap:
 

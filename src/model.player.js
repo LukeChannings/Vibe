@@ -75,10 +75,11 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 	
 	/**
 	 * adds the sound to the player.
-	 * @param id {string} the identifier for the track.
-	 * @param autoplay {boolean} will automatically start playing the track if true.
+	 * @param id {String} the identifier for the track.
+	 * @param mime {String} (optional) the MIME type of the track to be played.
+	 * @param autoplay {Boolean} will automatically start playing the track if true.
 	 */
-	Player.prototype.addSound = function(id, autoplay) {
+	Player.prototype.addSound = function(id, mime, autoplay) {
 	
 		// destroy the current sound instance.
 		if ( currentSound && currentSound.hasOwnProperty('destruct') ) {
@@ -87,12 +88,13 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 	
 		// define the new sound.
 		var sound = {
-			'id' : id,
-			'url' : 'http://' + this.settings.get('host') + ':' + this.settings.get('port') + '/stream/' + id,
-			'autoPlay' : !!autoplay || false,
-			'autoLoad' : true,
-			'stream' : true,
-			'volume' : this.volume,
+			  id : id
+			, url : 'http://' + this.settings.get('host') + ':' + this.settings.get('port') + '/stream/' + id
+			, autoPlay : autoplay || true
+			, autoLoad : true
+			, stream : true
+			, volume : this.volume
+			, type : mime
 		}
 		
 		// set the new track id.
@@ -247,7 +249,7 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 		// then add the sound.
 		if ( model[index] ) {
 		
-			this.addSound(model[index].trackid, true)
+			this.addSound(model[index].trackid, model[index].mime, true)
 
 		} else {
 			
@@ -280,7 +282,9 @@ define(['util', 'api.webkitNotifications', 'dom.animator'], function(util, webki
 
 			util.addClass(this.playlistModel.ui.playingNode, 'playing')
 		
-			this.addSound(this.playlistModel.getItem().trackid, true)
+			var item = this.playlistModel.getItem()
+
+			this.addSound(item.trackid, item.mime, true)
 		}
 	}
 

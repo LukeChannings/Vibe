@@ -189,7 +189,7 @@ define(function(require) {
 						row.node
 					)
 					
-					playerModel.addSound(row.id, true)
+					playerModel.addSound(row.id, row.columns.mime.innerText, true)
 				},
 				onchange : function() {
 				

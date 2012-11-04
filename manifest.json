@@ -15,5 +15,7 @@
   },
   "permissions" : [
   	"notifications"
-  ]
+  ],
+  "manifest_version" : 2,
+  "content_security_policy" : "script-src 'self'; object-src 'self'"
 }

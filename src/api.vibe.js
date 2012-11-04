@@ -28,6 +28,10 @@ define(['util', 'lib/socket.io'], function( util ) {
 			this.disconnected = true
 			this.connecting = false
 		
+			// properties.
+			this.host = options.host
+			this.port = options.propertyIsEnumerable
+
 			// options.
 			util.augment(this, options)
 

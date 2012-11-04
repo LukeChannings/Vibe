@@ -13,6 +13,7 @@ void function() {
 	  , initialiser = null
 	  , sha256  = null
 	  , self = this // reference to the current object.
+	  , sm2Loaded = false
 
 	  , throbberId // dialogue identifier.
 	  , throbber // throbber element.
@@ -171,40 +172,28 @@ void function() {
 	// called when the Api connects.
 	function vibeApiDidConnect() {
 
-		if ( ! interfaceHasBeenInitialised ) {
-			initialiser.call(self, function () {
-			
-				if ( settings.get('debug') ) {
-				
-					window.vibe = self
-				} else {
+		if ( ! sm2Loaded ) {
 
-					// expose an interface for plugins.
-					window.vibe = {
+			require(['lib/soundmanager2'], function() {
 
-						// methods for adding custom context menus.
-						contextMenu : {
-							addContext : self.contextMenu.addContext,
-							addContextItem : self.contextMenu.addContextItem,
-							getContext : self.contextMenu.getContext
-						},
+				soundManager.setup({
+					  url : 'lib/SoundManager2/swf/'
+					, debugMode : false
+					, allowScriptAccess : 'always'
+					, flashVersion : 9
+					, preferFlash : true
+					, wmode : 'transparent'
+					, useHighPerformance : true
+				})
 
-						// methods for adding custom settings panes.
-						settingsAssistant : {
-							registerDialogue : self.settingsAssistant.registerDialogue,
-							presentDialogue : self.settingsAssistant.presentDialogue
-						},
+				loadUI()
 
-						// methods for adding custom keyboard shortcuts.
-						keyboardShortcutManager : self.keyboardShortcutManager
-					}
-				}
-			
-				// stop the throbber.
-				if ( modal.hasDialogue(throbberID) ) {
-					modal.close(throbberID)
-				}
+				sm2Loaded = true
 			})
+
+		} else {
+
+			loadUI()
 		}
 	}
 	
@@ -307,6 +296,45 @@ void function() {
 			case "showMessage":
 
 				modal.createSingle(options)
+		}
+	}
+
+	function loadUI() {
+
+		if ( ! interfaceHasBeenInitialised ) {
+			initialiser.call(self, function () {
+			
+				if ( settings.get('debug') ) {
+				
+					window.vibe = self
+				} else {
+
+					// expose an interface for plugins.
+					window.vibe = {
+
+						// methods for adding custom context menus.
+						contextMenu : {
+							addContext : self.contextMenu.addContext,
+							addContextItem : self.contextMenu.addContextItem,
+							getContext : self.contextMenu.getContext
+						},
+
+						// methods for adding custom settings panes.
+						settingsAssistant : {
+							registerDialogue : self.settingsAssistant.registerDialogue,
+							presentDialogue : self.settingsAssistant.presentDialogue
+						},
+
+						// methods for adding custom keyboard shortcuts.
+						keyboardShortcutManager : self.keyboardShortcutManager
+					}
+				}
+			
+				// stop the throbber.
+				if ( modal.hasDialogue(throbberID) ) {
+					modal.close(throbberID)
+				}
+			})
 		}
 	}
 
