@@ -177,7 +177,7 @@ void function() {
 			require(['lib/soundmanager2'], function() {
 
 				soundManager.setup({
-					  url : 'lib/SoundManager2/swf/'
+					  url : 'lib/'
 					, debugMode : false
 					, allowScriptAccess : 'always'
 					, flashVersion : 9
