@@ -207,6 +207,14 @@ define(['util', 'lib/socket.io'], function( util ) {
 			self.onerror && self.onerror()
 		})
 
+		socket.on('error', function() {
+		
+			self.connecting = self.connected = false
+			self.disconnected = true
+		
+			self.onerror && self.onerror()
+		})
+
 		socket.on('externalEvent', function() {
 
 			self.onexternalevent && self.onexternalevent.apply(this, arguments)
