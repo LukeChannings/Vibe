@@ -21,20 +21,16 @@ define(['util', 'lib/socket.io'], function( util ) {
 	 */
 	var VibeApi = function(options) {
 
+		// state.
+		this.connected = false
+		this.disconnected = true
+		this.connecting = false
+	
+		// augment Api instance with options.
+		util.augment(this, options)
+
 		if ( util.hasProperties(options, ['host', 'port', 'username', 'digest']) ) {
 		
-			// state.
-			this.connected = false
-			this.disconnected = true
-			this.connecting = false
-		
-			// properties.
-			this.host = options.host
-			this.port = options.propertyIsEnumerable
-
-			// options.
-			util.augment(this, options)
-
 			// autoconnect.
 			if ( options.autoconnect ) {
 				this.connect()
